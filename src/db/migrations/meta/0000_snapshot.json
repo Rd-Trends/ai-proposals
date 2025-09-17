@@ -1,5 +1,5 @@
 {
-  "id": "52db3dd5-62ac-4299-af92-741a123ce6f7",
+  "id": "703624e0-2e17-465c-bb35-1e66032ca42d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -93,8 +93,12 @@
           "name": "accounts_user_id_users_id_fk",
           "tableFrom": "accounts",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -128,12 +132,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "proposal_title": {
-          "name": "proposal_title",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
         "proposal_content": {
           "name": "proposal_content",
           "type": "text",
@@ -153,6 +151,18 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'proposal_sent'"
+        },
+        "job_title": {
+          "name": "job_title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "job_description": {
+          "name": "job_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
         "job_posting_url": {
           "name": "job_posting_url",
@@ -224,8 +234,12 @@
           "name": "proposal_tracking_user_id_users_id_fk",
           "tableFrom": "proposal_tracking",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -233,8 +247,12 @@
           "name": "proposal_tracking_template_id_templates_id_fk",
           "tableFrom": "proposal_tracking",
           "tableTo": "templates",
-          "columnsFrom": ["template_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "template_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -304,8 +322,12 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -315,7 +337,9 @@
         "sessions_token_unique": {
           "name": "sessions_token_unique",
           "nullsNotDistinct": false,
-          "columns": ["token"]
+          "columns": [
+            "token"
+          ]
         }
       },
       "policies": {},
@@ -399,13 +423,6 @@
           "notNull": true,
           "default": 0
         },
-        "success_rate": {
-          "name": "success_rate",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -447,8 +464,12 @@
           "name": "templates_user_id_users_id_fk",
           "tableFrom": "templates",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -504,6 +525,12 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
+        },
+        "bio": {
+          "name": "bio",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -513,7 +540,9 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -587,7 +616,11 @@
     "public.template_status": {
       "name": "template_status",
       "schema": "public",
-      "values": ["draft", "active", "archived"]
+      "values": [
+        "draft",
+        "active",
+        "archived"
+      ]
     },
     "public.tone": {
       "name": "tone",
