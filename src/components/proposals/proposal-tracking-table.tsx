@@ -28,10 +28,10 @@ import { Button } from "../ui/button";
 
 export default function ProposalsTrackingTable({
   proposals,
-  isLoading
+  isLoading,
 }: {
   proposals: ProposalTracking[];
-  isLoading?: boolean
+  isLoading?: boolean;
 }) {
   const [selectedProposal, setSelectedProposal] =
     useState<ProposalTracking | null>(null);

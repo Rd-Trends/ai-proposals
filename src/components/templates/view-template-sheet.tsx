@@ -6,7 +6,6 @@ import {
   Clock,
   Eye,
   FileText,
-  Hash,
   Star,
   Tag,
   TrendingUp,
@@ -140,7 +139,7 @@ export function ViewTemplateSheet({
               </CardContent>
             </Card>
 
-            <Card>
+            {/* <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center">
                   <Hash className="mr-2 h-4 w-4" />
@@ -154,7 +153,7 @@ export function ViewTemplateSheet({
                     : "N/A"}
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
           {/* Tags */}
