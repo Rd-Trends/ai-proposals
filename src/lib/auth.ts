@@ -19,7 +19,8 @@ export const auth = betterAuth({
     },
   },
   emailAndPassword: {
-    enabled: false, // Disable password authentication
+    enabled: true,
+    requireEmailVerification: false,
   },
   plugins: [
     nextCookies(),

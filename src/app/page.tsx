@@ -21,12 +21,12 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link href="/auth">
+            <Link href="/auth/signup">
               <Button size="lg" className="w-full sm:w-auto">
                 Get Started Free
               </Button>
             </Link>
-            <Link href="/auth">
+            <Link href="/auth/signin">
               <Button variant="outline" size="lg" className="w-full sm:w-auto">
                 Sign In
               </Button>

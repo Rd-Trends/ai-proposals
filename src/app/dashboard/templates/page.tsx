@@ -20,7 +20,7 @@ export default async function TemplatesPage() {
   });
 
   if (!session) {
-    return redirect("/auth");
+    return redirect("/auth/signin");
   }
 
   return (
