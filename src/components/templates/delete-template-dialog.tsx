@@ -4,6 +4,7 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { deleteTemplate } from "@/actions/template-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,7 +15,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { Template } from "@/db";
-import { deleteTemplate } from "@/lib/actions/template-actions";
 
 interface DeleteTemplateDialogProps {
   template: Template;

@@ -10,7 +10,7 @@ import {
   TemplateStatsLoader,
 } from "@/components/templates/template-stats";
 import TemplatesPageTable from "@/components/templates/template-table";
-import { templateOperations } from "@/db/operations";
+import { getTemplatesByUserId } from "@/db/operations/template";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 
@@ -42,7 +42,7 @@ export default async function TemplatesPage() {
 }
 
 const TemplatesPageContent = async ({ user }: { user: User }) => {
-  const templates = await templateOperations.getByUserId(user.id);
+  const templates = await getTemplatesByUserId(user.id);
 
   return <TemplatesPageTable templates={templates} />;
 };

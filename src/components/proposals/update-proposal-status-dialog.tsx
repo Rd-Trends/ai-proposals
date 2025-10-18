@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import { updateProposal } from "@/actions/proposal-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,7 +32,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { PROPOSAL_OUTCOME, type ProposalTracking } from "@/db";
-import { updateProposal } from "@/lib/actions/proposal-actions";
 import { getProposalStatusLabel } from "./helpers";
 
 const updateStatusSchema = z.object({

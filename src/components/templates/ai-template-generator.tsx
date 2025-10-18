@@ -3,6 +3,7 @@
 import { Loader2, Sparkles } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { generateTemplateContent } from "@/actions/template-actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,7 +20,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import { generateTemplateContent } from "@/lib/actions/template-actions";
 
 type AIOutputSuccessData = ReturnType<
   typeof generateTemplateContent

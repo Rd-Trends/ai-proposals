@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  // BarChart3,
+  Briefcase,
   FileStack,
   FileText,
   Home,
@@ -26,7 +26,9 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarRail,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Navigation items
 const navigation: Array<{
@@ -53,6 +55,11 @@ const navigation: Array<{
     title: "Templates",
     url: "/dashboard/templates",
     icon: FileStack,
+  },
+  {
+    title: "Projects",
+    url: "/dashboard/projects",
+    icon: Briefcase,
   },
   {
     title: "Profile",
@@ -87,9 +94,11 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const isMobile = useIsMobile();
+
   return (
     <SidebarProvider>
-      <Sidebar collapsible="icon">
+      <Sidebar collapsible="icon" side={isMobile ? "right" : "left"}>
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -188,11 +197,17 @@ export const DashboardLayoutHeader = ({
   return (
     <header className="flex items-start justify-between shrink-0 gap-2 px-4 md:px-6 lg:px-8 pt-4">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-        <p className="text-muted-foreground">{description}</p>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+          {title}
+        </h1>
+        <p className=" text-xs md:text-sm text-muted-foreground">
+          {description}
+        </p>
       </div>
 
-      <div className="ml-auto flex items-center gap-2">{action}</div>
+      <div className="hidden md:flex items-center gap-2">{action}</div>
+
+      <SidebarTrigger className=" md:hidden mr-1 [&_svg]:size-5!" />
     </header>
   );
 };

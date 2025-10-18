@@ -23,9 +23,10 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  analyticsOperations,
-  proposalTrackingOperations,
-} from "@/db/operations";
+  getUserProposalStats,
+  getUserTemplateStats,
+} from "@/db/operations/analytics";
+import { getProposalTrackingByUserId } from "@/db/operations/proposal";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 
@@ -110,8 +111,8 @@ export default async function DashboardPage() {
 // Stats Overview
 const StatsOverview = async ({ user }: { user: User }) => {
   const [proposalStats, templateStats] = await Promise.all([
-    analyticsOperations.getUserProposalStats(user.id),
-    analyticsOperations.getUserTemplateStats(user.id),
+    getUserProposalStats(user.id),
+    getUserTemplateStats(user.id),
   ]);
 
   return (
@@ -195,7 +196,7 @@ const StatsOverviewSkeleton = () => (
 
 // Recent Proposals
 const RecentProposals = async ({ user }: { user: User }) => {
-  const proposals = await proposalTrackingOperations.getByUserId(user.id);
+  const proposals = await getProposalTrackingByUserId(user.id);
   const recent = proposals.slice(0, 3);
 
   return (

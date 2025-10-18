@@ -10,7 +10,7 @@ import {
   ProposalTrackingStatsSkeleton,
 } from "@/components/proposals/proposal-tracking-stats";
 import ProposalsTrackingTable from "@/components/proposals/proposal-tracking-table";
-import { proposalTrackingOperations } from "@/db/operations";
+import { getProposalTrackingByUserId } from "@/db/operations/proposal";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 
@@ -45,7 +45,7 @@ export default async function ProposalsPage() {
 }
 
 const ProposalsTrackingPageContent = async ({ user }: { user: User }) => {
-  const proposals = await proposalTrackingOperations.getByUserId(user.id);
+  const proposals = await getProposalTrackingByUserId(user.id);
 
   return <ProposalsTrackingTable proposals={proposals} />;
 };

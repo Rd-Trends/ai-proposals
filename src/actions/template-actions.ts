@@ -10,7 +10,7 @@ import {
   PROPOSAL_TONE,
   updateTemplateSchema,
 } from "@/db";
-import { templateOperations } from "@/db/operations";
+import * as templateServices from "@/db/operations/template";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 
@@ -156,7 +156,7 @@ export const createTemplate = async (data: InsertTemplate) => {
       throw new Error("Unauthorized");
     }
 
-    const template = await templateOperations.create({
+    const template = await templateServices.createTemplate({
       ...validatedData,
       userId: session.user.id,
     });
@@ -187,7 +187,7 @@ export const updateTemplate = async (
     }
 
     // Get the existing template to verify ownership
-    const existingTemplate = await templateOperations.getById(id);
+    const existingTemplate = await templateServices.getTemplateById(id);
     if (!existingTemplate) {
       return { data: null, error: "Template not found", success: false };
     }
@@ -196,7 +196,7 @@ export const updateTemplate = async (
       return { data: null, error: "Unauthorized", success: false };
     }
 
-    const template = await templateOperations.update(id, validatedData);
+    const template = await templateServices.updateTemplate(id, validatedData);
 
     return { data: template, error: null, success: true };
   } catch (error) {
@@ -218,7 +218,7 @@ export const duplicateTemplate = async (id: string) => {
     }
 
     // Get the existing template
-    const existingTemplate = await templateOperations.getById(id);
+    const existingTemplate = await templateServices.getTemplateById(id);
     if (!existingTemplate) {
       return { data: null, error: "Template not found", success: false };
     }
@@ -239,7 +239,7 @@ export const duplicateTemplate = async (id: string) => {
 
     const { id: _, updatedAt: __, createdAt: ___, ...rest } = duplicateData; // Exclude the id field
 
-    const template = await templateOperations.create(rest);
+    const template = await templateServices.createTemplate(rest);
 
     return { data: template, error: null, success: true };
   } catch (error) {
@@ -262,7 +262,7 @@ export const deleteTemplate = async (id: string) => {
     }
 
     // Get the existing template to verify ownership
-    const existingTemplate = await templateOperations.getById(id);
+    const existingTemplate = await templateServices.getTemplateById(id);
     if (!existingTemplate) {
       return { data: null, error: "Template not found", success: false };
     }
@@ -271,7 +271,7 @@ export const deleteTemplate = async (id: string) => {
       return { data: null, error: "Unauthorized", success: false };
     }
 
-    await templateOperations.delete(id);
+    await templateServices.deleteTemplate(id);
 
     return { data: null, error: null, success: true };
   } catch (error) {
@@ -290,7 +290,7 @@ export const toggleTemplateFavorite = async (id: string) => {
     }
 
     // Get the existing template to verify ownership
-    const existingTemplate = await templateOperations.getById(id);
+    const existingTemplate = await templateServices.getTemplateById(id);
     if (!existingTemplate) {
       return { data: null, error: "Template not found", success: false };
     }
@@ -299,7 +299,7 @@ export const toggleTemplateFavorite = async (id: string) => {
       return { data: null, error: "Unauthorized", success: false };
     }
 
-    const template = await templateOperations.toggleFavorite(id);
+    const template = await templateServices.toggleTemplateFavorite(id);
 
     return { data: template, error: null, success: true };
   } catch (error) {

@@ -1,11 +1,12 @@
 import { Award, Calendar, FileText, MessageSquare } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { analyticsOperations } from "@/db/operations";
+import { getUserProposalStats } from "@/db/operations/analytics";
 import type { User } from "@/lib/auth-client";
 
 const ProposalTrackingStats = async ({ user }: { user: User }) => {
-  const stats = await analyticsOperations.getUserProposalStats(user.id);
+  const stats = await getUserProposalStats(user.id);
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 py-6">
       <Card>

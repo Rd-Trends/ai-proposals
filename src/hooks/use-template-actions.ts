@@ -3,12 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useTransition } from "react";
 import { toast } from "sonner";
-import type { Template } from "@/db";
 import {
   deleteTemplate,
   duplicateTemplate,
   toggleTemplateFavorite,
-} from "@/lib/actions/template-actions";
+} from "@/actions/template-actions";
+import type { Template } from "@/db";
 
 export function useTemplateActions() {
   const router = useRouter();

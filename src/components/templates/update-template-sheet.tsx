@@ -7,6 +7,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { updateTemplate } from "@/actions/template-actions";
 import { AITemplateGenerator } from "@/components/templates/ai-template-generator";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,7 +38,6 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { PROPOSAL_TONE, type Template } from "@/db";
-import { updateTemplate } from "@/lib/actions/template-actions";
 
 interface UpdateTemplateSheetProps {
   template: Template;

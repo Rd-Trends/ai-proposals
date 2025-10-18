@@ -2,8 +2,11 @@
 
 import { headers } from "next/headers";
 import { type ProposalTracking, updateProposalTrackingSchema } from "@/db";
-import { proposalTrackingOperations } from "@/db/operations";
-import { auth } from "../auth";
+import {
+  getProposalTrackingById,
+  updateProposalTracking,
+} from "@/db/operations/proposal";
+import { auth } from "@/lib/auth";
 
 export const updateProposal = async (
   proposalId: string,
@@ -21,8 +24,7 @@ export const updateProposal = async (
     }
 
     // Get the existing proposal to verify ownership
-    const existingProposal =
-      await proposalTrackingOperations.getById(proposalId);
+    const existingProposal = await getProposalTrackingById(proposalId);
     if (!existingProposal) {
       return { data: null, error: "Proposal not found", success: false };
     }
@@ -32,7 +34,7 @@ export const updateProposal = async (
     }
 
     // Update proposal status
-    const updatedProposal = await proposalTrackingOperations.update(
+    const updatedProposal = await updateProposalTracking(
       proposalId,
       validatedData,
     );

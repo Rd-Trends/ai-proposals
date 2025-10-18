@@ -1,12 +1,13 @@
 import { FileText, Star, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { analyticsOperations } from "@/db/operations";
+import { getUserTemplateStats } from "@/db/operations/analytics";
 import type { User } from "@/lib/auth-client";
 import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/skeleton";
 
 const TemplateStats = async ({ user }: { user: User }) => {
-  const stats = await analyticsOperations.getUserTemplateStats(user.id);
+  const stats = await getUserTemplateStats(user.id);
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>

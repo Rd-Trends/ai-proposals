@@ -9,10 +9,12 @@ import {
 import { headers } from "next/headers";
 import z from "zod";
 import { PROPOSAL_TONE } from "@/db";
+import { createProposalTracking } from "@/db/operations/proposal";
 import {
-  proposalTrackingOperations,
-  templateOperations,
-} from "@/db/operations";
+  createTemplate,
+  getTemplatesByUserId,
+  incrementTemplateUsage,
+} from "@/db/operations/template";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 
@@ -123,7 +125,7 @@ export async function POST(req: Request) {
       getTemplates: tool({
         description: "Retrieve the user's proposal templates.",
         inputSchema: z.object({}),
-        execute: async () => templateOperations.getByUserId(session.user.id),
+        execute: async () => getTemplatesByUserId(session.user.id),
       }),
       saveProposal: tool({
         description:
@@ -152,7 +154,7 @@ export async function POST(req: Request) {
             .describe("The platform name if available, e.g., Upwork"),
         }),
         execute: async (input) => {
-          const proposal = await proposalTrackingOperations.create({
+          const proposal = await createProposalTracking({
             userId: session.user.id,
             templateId: input.templateId,
             proposalContent: input.proposalContent,
@@ -164,7 +166,7 @@ export async function POST(req: Request) {
             currentOutcome: "proposal_sent",
           });
 
-          await templateOperations.incrementUsage(input.templateId);
+          await incrementTemplateUsage(input.templateId);
 
           return { proposalId: proposal.id };
         },
@@ -200,7 +202,7 @@ export async function POST(req: Request) {
             ),
         }),
         execute: async (input) => {
-          const template = await templateOperations.create({
+          const template = await createTemplate({
             userId: session.user.id,
             title: input.title,
             description: input.description,
@@ -216,5 +218,6 @@ export async function POST(req: Request) {
     },
   });
 
+  console.log(await result.steps);
   return result.toUIMessageStreamResponse();
 }

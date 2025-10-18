@@ -7,6 +7,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { createTemplate } from "@/actions/template-actions";
 import { useAuth } from "@/components/auth/auth-provider";
 import { AITemplateGenerator } from "@/components/templates/ai-template-generator";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +39,6 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { PROPOSAL_TONE } from "@/db";
-import { createTemplate } from "@/lib/actions/template-actions";
 
 interface CreateTemplateSheetProps {
   open?: boolean;
