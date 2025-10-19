@@ -1,6 +1,6 @@
 {
-  "id": "480c6de4-ab8e-4ee8-8cb9-404eabc9c9e5",
-  "prevId": "703624e0-2e17-465c-bb35-1e66032ca42d",
+  "id": "f4d7a5b3-01e9-46b7-a545-c503be074146",
+  "prevId": "480c6de4-ab8e-4ee8-8cb9-404eabc9c9e5",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -647,6 +647,84 @@
         "templates_user_id_users_id_fk": {
           "name": "templates_user_id_users_id_fk",
           "tableFrom": "templates",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.testimonials": {
+      "name": "testimonials",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "client_name": {
+          "name": "client_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "client_title": {
+          "name": "client_title",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_title": {
+          "name": "project_title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "testimonials_user_id_users_id_fk": {
+          "name": "testimonials_user_id_users_id_fk",
+          "tableFrom": "testimonials",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"

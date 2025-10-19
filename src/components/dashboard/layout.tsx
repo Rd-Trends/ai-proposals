@@ -6,7 +6,7 @@ import {
   FileText,
   Home,
   MessageSquare,
-  PlusCircle,
+  MessageSquareQuote,
   Settings,
 } from "lucide-react";
 import type { Route } from "next";
@@ -62,29 +62,13 @@ const navigation: Array<{
     icon: Briefcase,
   },
   {
+    title: "Testimonials",
+    url: "/dashboard/testimonials",
+    icon: MessageSquareQuote,
+  },
+  {
     title: "Profile",
     url: "/dashboard/profile",
-    icon: Settings,
-  },
-  // {
-  //   title: "Analytics",
-  //   url: "/dashboard/analytics",
-  //   icon: BarChart3,
-  // },
-];
-
-const tools = [
-  {
-    title: "New Proposal",
-    url: "/dashboard/proposals/new",
-    icon: PlusCircle,
-  },
-];
-
-const account = [
-  {
-    title: "Settings",
-    url: "/dashboard/settings",
     icon: Settings,
   },
 ];
@@ -128,42 +112,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       <Link href={item.url}>
                         <item.icon /> {item.title}
                       </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <SidebarGroup>
-            <SidebarGroupLabel>Tools</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {tools.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <SidebarGroup>
-            <SidebarGroupLabel>Account</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {account.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

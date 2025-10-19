@@ -12,8 +12,15 @@
     {
       "idx": 1,
       "version": "7",
-      "when": 1759600689915,
-      "tag": "0001_add-case-study",
+      "when": 1760806988752,
+      "tag": "0001_add-project-table",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1760889911224,
+      "tag": "0002_add_testimonials",
       "breakpoints": true
     }
   ]

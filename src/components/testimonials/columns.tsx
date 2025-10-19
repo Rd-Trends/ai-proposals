@@ -13,12 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Project } from "@/db";
+import type { Testimonial } from "@/db";
 
-export type ProjectColumnProps = {
-  onView: (project: Project) => void;
-  onEdit: (project: Project) => void;
-  onDelete: (project: Project) => void;
+export type TestimonialColumnProps = {
+  onView: (testimonial: Testimonial) => void;
+  onEdit: (testimonial: Testimonial) => void;
+  onDelete: (testimonial: Testimonial) => void;
   onCopy: (id: string) => void;
 };
 
@@ -27,7 +27,7 @@ export const createColumns = ({
   onEdit,
   onDelete,
   onCopy,
-}: ProjectColumnProps): ColumnDef<Project>[] => [
+}: TestimonialColumnProps): ColumnDef<Testimonial>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -51,21 +51,43 @@ export const createColumns = ({
     enableHiding: false,
   },
   {
-    accessorKey: "title",
-    header: "Title",
+    accessorKey: "clientName",
+    header: "Client",
     cell: ({ row }) => {
-      const project = row.original;
-      // Extract plain text from HTML for preview
-      const plainText = project.details
-        .replace(/<[^>]*>/g, "")
-        .substring(0, 100);
+      const testimonial = row.original;
       return (
-        <div className="flex flex-col max-w-md">
-          <span className="font-medium">{project.title}</span>
-          <span className="text-sm text-muted-foreground line-clamp-1">
-            {plainText}...
-          </span>
+        <div className="flex flex-col">
+          <span className="font-medium">{testimonial.clientName}</span>
+          {testimonial.clientTitle && (
+            <span className="text-sm text-muted-foreground">
+              {testimonial.clientTitle}
+            </span>
+          )}
         </div>
+      );
+    },
+  },
+  {
+    accessorKey: "content",
+    header: "Testimonial",
+    cell: ({ row }) => {
+      const content = row.getValue("content") as string;
+      return (
+        <div className="max-w-md">
+          <span className="text-sm line-clamp-2">{content}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "projectTitle",
+    header: "Project",
+    cell: ({ row }) => {
+      const projectTitle = row.getValue("projectTitle") as string | null;
+      return projectTitle ? (
+        <span className="text-sm">{projectTitle}</span>
+      ) : (
+        <span className="text-sm text-muted-foreground">-</span>
       );
     },
   },
@@ -82,21 +104,9 @@ export const createColumns = ({
     },
   },
   {
-    accessorKey: "updatedAt",
-    header: "Updated",
-    cell: ({ row }) => {
-      const updatedAt = row.getValue("updatedAt") as Date;
-      return (
-        <span className="text-sm">
-          {formatDistance(updatedAt, new Date(), { addSuffix: true })}
-        </span>
-      );
-    },
-  },
-  {
     id: "actions",
     cell: ({ row }) => {
-      const project = row.original;
+      const testimonial = row.original;
 
       return (
         <DropdownMenu>
@@ -108,26 +118,26 @@ export const createColumns = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onCopy(project.id)}>
+            <DropdownMenuItem onClick={() => onCopy(testimonial.id)}>
               <Copy className="mr-2 h-4 w-4" />
-              Copy project ID
+              Copy testimonial ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onView(project)}>
+            <DropdownMenuItem onClick={() => onView(testimonial)}>
               <Eye className="mr-2 h-4 w-4" />
               View details
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEdit(project)}>
+            <DropdownMenuItem onClick={() => onEdit(testimonial)}>
               <Pencil className="mr-2 h-4 w-4" />
-              Edit project
+              Edit testimonial
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => onDelete(project)}
+              onClick={() => onDelete(testimonial)}
               className="text-destructive"
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete project
+              Delete testimonial
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

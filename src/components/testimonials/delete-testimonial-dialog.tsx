@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { deleteTemplate } from "@/actions/template-actions";
+import { deleteTestimonial } from "@/actions/testimonial-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,38 +14,40 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Template } from "@/db";
+import type { Testimonial } from "@/db";
 
-interface DeleteTemplateDialogProps {
-  template: Template;
+interface DeleteTestimonialDialogProps {
+  testimonial: Testimonial;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function DeleteTemplateDialog({
-  template,
+export function DeleteTestimonialDialog({
+  testimonial,
   open,
   onOpenChange,
-}: DeleteTemplateDialogProps) {
+}: DeleteTestimonialDialogProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const handleDeleteTemplate = async () => {
     startTransition(async () => {
       try {
-        const result = await deleteTemplate(template.id);
+        const result = await deleteTestimonial(testimonial.id);
         if (result.success) {
-          toast.success(`Template "${template.title}" deleted successfully`);
+          toast.success(
+            `Testimonial from "${testimonial.clientName}" deleted successfully`,
+          );
           startTransition(() => {
             onOpenChange(false);
             router.refresh();
           });
         } else {
-          toast.error(result.error || "Failed to delete template");
+          toast.error(result.error || "Failed to delete testimonial");
         }
       } catch (error) {
-        console.error("Error deleting template:", error);
-        toast.error("Failed to delete template");
+        console.error("Error deleting testimonial", error);
+        toast.error("Failed to delete testimonial");
       }
     });
   };
@@ -54,19 +56,14 @@ export function DeleteTemplateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Template</DialogTitle>
+          <DialogTitle>Delete Testimonial</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete &quot;{template.title}&quot;? This
-            action cannot be undone. All data associated with this template will
-            be permanently removed.
+            Are you sure you want to delete the testimonial from "
+            {testimonial.clientName}"? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange?.(false)}
-            disabled={isPending}
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <Button
@@ -82,7 +79,7 @@ export function DeleteTemplateDialog({
             ) : (
               <>
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete Template
+                Delete Testimonial
               </>
             )}
           </Button>

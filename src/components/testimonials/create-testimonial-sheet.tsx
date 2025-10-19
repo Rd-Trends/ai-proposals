@@ -1,13 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FolderPlus, Save } from "lucide-react";
+import { MessageSquareQuote, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { createProject } from "@/actions/project-actions";
+import { createTestimonial } from "@/actions/testimonial-actions";
 import { useAuth } from "@/components/auth/auth-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +20,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import {
   Sheet,
   SheetContent,
@@ -28,43 +27,49 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
 
-interface CreateProjectSheetProps {
+interface CreateTestimonialSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function CreateProjectSheet({
+export function CreateTestimonialSheet({
   open,
   onOpenChange,
-}: CreateProjectSheetProps) {
+}: CreateTestimonialSheetProps) {
   const { user } = useAuth();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<InsertProject>({
+  const form = useForm<InsertTestimonial>({
     resolver: zodResolver(schema),
     defaultValues: {
-      title: "",
-      details: "",
+      clientName: "",
+      clientTitle: "",
+      content: "",
+      projectTitle: "",
     },
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
     startTransition(async () => {
       try {
-        const res = await createProject({ ...data, userId: user?.id || "" });
+        const res = await createTestimonial({
+          ...data,
+          userId: user?.id || "",
+        });
         if (!res.success) {
-          toast.error(res.error || "Failed to create project");
+          toast.error(res.error || "Failed to create testimonial");
           return;
         }
-        toast.success("Project created successfully");
+        toast.success("Testimonial created successfully");
         form.reset();
         onOpenChange(false);
         router.refresh();
       } catch (error) {
-        console.error("Error submitting project:", error);
-        toast.error("Failed to create project");
+        console.error("Error submitting testimonial:", error);
+        toast.error("Failed to create testimonial");
       }
     });
   });
@@ -74,12 +79,12 @@ export function CreateProjectSheet({
       <SheetContent className="sm:max-w-2xl overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            <FolderPlus className="h-5 w-5" />
-            Create New Project
+            <MessageSquareQuote className="h-5 w-5" />
+            Add New Testimonial
           </SheetTitle>
           <SheetDescription>
-            Add a new project to your portfolio for referencing in proposals.
-            Fill in the details below.
+            Save client testimonials to reference in your proposals and build
+            credibility.
           </SheetDescription>
         </SheetHeader>
 
@@ -88,18 +93,15 @@ export function CreateProjectSheet({
             <div className="space-y-4">
               <FormField
                 control={form.control}
-                name="title"
+                name="clientName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Project Title *</FormLabel>
+                    <FormLabel>Client Name *</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="e.g., E-commerce Website for Fashion Brand"
-                        {...field}
-                      />
+                      <Input placeholder="e.g., Sarah Johnson" {...field} />
                     </FormControl>
                     <FormDescription>
-                      A clear, descriptive name for your project
+                      The name of the client who provided this testimonial
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -108,20 +110,56 @@ export function CreateProjectSheet({
 
               <FormField
                 control={form.control}
-                name="details"
+                name="clientTitle"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Project Details *</FormLabel>
+                    <FormLabel>Client Title</FormLabel>
                     <FormControl>
-                      <RichTextEditor
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder="Describe your project in detail. Include challenges solved, technologies used, outcomes achieved, links to demos, and any other relevant information..."
+                      <Input placeholder="e.g., CEO at TechCorp" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      The client's role and company (optional)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Testimonial *</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="What did the client say about your work?"
+                        className="min-h-[150px] resize-none"
+                        {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Use the rich text editor to format your project details.
-                      You can add headings, lists, links, and more.
+                      The testimonial text from your client
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="projectTitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Title</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="e.g., E-commerce Website Redesign"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      The project this testimonial is related to (optional)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -147,7 +185,7 @@ export function CreateProjectSheet({
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" />
-                    Create Project
+                    Create Testimonial
                   </>
                 )}
               </Button>
@@ -160,8 +198,10 @@ export function CreateProjectSheet({
 }
 
 const schema = z.object({
-  title: z.string().min(1, "Title is required"),
-  details: z.string().min(1, "Details are required"),
+  clientName: z.string().min(1, "Client name is required").max(100),
+  clientTitle: z.string().max(100).optional(),
+  content: z.string().min(1, "Testimonial content is required"),
+  projectTitle: z.string().max(255).optional(),
 });
 
-type InsertProject = z.infer<typeof schema>;
+type InsertTestimonial = z.infer<typeof schema>;

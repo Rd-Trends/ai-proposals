@@ -1,7 +1,7 @@
 "use client";
 
 import type { Table } from "@tanstack/react-table";
-import { ChevronDown, Filter, Plus, Search, Settings2 } from "lucide-react";
+import { ChevronDown, Plus, Search, Settings2 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { createColumns } from "@/components/projects/columns";
 import { CreateProjectSheet } from "@/components/projects/create-project-sheet";
@@ -25,14 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { PROJECT_TYPE, type Project } from "@/db";
+import type { Project } from "@/db";
 import { useProjectActions } from "@/hooks/use-project-actions";
 
 export default function ProjectsPageTable({
@@ -158,8 +151,6 @@ function ProjectTableHeader<TData>({
 
       {/* Desktop filters - hidden on mobile */}
       <div className="hidden xl:flex items-center space-x-2">
-        <TypeFilter table={table} className="w-[180px]" />
-        <CategoryFilter table={table} className="w-[180px]" />
         <ColumnVisibilityDropdown table={table} />
 
         {/* New project button */}
@@ -177,121 +168,36 @@ function ProjectTableHeader<TData>({
         {onNewProject && (
           <Button
             onClick={onNewProject}
-            size="icon"
             variant="outline"
             aria-label="Create new project"
           >
             <Plus className="h-4 w-4" />
+            <span className="sr-only">New Project</span>
           </Button>
         )}
 
-        {/* Drawer for filters - mobile only */}
+        {/* Column visibility - mobile only */}
         <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
           <DrawerTrigger asChild>
             <Button
               variant="outline"
               size="icon"
-              aria-label="Open filters and actions"
+              aria-label="Open column visibility"
             >
               <Settings2 className="h-4 w-4" />
             </Button>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>Filters & Actions</DrawerTitle>
+              <DrawerTitle>Column Visibility</DrawerTitle>
             </DrawerHeader>
             <div className="p-4 space-y-4">
-              <TypeFilter table={table} showLabel />
-              <CategoryFilter table={table} showLabel />
-
-              {onNewProject && (
-                <Button onClick={onNewProject} className="w-full">
-                  <Plus className="mr-2 h-4 w-4" />
-                  New Project
-                </Button>
-              )}
+              <ColumnVisibilityDropdown table={table} />
             </div>
           </DrawerContent>
         </Drawer>
       </div>
     </header>
-  );
-}
-
-// Reusable filter components
-function TypeFilter<TData>({
-  table,
-  className,
-  showLabel = false,
-}: {
-  table: Table<TData>;
-  className?: string;
-  showLabel?: boolean;
-}) {
-  return (
-    <div className={showLabel ? "space-y-2" : ""}>
-      {showLabel && <div className="text-sm font-medium">Type</div>}
-      <Select
-        value={(table.getColumn("type")?.getFilterValue() as string) ?? ""}
-        onValueChange={(value) =>
-          table.getColumn("type")?.setFilterValue(value === "all" ? "" : value)
-        }
-      >
-        <SelectTrigger className={className}>
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4" />
-            <SelectValue placeholder="All types" />
-          </div>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All types</SelectItem>
-          {PROJECT_TYPE.map((type) => (
-            <SelectItem key={type} value={type} className="capitalize">
-              {type.replace("_", " ")}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
-
-function CategoryFilter<TData>({
-  table,
-  className,
-  showLabel = false,
-}: {
-  table: Table<TData>;
-  className?: string;
-  showLabel?: boolean;
-}) {
-  return (
-    <div className={showLabel ? "space-y-2" : ""}>
-      {showLabel && <div className="text-sm font-medium">Category</div>}
-      <Select
-        value={(table.getColumn("category")?.getFilterValue() as string) ?? ""}
-        onValueChange={(value) =>
-          table
-            .getColumn("category")
-            ?.setFilterValue(value === "all" ? "" : value)
-        }
-      >
-        <SelectTrigger className={className}>
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4" />
-            <SelectValue placeholder="All categories" />
-          </div>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All categories</SelectItem>
-          <SelectItem value="web development">Web Development</SelectItem>
-          <SelectItem value="mobile app">Mobile App</SelectItem>
-          <SelectItem value="design">Design</SelectItem>
-          <SelectItem value="marketing">Marketing</SelectItem>
-          <SelectItem value="consulting">Consulting</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
   );
 }
 
