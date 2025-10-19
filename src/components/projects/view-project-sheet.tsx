@@ -45,7 +45,7 @@ export function ViewProjectSheet({
         </SheetHeader>
 
         <ScrollArea className="h-[calc(100vh-140px)] pr-4 mt-6">
-          <div className="space-y-6">
+          <div className="space-y-6 px-4">
             <div>
               <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">
                 Project Details
