@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import {
   DashboardGutter,
   DashboardLayoutHeader,
+  DashboardPageHeader,
 } from "@/components/dashboard/layout";
 import ProjectsPageTable from "@/components/projects/project-table";
 import { getProjectsByUserId } from "@/db/operations/project";
@@ -22,6 +23,12 @@ export default async function ProjectsPage() {
   return (
     <>
       <DashboardLayoutHeader
+        breadcrumbs={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Projects" },
+        ]}
+      />
+      <DashboardPageHeader
         title="Projects"
         description="Manage your projects and case studies for proposal references"
       />

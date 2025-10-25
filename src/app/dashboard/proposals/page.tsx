@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import {
   DashboardGutter,
   DashboardLayoutHeader,
+  DashboardPageHeader,
 } from "@/components/dashboard/layout";
 import {
   ProposalTrackingStats,
@@ -26,6 +27,12 @@ export default async function ProposalsPage() {
   return (
     <>
       <DashboardLayoutHeader
+        breadcrumbs={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Proposals" },
+        ]}
+      />
+      <DashboardPageHeader
         title="Proposals"
         description="Track your proposal submissions and analyze their performance"
       />

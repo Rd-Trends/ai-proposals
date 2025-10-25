@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import {
   DashboardGutter,
   DashboardLayoutHeader,
+  DashboardPageHeader,
 } from "@/components/dashboard/layout";
 import { TestimonialStats } from "@/components/testimonials/testimonial-stats";
 import TestimonialsTable from "@/components/testimonials/testimonial-table";
@@ -23,6 +24,12 @@ export default async function TestimonialsPage() {
   return (
     <>
       <DashboardLayoutHeader
+        breadcrumbs={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Testimonials" },
+        ]}
+      />
+      <DashboardPageHeader
         title="Testimonials"
         description="Manage client testimonials to build credibility in your proposals"
       />

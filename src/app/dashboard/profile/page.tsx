@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import {
   DashboardGutter,
   DashboardLayoutHeader,
+  DashboardPageHeader,
 } from "@/components/dashboard/layout";
 import { ProfileForm } from "@/components/profile/profile-form";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,6 +21,12 @@ export default async function ProfilePage() {
   return (
     <>
       <DashboardLayoutHeader
+        breadcrumbs={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Profile" },
+        ]}
+      />
+      <DashboardPageHeader
         title="Profile Settings"
         description="Update your personal information and preferences."
       />

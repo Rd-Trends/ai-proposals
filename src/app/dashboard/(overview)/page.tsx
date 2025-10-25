@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import {
   DashboardGutter,
   DashboardLayoutHeader,
+  DashboardPageHeader,
 } from "@/components/dashboard/layout";
 import {
   getProposalStatusBadgeVariant,
@@ -41,7 +42,8 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <DashboardLayoutHeader
+      <DashboardLayoutHeader breadcrumbs={[{ label: "Dashboard" }]} />
+      <DashboardPageHeader
         title="Dashboard"
         description={`Welcome back, ${user.name || user.email}!`}
         action={

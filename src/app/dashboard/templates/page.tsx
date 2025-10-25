@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import {
   DashboardGutter,
   DashboardLayoutHeader,
+  DashboardPageHeader,
 } from "@/components/dashboard/layout";
 import {
   TemplateStats,
@@ -26,6 +27,12 @@ export default async function TemplatesPage() {
   return (
     <>
       <DashboardLayoutHeader
+        breadcrumbs={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Templates" },
+        ]}
+      />
+      <DashboardPageHeader
         title="Templates"
         description="Manage your proposal templates and track their performance"
       />

@@ -11,7 +11,17 @@ import {
 } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
+import { Fragment } from "react";
 import { UserMenu } from "@/components/auth/user-menu";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -27,15 +37,18 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
-// Navigation items
-const navigation: Array<{
+type NavigationItem = {
   title: string;
   url: Route;
   icon: React.ElementType;
-}> = [
+};
+
+// Navigation items
+const navigation: Array<NavigationItem> = [
   {
     title: "Dashboard",
     url: "/dashboard",
@@ -77,12 +90,29 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
-export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const isMobile = useIsMobile();
+const NavLink = (item: NavigationItem) => {
+  const { setOpenMobile } = useSidebar();
 
   return (
-    <SidebarProvider>
-      <Sidebar collapsible="icon" side={isMobile ? "right" : "left"}>
+    <SidebarMenuButton asChild>
+      <Link href={item.url} onClick={() => setOpenMobile(false)}>
+        <item.icon /> {item.title}
+      </Link>
+    </SidebarMenuButton>
+  );
+};
+
+export function DashboardLayout({ children }: DashboardLayoutProps) {
+  return (
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <Sidebar collapsible="icon">
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -108,11 +138,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <SidebarMenu>
                 {navigation.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link href={item.url}>
-                        <item.icon /> {item.title}
-                      </Link>
-                    </SidebarMenuButton>
+                    <NavLink {...item} />
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
@@ -134,6 +160,51 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 }
 
 export const DashboardLayoutHeader = ({
+  breadcrumbs,
+}: {
+  breadcrumbs: Array<{ label: string; href?: Route }>;
+}) => {
+  return (
+    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+      <div className="flex items-center gap-2 px-4">
+        <SidebarTrigger className="-ml-1" />
+        <Separator
+          orientation="vertical"
+          className="mr-2 data-[orientation=vertical]:h-4"
+        />
+        <Breadcrumb>
+          <BreadcrumbList>
+            {breadcrumbs.map((crumb, index) => {
+              const isLast = index === breadcrumbs.length - 1;
+              const hideOnMobile = breadcrumbs.length > 1 && !isLast;
+
+              return (
+                <Fragment key={crumb.href || crumb.label}>
+                  {index > 0 && (
+                    <BreadcrumbSeparator className="hidden md:block" />
+                  )}
+                  <BreadcrumbItem
+                    className={hideOnMobile ? "hidden md:block" : ""}
+                  >
+                    {isLast || !crumb.href ? (
+                      <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                    ) : (
+                      <BreadcrumbLink asChild>
+                        <Link href={crumb.href}>{crumb.label}</Link>
+                      </BreadcrumbLink>
+                    )}
+                  </BreadcrumbItem>
+                </Fragment>
+              );
+            })}
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+    </header>
+  );
+};
+
+export const DashboardPageHeader = ({
   title,
   description,
   action,
@@ -143,30 +214,31 @@ export const DashboardLayoutHeader = ({
   action?: React.ReactNode;
 }) => {
   return (
-    <header className="flex items-start justify-between shrink-0 gap-2 px-4 md:px-6 lg:px-8 pt-4">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-          {title}
-        </h1>
-        <p className=" text-xs md:text-sm text-muted-foreground">
-          {description}
-        </p>
+    <div className="flex flex-col gap-4 px-4 pt-4 md:flex-row md:items-center md:justify-between md:px-6 lg:px-8">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        {description && (
+          <p className="text-sm text-muted-foreground">{description}</p>
+        )}
       </div>
-
-      <div className="hidden md:flex items-center gap-2">{action}</div>
-
-      <SidebarTrigger className=" md:hidden mr-1 [&_svg]:size-5!" />
-    </header>
+      {action && <div className="flex items-center gap-2">{action}</div>}
+    </div>
   );
 };
 
 export const DashboardGutter = ({
   as,
   children,
-}: React.PropsWithChildren<{ as?: React.ElementType }>) => {
+  className,
+}: React.PropsWithChildren<{ as?: React.ElementType; className?: string }>) => {
   const Component = as || "div";
   return (
-    <Component className="container mx-auto flex flex-1 flex-col gap-6 py-6 px-4 md:px-6 lg:px-8">
+    <Component
+      className={cn(
+        "container mx-auto flex flex-1 flex-col gap-6 py-6 px-4 md:px-6 lg:px-8",
+        className,
+      )}
+    >
       {children}
     </Component>
   );
