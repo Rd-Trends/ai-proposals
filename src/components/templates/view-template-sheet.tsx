@@ -22,7 +22,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { Template } from "@/db";
+import type { Template } from "@/lib/db";
 
 interface ViewTemplateSheetProps {
   template: Template;

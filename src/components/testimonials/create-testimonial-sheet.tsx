@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { createTestimonial } from "@/actions/testimonial-actions";
-import { useAuth } from "@/components/auth/auth-provider";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -28,6 +27,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
+import { useSession } from "@/lib/auth-client";
 
 interface CreateTestimonialSheetProps {
   open: boolean;
@@ -38,7 +38,8 @@ export function CreateTestimonialSheet({
   open,
   onOpenChange,
 }: CreateTestimonialSheetProps) {
-  const { user } = useAuth();
+  const { data: sessionData } = useSession();
+  const user = sessionData?.user;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

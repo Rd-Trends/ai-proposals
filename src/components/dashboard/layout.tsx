@@ -11,8 +11,9 @@ import {
 } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, Suspense } from "react";
 import { UserMenu } from "@/components/auth/user-menu";
+import { ChatHistory } from "@/components/dashboard/chat-history";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -144,6 +145,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+
+          <Suspense fallback={null}>
+            <ChatHistory />
+          </Suspense>
         </SidebarContent>
 
         <SidebarFooter>

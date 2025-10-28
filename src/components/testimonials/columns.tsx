@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Testimonial } from "@/db";
+import type { Testimonial } from "@/lib/db";
 
 export type TestimonialColumnProps = {
   onView: (testimonial: Testimonial) => void;

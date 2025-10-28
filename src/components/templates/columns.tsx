@@ -19,7 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Template } from "@/db";
+import type { Template } from "@/lib/db";
 
 export const createColumns = ({
   onView,

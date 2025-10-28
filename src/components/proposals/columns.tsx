@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { ProposalOutcome, ProposalTracking } from "@/db";
+import type { ProposalOutcome, ProposalTracking } from "@/lib/db";
 import {
   getProposalStatusBadgeVariant,
   getProposalStatusLabel,

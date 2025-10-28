@@ -2,13 +2,13 @@
 
 import { headers } from "next/headers";
 import z from "zod";
+import { auth } from "@/lib/auth";
 import {
   insertTestimonialSchema,
   type NewTestimonial,
   updateTestimonialSchema,
-} from "@/db";
-import * as testimonialServices from "@/db/operations/testimonial";
-import { auth } from "@/lib/auth";
+} from "@/lib/db";
+import * as testimonialServices from "@/lib/db/operations/testimonial";
 
 export const createTestimonial = async (data: NewTestimonial) => {
   try {

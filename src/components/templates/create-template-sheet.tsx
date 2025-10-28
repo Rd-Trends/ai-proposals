@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { createTemplate } from "@/actions/template-actions";
-import { useAuth } from "@/components/auth/auth-provider";
 import { AITemplateGenerator } from "@/components/templates/ai-template-generator";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,7 +37,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { PROPOSAL_TONE } from "@/db";
+import { useSession } from "@/lib/auth-client";
+import { PROPOSAL_TONE } from "@/lib/db";
 
 interface CreateTemplateSheetProps {
   open?: boolean;
@@ -49,7 +49,8 @@ export function CreateTemplateSheet({
   open,
   onOpenChange,
 }: CreateTemplateSheetProps) {
-  const { user } = useAuth();
+  const { data: sessionData } = useSession();
+  const user = sessionData?.user;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [newTag, setNewTag] = useState("");

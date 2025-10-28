@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Project } from "@/db";
+import type { Project } from "@/lib/db";
 
 export type ProjectColumnProps = {
   onView: (project: Project) => void;

@@ -1,6 +1,8 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { DefaultChatTransport, type UIMessage } from "ai";
 import {
   CopyCheck,
   CopyIcon,
@@ -10,6 +12,7 @@ import {
   Target,
 } from "lucide-react";
 import { Fragment, useState } from "react";
+import { toast } from "sonner";
 import { Action, Actions } from "@/components/ai-elements/actions";
 import {
   Conversation,
@@ -31,6 +34,9 @@ import {
 } from "@/components/dashboard/layout";
 import { Card } from "@/components/ui/card";
 import { useClipboard } from "@/hooks/use-clipboard";
+import { ChatSDKError } from "@/lib/error";
+import { queryKeys } from "@/lib/query-keys";
+import { fetchWithErrorHandlers, generateUUID } from "@/lib/utils";
 
 const extractProposal = (text: string) => {
   const startMarker = "[PROPOSAL_START]";
@@ -51,9 +57,59 @@ const extractProposal = (text: string) => {
   return proposalText;
 };
 
-export default function ChatPage() {
+export default function ChatPage({
+  id,
+  initialMessages,
+}: {
+  id?: string | undefined;
+  initialMessages?: UIMessage[];
+} = {}) {
   const [input, setInput] = useState("");
-  const { messages, sendMessage, status } = useChat();
+  const queryClient = useQueryClient();
+  const { sendMessage, messages, status } = useChat({
+    id, // use the provided chat ID
+    messages: initialMessages, // load initial messages
+    generateId: generateUUID,
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      fetch: fetchWithErrorHandlers,
+      prepareSendMessagesRequest(request) {
+        return {
+          body: {
+            id: request.id,
+            message: request.messages.at(-1),
+            ...request.body,
+          },
+        };
+      },
+    }),
+    // onData: (dataPart) => {
+    //   setDataStream((ds) => (ds ? [...ds, dataPart] : []));
+    //   if (dataPart.type === "data-usage") {
+    //     setUsage(dataPart.data);
+    //   }
+    // },
+    onFinish: () => {
+      // Invalidate conversation history to reflect the new conversation
+      if (messages.length < 3) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.conversations.history(),
+        });
+      }
+    },
+    onError: (error) => {
+      if (error instanceof ChatSDKError) {
+        // Check if it's a credit card error
+        if (
+          error.message?.includes("AI Gateway requires a valid credit card")
+        ) {
+          // setShowCreditCardAlert(true);
+        } else {
+          toast.error(error.message);
+        }
+      }
+    },
+  });
 
   const handleQuickPrompt = (prompt: string) => {
     setInput(prompt);

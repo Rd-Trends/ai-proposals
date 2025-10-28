@@ -1,4 +1,5 @@
 export * from "./auth";
+export * from "./conversations";
 export * from "./projects";
 export * from "./proposals";
 export * from "./relations";

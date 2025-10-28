@@ -1,8 +1,8 @@
 import { Award, Calendar, FileText, MessageSquare } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUserProposalStats } from "@/db/operations/analytics";
 import type { User } from "@/lib/auth-client";
+import { getUserProposalStats } from "@/lib/db/operations/analytics";
 
 const ProposalTrackingStats = async ({ user }: { user: User }) => {
   const stats = await getUserProposalStats(user.id);

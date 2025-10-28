@@ -11,9 +11,9 @@ import {
   TemplateStatsLoader,
 } from "@/components/templates/template-stats";
 import TemplatesPageTable from "@/components/templates/template-table";
-import { getTemplatesByUserId } from "@/db/operations/template";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
+import { getTemplatesByUserId } from "@/lib/db/operations/template";
 
 export default async function TemplatesPage() {
   const session = await auth.api.getSession({

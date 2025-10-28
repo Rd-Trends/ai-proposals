@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Template } from "@/db";
+import type { Template } from "@/lib/db";
 
 interface DeleteTemplateDialogProps {
   template: Template;

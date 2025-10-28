@@ -25,8 +25,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import type { Project } from "@/db";
 import { useProjectActions } from "@/hooks/use-project-actions";
+import type { Project } from "@/lib/db";
 
 export default function ProjectsPageTable({
   projects,

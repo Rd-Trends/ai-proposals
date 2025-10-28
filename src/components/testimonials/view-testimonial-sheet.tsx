@@ -8,7 +8,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { Testimonial } from "@/db";
+import type { Testimonial } from "@/lib/db";
 
 interface ViewTestimonialSheetProps {
   open: boolean;

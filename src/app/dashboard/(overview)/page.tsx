@@ -23,13 +23,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { auth } from "@/lib/auth";
+import type { User } from "@/lib/auth-client";
 import {
   getUserProposalStats,
   getUserTemplateStats,
-} from "@/db/operations/analytics";
-import { getProposalTrackingByUserId } from "@/db/operations/proposal";
-import { auth } from "@/lib/auth";
-import type { User } from "@/lib/auth-client";
+} from "@/lib/db/operations/analytics";
+import { getProposalTrackingByUserId } from "@/lib/db/operations/proposal";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() });

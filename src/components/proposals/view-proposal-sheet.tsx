@@ -9,7 +9,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { ProposalTracking } from "@/db";
+import type { ProposalTracking } from "@/lib/db";
 import { Button } from "../ui/button";
 import {
   getProposalStatusBadgeVariant,

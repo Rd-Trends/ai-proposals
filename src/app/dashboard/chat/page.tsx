@@ -1,7 +1,8 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import ChatPage from "./page.client";
+import { generateUUID } from "@/lib/utils";
+import ChatPage from "./chat";
 
 export default async function Page() {
   const session = await auth.api.getSession({
@@ -12,5 +13,7 @@ export default async function Page() {
     return redirect("/auth/signin");
   }
 
-  return <ChatPage />;
+  const id = generateUUID();
+
+  return <ChatPage id={id} initialMessages={[]} />;
 }

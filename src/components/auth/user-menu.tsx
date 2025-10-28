@@ -18,20 +18,21 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { authClient } from "@/lib/auth-client";
-import { useAuth } from "./auth-provider";
+import { authClient, useSession } from "@/lib/auth-client";
 
 export function UserMenu() {
   const router = useRouter();
   const { isMobile } = useSidebar();
-  const { user, loading } = useAuth();
+  const { data, isPending } = useSession();
+
+  const user = data?.user;
 
   const handleSignOut = async () => {
     await authClient.signOut();
     router.push("/");
   };
 
-  if (loading) {
+  if (isPending) {
     return <div className="h-8 w-8 rounded-full bg-gray-200 animate-pulse" />;
   }
 

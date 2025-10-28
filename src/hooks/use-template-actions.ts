@@ -8,7 +8,7 @@ import {
   duplicateTemplate,
   toggleTemplateFavorite,
 } from "@/actions/template-actions";
-import type { Template } from "@/db";
+import type { Template } from "@/lib/db";
 
 export function useTemplateActions() {
   const router = useRouter();

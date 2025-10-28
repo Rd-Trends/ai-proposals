@@ -3,8 +3,8 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { magicLink } from "better-auth/plugins/magic-link";
-import { db } from "@/db/drizzle";
-import * as schema from "@/db/schema";
+import { db } from "@/lib/db/drizzle";
+import * as schema from "@/lib/db/schema";
 import { resend } from "./email";
 
 export const auth = betterAuth({

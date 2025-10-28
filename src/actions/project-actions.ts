@@ -2,13 +2,13 @@
 
 import { headers } from "next/headers";
 import z from "zod";
+import { auth } from "@/lib/auth";
 import {
   insertProjectSchema,
   type NewProject,
   updateProjectSchema,
-} from "@/db";
-import * as projectServices from "@/db/operations/project";
-import { auth } from "@/lib/auth";
+} from "@/lib/db";
+import * as projectServices from "@/lib/db/operations/project";
 
 export const createProject = async (data: NewProject) => {
   try {

@@ -31,7 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { PROPOSAL_OUTCOME, type ProposalTracking } from "@/db";
+import { PROPOSAL_OUTCOME, type ProposalTracking } from "@/lib/db";
 import { getProposalStatusLabel } from "./helpers";
 
 const updateStatusSchema = z.object({

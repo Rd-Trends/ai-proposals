@@ -11,9 +11,9 @@ import {
   ProposalTrackingStatsSkeleton,
 } from "@/components/proposals/proposal-tracking-stats";
 import ProposalsTrackingTable from "@/components/proposals/proposal-tracking-table";
-import { getProposalTrackingByUserId } from "@/db/operations/proposal";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
+import { getProposalTrackingByUserId } from "@/lib/db/operations/proposal";
 
 export default async function ProposalsPage() {
   const session = await auth.api.getSession({

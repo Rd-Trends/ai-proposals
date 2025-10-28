@@ -4,15 +4,15 @@ import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import { headers } from "next/headers";
 import z from "zod";
+import { auth } from "@/lib/auth";
+import type { User } from "@/lib/auth-client";
 import {
   type InsertTemplate,
   insertTemplateSchema,
   PROPOSAL_TONE,
   updateTemplateSchema,
-} from "@/db";
-import * as templateServices from "@/db/operations/template";
-import { auth } from "@/lib/auth";
-import type { User } from "@/lib/auth-client";
+} from "@/lib/db";
+import * as templateServices from "@/lib/db/operations/template";
 
 const getPrompt = (user: User) => {
   const userContext = `

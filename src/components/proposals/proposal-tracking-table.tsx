@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ProposalTracking } from "@/db";
+import type { ProposalTracking } from "@/lib/db";
 import { Button } from "../ui/button";
 
 export default function ProposalsTrackingTable({

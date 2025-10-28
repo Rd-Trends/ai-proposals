@@ -4,17 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npm run db:vercel:migrate && next build --turbopack",
-    "build:local": "next build --turbopack",
+    "build": "npm run db:migrate && next build --turbopack",
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "tsx ./src/lib/db/migrate.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx src/db/seed.ts",
-    "db:vercel:migrate": "tsx ./src/db/migrate.ts"
+    "db:seed": "tsx ./src/lib/db/seed.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.15",
@@ -35,6 +33,7 @@
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@tanstack/react-query": "^5.90.5",
     "@tanstack/react-table": "^8.21.3",
     "@tiptap/extension-highlight": "^3.6.6",
     "@tiptap/extension-horizontal-rule": "^3.6.6",

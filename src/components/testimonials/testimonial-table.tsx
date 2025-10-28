@@ -25,8 +25,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import type { Testimonial } from "@/db";
 import { useClipboard } from "@/hooks/use-clipboard";
+import type { Testimonial } from "@/lib/db";
 
 export default function TestimonialsTable({
   testimonials,

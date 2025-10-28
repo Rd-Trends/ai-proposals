@@ -8,9 +8,9 @@ import {
 } from "@/components/dashboard/layout";
 import { TestimonialStats } from "@/components/testimonials/testimonial-stats";
 import TestimonialsTable from "@/components/testimonials/testimonial-table";
-import { getTestimonialsByUserId } from "@/db/operations/testimonial";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
+import { getTestimonialsByUserId } from "@/lib/db/operations/testimonial";
 
 export default async function TestimonialsPage() {
   const session = await auth.api.getSession({

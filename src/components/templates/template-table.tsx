@@ -25,8 +25,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TEMPLATE_STATUS, type Template } from "@/db";
 import { useTemplateActions } from "@/hooks/use-template-actions";
+import { TEMPLATE_STATUS, type Template } from "@/lib/db";
 
 import {
   DropdownMenu,

@@ -10,7 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { Project } from "@/db";
+import type { Project } from "@/lib/db";
 
 interface ViewProjectSheetProps {
   project: Project;

@@ -37,7 +37,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { PROPOSAL_TONE, type Template } from "@/db";
+import { PROPOSAL_TONE, type Template } from "@/lib/db";
 
 interface UpdateTemplateSheetProps {
   template: Template;

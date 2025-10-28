@@ -7,9 +7,9 @@ import {
   DashboardPageHeader,
 } from "@/components/dashboard/layout";
 import ProjectsPageTable from "@/components/projects/project-table";
-import { getProjectsByUserId } from "@/db/operations/project";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
+import { getProjectsByUserId } from "@/lib/db/operations/project";
 
 export default async function ProjectsPage() {
   const session = await auth.api.getSession({

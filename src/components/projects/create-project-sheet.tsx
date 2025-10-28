@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { createProject } from "@/actions/project-actions";
-import { useAuth } from "@/components/auth/auth-provider";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -28,6 +27,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useSession } from "@/lib/auth-client";
 
 interface CreateProjectSheetProps {
   open: boolean;
@@ -38,7 +38,8 @@ export function CreateProjectSheet({
   open,
   onOpenChange,
 }: CreateProjectSheetProps) {
-  const { user } = useAuth();
+  const { data: sessionData } = useSession();
+  const user = sessionData?.user;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

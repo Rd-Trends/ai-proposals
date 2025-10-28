@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Project } from "@/db";
+import type { Project } from "@/lib/db";
 
 interface DeleteProjectDialogProps {
   project: Project;

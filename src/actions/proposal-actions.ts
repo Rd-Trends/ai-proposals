@@ -1,12 +1,12 @@
 "use server";
 
 import { headers } from "next/headers";
-import { type ProposalTracking, updateProposalTrackingSchema } from "@/db";
+import { auth } from "@/lib/auth";
+import { type ProposalTracking, updateProposalTrackingSchema } from "@/lib/db";
 import {
   getProposalTrackingById,
   updateProposalTracking,
-} from "@/db/operations/proposal";
-import { auth } from "@/lib/auth";
+} from "@/lib/db/operations/proposal";
 
 export const updateProposal = async (
   proposalId: string,

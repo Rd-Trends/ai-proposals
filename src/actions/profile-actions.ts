@@ -3,9 +3,9 @@
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { db } from "@/db/drizzle";
-import { users } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { db } from "@/lib/db/drizzle";
+import { users } from "@/lib/db/schema";
 
 const profileSchema = z.object({
   name: z.string().min(2),

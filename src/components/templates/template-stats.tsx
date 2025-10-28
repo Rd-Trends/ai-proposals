@@ -1,7 +1,7 @@
 import { FileText, Star, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getUserTemplateStats } from "@/db/operations/analytics";
 import type { User } from "@/lib/auth-client";
+import { getUserTemplateStats } from "@/lib/db/operations/analytics";
 import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/skeleton";
 

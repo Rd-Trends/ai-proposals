@@ -2,7 +2,7 @@
 
 import { MessageSquareQuote, Star, TrendingUp, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Testimonial } from "@/db";
+import type { Testimonial } from "@/lib/db";
 
 interface TestimonialStatsProps {
   testimonials: Testimonial[];

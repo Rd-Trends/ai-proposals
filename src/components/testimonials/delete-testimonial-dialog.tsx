@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Testimonial } from "@/db";
+import type { Testimonial } from "@/lib/db";
 
 interface DeleteTestimonialDialogProps {
   testimonial: Testimonial;
