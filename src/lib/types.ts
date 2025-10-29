@@ -53,12 +53,14 @@ export interface PaginationParams {
   pageSize: number;
 }
 
+export type PageMetadata = {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+};
+
 export interface PaginatedResult<T> {
   data: T[];
-  pagination: {
-    page: number;
-    pageSize: number;
-    total: number;
-    totalPages: number;
-  };
+  pagination: PageMetadata;
 }

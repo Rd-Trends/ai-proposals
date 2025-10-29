@@ -1,6 +1,8 @@
-import { desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
+import type { PaginatedResult, PaginationParams } from "@/lib/types";
 import { db } from "../drizzle";
 import { type NewTestimonial, type Testimonial, testimonials } from "../index";
+import { calculateTotalPages, getPaginationOffset } from "./util";
 
 // Create a new testimonial
 export async function createTestimonial(
@@ -24,15 +26,49 @@ export async function getTestimonialById(
   return testimonial || null;
 }
 
-// Get testimonials by user ID
+// Get testimonials by user ID with pagination
 export async function getTestimonialsByUserId(
   userId: string,
-): Promise<Testimonial[]> {
-  return await db
+  params?: PaginationParams,
+): Promise<PaginatedResult<Testimonial>> {
+  const page = params?.page ?? 1;
+  const pageSize = params?.pageSize ?? 10;
+  const offset = getPaginationOffset(page, pageSize);
+
+  const conditions = [eq(testimonials.userId, userId)];
+
+  const sq = db
+    .select({ id: testimonials.id })
+    .from(testimonials)
+    .where(and(...conditions))
+    .orderBy(desc(testimonials.updatedAt))
+    .limit(pageSize)
+    .offset(offset)
+    .as("subquery");
+
+  const userTestimonials = await db
     .select()
     .from(testimonials)
-    .where(eq(testimonials.userId, userId))
+    .innerJoin(sq, eq(testimonials.id, sq.id))
     .orderBy(desc(testimonials.updatedAt));
+
+  const [totalResult] = await db
+    .select({ total: count() })
+    .from(testimonials)
+    .where(and(...conditions));
+
+  const total = totalResult?.total ?? 0;
+  const totalPages = calculateTotalPages(total, pageSize);
+
+  return {
+    data: userTestimonials.map((row) => row.testimonials),
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages,
+    },
+  };
 }
 
 // Update testimonial

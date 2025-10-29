@@ -1,6 +1,8 @@
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, sql } from "drizzle-orm";
+import type { PaginatedResult, PaginationParams } from "@/lib/types";
 import { db } from "../drizzle";
 import { type InsertTemplate, type Template, templates } from "../index";
+import { calculateTotalPages, getPaginationOffset } from "./util";
 
 // Create a new template
 export async function createTemplate(
@@ -22,21 +24,52 @@ export async function getTemplateById(id: string): Promise<Template | null> {
   return template || null;
 }
 
-// Get templates by user ID
+// Get templates by user ID with pagination
 export async function getTemplatesByUserId(
   userId: string,
-  status?: "draft" | "active" | "archived",
-): Promise<Template[]> {
+  params?: PaginationParams & { status?: "draft" | "active" | "archived" },
+): Promise<PaginatedResult<Template>> {
+  const page = params?.page ?? 1;
+  const pageSize = params?.pageSize ?? 10;
+  const offset = getPaginationOffset(page, pageSize);
+
   const conditions = [eq(templates.userId, userId)];
-  if (status) {
-    conditions.push(eq(templates.status, status));
+  if (params?.status) {
+    conditions.push(eq(templates.status, params.status));
   }
 
-  return await db
-    .select()
+  const sq = db
+    .select({ id: templates.id })
     .from(templates)
     .where(and(...conditions))
+    .orderBy(desc(templates.updatedAt))
+    .limit(pageSize)
+    .offset(offset)
+    .as("subquery");
+
+  const userTemplates = await db
+    .select()
+    .from(templates)
+    .innerJoin(sq, eq(templates.id, sq.id))
     .orderBy(desc(templates.updatedAt));
+
+  const [totalResult] = await db
+    .select({ total: count() })
+    .from(templates)
+    .where(and(...conditions));
+
+  const total = totalResult?.total ?? 0;
+  const totalPages = calculateTotalPages(total, pageSize);
+
+  return {
+    data: userTemplates.map((row) => row.templates),
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages,
+    },
+  };
 }
 
 // Get favorite templates by user ID

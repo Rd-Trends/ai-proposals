@@ -23,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -31,13 +32,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { ProposalTracking } from "@/lib/db";
+import type { PageMetadata } from "@/lib/types";
 import { Button } from "../ui/button";
 
 export default function ProposalsTrackingTable({
   proposals,
+  pagination,
   isLoading,
 }: {
   proposals: ProposalTracking[];
+  pagination?: PageMetadata;
   isLoading?: boolean;
 }) {
   const [selectedProposal, setSelectedProposal] =
@@ -71,6 +75,7 @@ export default function ProposalsTrackingTable({
             columns={columns}
             data={proposals}
             isLoading={isLoading}
+            enablePagination={false} // Disable client-side pagination
             onRowClick={(proposal: ProposalTracking) => {
               setSelectedProposal(proposal);
               setShowViewDialog(true);
@@ -78,6 +83,16 @@ export default function ProposalsTrackingTable({
             tableHeader={(table) => <ProposalTableHeader table={table} />}
             emptyMessage="No proposals found."
           />
+          {/* Server-side pagination */}
+          {!!pagination?.totalPages && (
+            <Pagination
+              className="mt-4"
+              page={pagination.page}
+              pageSize={pagination.pageSize}
+              total={pagination.total}
+              totalPages={pagination.totalPages}
+            />
+          )}
         </CardContent>
       </Card>
 

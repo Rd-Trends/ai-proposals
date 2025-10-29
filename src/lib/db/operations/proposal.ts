@@ -1,10 +1,12 @@
-import { desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
+import type { PaginatedResult, PaginationParams } from "@/lib/types";
 import { db } from "../drizzle";
 import {
   type NewProposalTracking,
   type ProposalTracking,
   proposalTracking,
 } from "../index";
+import { calculateTotalPages, getPaginationOffset } from "./util";
 
 // Create a new proposal tracking entry
 export async function createProposalTracking(
@@ -28,15 +30,49 @@ export async function getProposalTrackingById(
   return proposal || null;
 }
 
-// Get proposals by user ID
+// Get proposals by user ID with pagination
 export async function getProposalTrackingByUserId(
   userId: string,
-): Promise<ProposalTracking[]> {
-  return await db
+  params?: PaginationParams,
+): Promise<PaginatedResult<ProposalTracking>> {
+  const page = params?.page ?? 1;
+  const pageSize = params?.pageSize ?? 10;
+  const offset = getPaginationOffset(page, pageSize);
+
+  const conditions = [eq(proposalTracking.userId, userId)];
+
+  const sq = db
+    .select({ id: proposalTracking.id })
+    .from(proposalTracking)
+    .where(and(...conditions))
+    .orderBy(desc(proposalTracking.sentAt))
+    .limit(pageSize)
+    .offset(offset)
+    .as("subquery");
+
+  const userProposals = await db
     .select()
     .from(proposalTracking)
-    .where(eq(proposalTracking.userId, userId))
+    .innerJoin(sq, eq(proposalTracking.id, sq.id))
     .orderBy(desc(proposalTracking.sentAt));
+
+  const [totalResult] = await db
+    .select({ total: count() })
+    .from(proposalTracking)
+    .where(and(...conditions));
+
+  const total = totalResult?.total ?? 0;
+  const totalPages = calculateTotalPages(total, pageSize);
+
+  return {
+    data: userProposals.map((row) => row.proposal_tracking),
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages,
+    },
+  };
 }
 
 // Update proposal tracking

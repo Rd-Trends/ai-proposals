@@ -15,7 +15,16 @@ import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 import { getProposalTrackingByUserId } from "@/lib/db/operations/proposal";
 
-export default async function ProposalsPage() {
+type ProposalsPageProps = {
+  searchParams: Promise<{
+    page?: string;
+    pageSize?: string;
+  }>;
+};
+
+export default async function ProposalsPage({
+  searchParams,
+}: ProposalsPageProps) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -44,15 +53,36 @@ export default async function ProposalsPage() {
         <Suspense
           fallback={<ProposalsTrackingTable proposals={[]} isLoading />}
         >
-          <ProposalsTrackingPageContent user={session.user} />
+          <ProposalsTrackingPageContent
+            user={session.user}
+            searchParams={searchParams}
+          />
         </Suspense>
       </DashboardGutter>
     </>
   );
 }
 
-const ProposalsTrackingPageContent = async ({ user }: { user: User }) => {
-  const proposals = await getProposalTrackingByUserId(user.id);
+const ProposalsTrackingPageContent = async ({
+  user,
+  searchParams,
+}: {
+  user: User;
+  searchParams: ProposalsPageProps["searchParams"];
+}) => {
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
+  const pageSize = Number(params.pageSize) || 10;
 
-  return <ProposalsTrackingTable proposals={proposals} />;
+  const result = await getProposalTrackingByUserId(user.id, {
+    page,
+    pageSize,
+  });
+
+  return (
+    <ProposalsTrackingTable
+      proposals={result.data}
+      pagination={result.pagination}
+    />
+  );
 };

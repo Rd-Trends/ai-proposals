@@ -11,7 +11,16 @@ import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 import { getProjectsByUserId } from "@/lib/db/operations/project";
 
-export default async function ProjectsPage() {
+type ProjectsPageProps = {
+  searchParams: Promise<{
+    page?: string;
+    pageSize?: string;
+  }>;
+};
+
+export default async function ProjectsPage({
+  searchParams,
+}: ProjectsPageProps) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -37,15 +46,33 @@ export default async function ProjectsPage() {
           <ProjectStats user={session.user} />
         </Suspense> */}
         <Suspense fallback={<ProjectsPageTable projects={[]} isLoading />}>
-          <ProjectsPageContent user={session.user} />
+          <ProjectsPageContent
+            user={session.user}
+            searchParams={searchParams}
+          />
         </Suspense>
       </DashboardGutter>
     </>
   );
 }
 
-const ProjectsPageContent = async ({ user }: { user: User }) => {
-  const projects = await getProjectsByUserId(user.id);
+const ProjectsPageContent = async ({
+  user,
+  searchParams,
+}: {
+  user: User;
+  searchParams: ProjectsPageProps["searchParams"];
+}) => {
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
+  const pageSize = Number(params.pageSize) || 10;
 
-  return <ProjectsPageTable projects={projects} />;
+  const result = await getProjectsByUserId(user.id, {
+    page,
+    pageSize,
+  });
+
+  return (
+    <ProjectsPageTable projects={result.data} pagination={result.pagination} />
+  );
 };

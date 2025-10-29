@@ -15,7 +15,17 @@ import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 import { getTemplatesByUserId } from "@/lib/db/operations/template";
 
-export default async function TemplatesPage() {
+type TemplatesPageProps = {
+  searchParams: Promise<{
+    page?: string;
+    pageSize?: string;
+    status?: "draft" | "active" | "archived";
+  }>;
+};
+
+export default async function TemplatesPage({
+  searchParams,
+}: TemplatesPageProps) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -41,15 +51,38 @@ export default async function TemplatesPage() {
           <TemplateStats user={session.user} />
         </Suspense>
         <Suspense fallback={<TemplatesPageTable templates={[]} isLoading />}>
-          <TemplatesPageContent user={session.user} />
+          <TemplatesPageContent
+            user={session.user}
+            searchParams={searchParams}
+          />
         </Suspense>
       </DashboardGutter>
     </>
   );
 }
 
-const TemplatesPageContent = async ({ user }: { user: User }) => {
-  const templates = await getTemplatesByUserId(user.id);
+const TemplatesPageContent = async ({
+  user,
+  searchParams,
+}: {
+  user: User;
+  searchParams: TemplatesPageProps["searchParams"];
+}) => {
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
+  const pageSize = Number(params.pageSize) || 10;
+  const status = params.status;
 
-  return <TemplatesPageTable templates={templates} />;
+  const result = await getTemplatesByUserId(user.id, {
+    page,
+    pageSize,
+    status,
+  });
+
+  return (
+    <TemplatesPageTable
+      templates={result.data}
+      pagination={result.pagination}
+    />
+  );
 };

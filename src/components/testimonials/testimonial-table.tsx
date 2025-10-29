@@ -25,14 +25,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/ui/pagination";
 import { useClipboard } from "@/hooks/use-clipboard";
 import type { Testimonial } from "@/lib/db";
+import type { PageMetadata } from "@/lib/types";
 
 export default function TestimonialsTable({
   testimonials,
+  pagination,
   isLoading,
 }: {
   testimonials: Testimonial[];
+  pagination?: PageMetadata;
   isLoading?: boolean;
 }) {
   const { copy } = useClipboard();
@@ -90,6 +94,7 @@ export default function TestimonialsTable({
             columns={columns}
             data={testimonials}
             isLoading={isLoading}
+            enablePagination={false} // Disable client-side pagination
             onRowClick={(testimonial) => {
               setSelectedTestimonial(testimonial);
               setShowViewTestimonial(true);
@@ -100,7 +105,18 @@ export default function TestimonialsTable({
                 onNewTestimonial={() => setShowCreateTestimonial(true)}
               />
             )}
+            emptyMessage="No testimonials found."
           />
+          {/* Server-side pagination */}
+          {!!pagination?.totalPages && (
+            <Pagination
+              className="mt-4"
+              page={pagination.page}
+              pageSize={pagination.pageSize}
+              total={pagination.total}
+              totalPages={pagination.totalPages}
+            />
+          )}
         </CardContent>
       </Card>
 

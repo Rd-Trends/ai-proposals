@@ -1,6 +1,8 @@
-import { desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
+import type { PaginatedResult, PaginationParams } from "@/lib/types";
 import { db } from "../drizzle";
 import { type NewProject, type Project, projects } from "../index";
+import { calculateTotalPages, getPaginationOffset } from "./util";
 
 // Create a new project
 export async function createProject(projectData: NewProject): Promise<Project> {
@@ -14,13 +16,49 @@ export async function getProjectById(id: string): Promise<Project | null> {
   return project || null;
 }
 
-// Get projects by user ID
-export async function getProjectsByUserId(userId: string): Promise<Project[]> {
-  return await db
+// Get projects by user ID with pagination
+export async function getProjectsByUserId(
+  userId: string,
+  params?: PaginationParams,
+): Promise<PaginatedResult<Project>> {
+  const page = params?.page ?? 1;
+  const pageSize = params?.pageSize ?? 10;
+  const offset = getPaginationOffset(page, pageSize);
+
+  const conditions = [eq(projects.userId, userId)];
+
+  const sq = db
+    .select({ id: projects.id })
+    .from(projects)
+    .where(and(...conditions))
+    .orderBy(desc(projects.updatedAt))
+    .limit(pageSize)
+    .offset(offset)
+    .as("subquery");
+
+  const userProjects = await db
     .select()
     .from(projects)
-    .where(eq(projects.userId, userId))
+    .innerJoin(sq, eq(projects.id, sq.id))
     .orderBy(desc(projects.updatedAt));
+
+  const [totalResult] = await db
+    .select({ total: count() })
+    .from(projects)
+    .where(and(...conditions));
+
+  const total = totalResult?.total ?? 0;
+  const totalPages = calculateTotalPages(total, pageSize);
+
+  return {
+    data: userProjects.map((row) => row.projects),
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages,
+    },
+  };
 }
 
 // Update project

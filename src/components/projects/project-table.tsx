@@ -25,14 +25,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/ui/pagination";
 import { useProjectActions } from "@/hooks/use-project-actions";
 import type { Project } from "@/lib/db";
+import type { PageMetadata } from "@/lib/types";
 
 export default function ProjectsPageTable({
   projects,
+  pagination,
   isLoading,
 }: {
   projects: Project[];
+  pagination?: PageMetadata;
   isLoading?: boolean;
 }) {
   const { handleCopyId } = useProjectActions();
@@ -77,6 +81,7 @@ export default function ProjectsPageTable({
             columns={columns}
             data={projects}
             isLoading={isLoading}
+            enablePagination={false} // Disable client-side pagination
             onRowClick={(project) => {
               setSelectedProject(project);
               setShowViewProject(true);
@@ -87,7 +92,18 @@ export default function ProjectsPageTable({
                 onNewProject={() => setShowCreateProject(true)}
               />
             )}
+            emptyMessage="No projects found."
           />
+          {/* Server-side pagination */}
+          {!!pagination?.totalPages && (
+            <Pagination
+              className="mt-4"
+              page={pagination.page}
+              pageSize={pagination.pageSize}
+              total={pagination.total}
+              totalPages={pagination.totalPages}
+            />
+          )}
         </CardContent>
       </Card>
 

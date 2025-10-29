@@ -18,6 +18,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Pagination } from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { useTemplateActions } from "@/hooks/use-template-actions";
 import { TEMPLATE_STATUS, type Template } from "@/lib/db";
+import type { PageMetadata } from "@/lib/types";
 
 import {
   DropdownMenu,
@@ -38,9 +40,11 @@ import { Input } from "../ui/input";
 
 export default function TemplatesPageTable({
   templates,
+  pagination,
   isLoading,
 }: {
   templates: Template[];
+  pagination?: PageMetadata;
   isLoading?: boolean;
 }) {
   const { handleDuplicateTemplate, handleToggleFavorite, handleCopyId } =
@@ -88,6 +92,7 @@ export default function TemplatesPageTable({
             columns={columns}
             data={templates}
             isLoading={isLoading}
+            enablePagination={false} // Disable client-side pagination
             onRowClick={(template) => {
               setSelectedTemplate(template);
               setShowViewTemplate(true);
@@ -100,6 +105,16 @@ export default function TemplatesPageTable({
             )}
             emptyMessage="No templates found."
           />
+          {/* Server-side pagination */}
+          {!!pagination?.totalPages && (
+            <Pagination
+              className="mt-4"
+              page={pagination.page}
+              pageSize={pagination.pageSize}
+              total={pagination.total}
+              totalPages={pagination.totalPages}
+            />
+          )}
         </CardContent>
       </Card>
 
