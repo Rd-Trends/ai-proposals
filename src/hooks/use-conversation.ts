@@ -2,11 +2,35 @@ import {
   type InfiniteData,
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import type { Conversation } from "@/lib/db";
 import { queryKeys } from "@/lib/query-keys";
 import type { PaginatedResult } from "@/lib/types";
+
+export const useGetConversation = ({
+  id,
+  initialData,
+}: {
+  id: string;
+  initialData?: Conversation | null;
+}) => {
+  return useQuery({
+    queryKey: queryKeys.conversations.detail(id),
+    queryFn: async () => {
+      const response = await fetch(`/api/chat/${id}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch conversation");
+      }
+
+      const data = await response.json();
+      return data.conversation as Conversation;
+    },
+    initialData: initialData ?? null,
+  });
+};
 
 export const useConversationHistory = (pageSize = 10) => {
   return useInfiniteQuery<PaginatedResult<Conversation>>({
@@ -54,18 +78,19 @@ export const useUpdateConversation = () => {
     },
     onMutate: async ({ id, title }) => {
       await queryClient.cancelQueries({
-        queryKey: queryKeys.conversations.history(),
+        queryKey: queryKeys.conversations.all,
       });
 
       const previousData = queryClient.getQueriesData<
-        InfiniteData<PaginatedResult<Conversation>>
-      >({ queryKey: queryKeys.conversations.history() });
+        InfiniteData<PaginatedResult<Conversation>> | Conversation
+      >({ queryKey: queryKeys.conversations.all });
 
-      queryClient.setQueriesData<InfiniteData<PaginatedResult<Conversation>>>(
-        { queryKey: queryKeys.conversations.history() },
-        (oldData) => {
-          if (!oldData) return oldData;
+      queryClient.setQueriesData<
+        InfiniteData<PaginatedResult<Conversation>> | Conversation
+      >({ queryKey: queryKeys.conversations.all }, (oldData) => {
+        if (!oldData) return oldData;
 
+        if ("pages" in oldData) {
           const newPages = oldData.pages.map((page) => {
             return {
               ...page,
@@ -81,8 +106,12 @@ export const useUpdateConversation = () => {
             ...oldData,
             pages: newPages,
           };
-        },
-      );
+        } else {
+          if (oldData.id === id) {
+            return { ...oldData, title };
+          }
+        }
+      });
 
       return previousData;
     },
@@ -113,18 +142,19 @@ export const useDeleteConversation = () => {
     },
     onMutate: async (id) => {
       await queryClient.cancelQueries({
-        queryKey: queryKeys.conversations.history(),
+        queryKey: queryKeys.conversations.all,
       });
 
       const previousData = queryClient.getQueriesData<
-        InfiniteData<PaginatedResult<Conversation>>
-      >({ queryKey: queryKeys.conversations.history() });
+        InfiniteData<PaginatedResult<Conversation>> | Conversation
+      >({ queryKey: queryKeys.conversations.all });
 
-      queryClient.setQueriesData<InfiniteData<PaginatedResult<Conversation>>>(
-        { queryKey: queryKeys.conversations.history() },
-        (oldData) => {
-          if (!oldData) return oldData;
+      queryClient.setQueriesData<
+        InfiniteData<PaginatedResult<Conversation>> | Conversation
+      >({ queryKey: queryKeys.conversations.all }, (oldData) => {
+        if (!oldData) return oldData;
 
+        if ("pages" in oldData) {
           const newPages = oldData.pages.map((page) => {
             return {
               ...page,
@@ -136,8 +166,8 @@ export const useDeleteConversation = () => {
             ...oldData,
             pages: newPages,
           };
-        },
-      );
+        }
+      });
 
       return previousData;
     },

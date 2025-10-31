@@ -198,8 +198,8 @@ const StatsOverviewSkeleton = () => (
 
 // Recent Proposals
 const RecentProposals = async ({ user }: { user: User }) => {
-  const proposals = await getProposalTrackingByUserId(user.id);
-  const recent = proposals.slice(0, 3);
+  const result = await getProposalTrackingByUserId(user.id);
+  const recent = result.data.slice(0, 3);
 
   return (
     <Card>

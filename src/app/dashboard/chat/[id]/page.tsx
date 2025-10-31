@@ -1,12 +1,12 @@
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
+import { Chat } from "@/components/chats";
 import { auth } from "@/lib/auth";
 import {
   getConversationById,
   getMessagesByConversationId,
 } from "@/lib/db/operations/conversation";
 import { convertToUIMessages } from "@/lib/utils";
-import ChatPage from "../chat";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({
@@ -34,5 +34,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   const uiMessages = convertToUIMessages(messagesFromDb);
 
-  return <ChatPage id={id} initialMessages={uiMessages} />;
+  return (
+    <Chat id={id} initialMessages={uiMessages} conversation={conversation} />
+  );
 }

@@ -15,6 +15,50 @@ const updateConversationSchema = z.object({
     .max(80, "Title must be at most 80 characters"),
 });
 
+export async function GET(
+  _request: Request,
+  ctx: RouteContext<"/api/chat/[id]">,
+) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await ctx.params;
+
+    const conversation = await getConversationById({ id });
+
+    if (!conversation) {
+      return NextResponse.json(
+        { error: "Conversation not found" },
+        { status: 404 },
+      );
+    }
+
+    if (conversation.userId !== session.user.id) {
+      return NextResponse.json(
+        {
+          error:
+            "Forbidden: You don't have permission to access this conversation",
+        },
+        { status: 403 },
+      );
+    }
+
+    return NextResponse.json({ conversation });
+  } catch (error) {
+    console.error("Error fetching conversation:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch conversation" },
+      { status: 500 },
+    );
+  }
+}
+
 export async function PATCH(
   request: Request,
   ctx: RouteContext<"/api/chat/[id]">,
@@ -84,7 +128,7 @@ export async function PATCH(
 
 export async function DELETE(
   _request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  ctx: RouteContext<"/api/chat/[id]">,
 ) {
   try {
     const session = await auth.api.getSession({
@@ -95,7 +139,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = await params;
+    const { id } = await ctx.params;
 
     // Check if conversation exists and belongs to user
     const existingConversation = await getConversationById({ id });

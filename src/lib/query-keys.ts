@@ -23,7 +23,7 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.conversations.details(), id] as const,
     history: (pageSize?: number) =>
       pageSize
-        ? (["conversation-history", pageSize] as const)
-        : (["conversation-history"] as const),
+        ? ([...queryKeys.conversations.all, "history", pageSize] as const)
+        : ([...queryKeys.conversations.all, "history"] as const),
   },
 } as const;
