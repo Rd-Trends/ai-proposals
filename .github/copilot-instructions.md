@@ -2,20 +2,8 @@
 
 These rules are binding for all Copilot Chat responses in this repo. Default to brevity and only expand when asked.
 
-- Keep responses and feedback short and concise (2-3 sentences) unless more detail is requested.
+- After completing tasks, your feedback/response should be concise, summarize what you did in 1-4 sentences.
 
-### Project coding defaults
-
-- Framework: Next.js App Router with TypeScript. Keep server/client boundaries clear. Use server actions with `useTransition`.
-- UI: Shadcn UI + Tailwind. Use Shadcn form components for all inputs. Keep design clean, modern, and responsive.
-- Data: PostgreSQL via Drizzle ORM with typed schemas and queries.
-- Auth: BetterAuth. Follow existing patterns in `src/app/auth` and `src/lib/auth*`.
-- AI: Vercel AI SDK. Follow existing chat/actions patterns in `src/actions` and `src/components/ai-elements`.
-- Charts: Recharts (or existing configured chart lib) for analytics.
-- Code style: TypeScript everywhere, ESLint + Prettier. Use const/let, async/await, arrow functions for callbacks, descriptive names over comments.
-
-
----
 
 ## Project Overview
 
