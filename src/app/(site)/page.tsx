@@ -2,25 +2,19 @@ import { BenefitsSection } from "@/components/home/benefits";
 import { CTASection } from "@/components/home/cta";
 import { FAQSection } from "@/components/home/faq";
 import { FeaturesSection } from "@/components/home/features";
-import { Footer } from "@/components/home/footer";
 import { HeroSection } from "@/components/home/hero";
 import { HowItWorksSection } from "@/components/home/how-it-works";
-import { Navbar } from "@/components/site-layout/navbar";
 
 export default function Home() {
   return (
-    <div>
-      <Navbar />
-      <div className="min-h-screen flex flex-col items-center justify-center">
-        <HeroSection />
-        <FeaturesSection />
-        <HowItWorksSection />
-        <BenefitsSection />
-        <FAQSection />
-        <CTASection />
-      </div>
-      <Footer />
-    </div>
+    <>
+      <HeroSection />
+      <FeaturesSection />
+      <HowItWorksSection />
+      <BenefitsSection />
+      <FAQSection />
+      <CTASection />
+    </>
   );
   // return (
   //   <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">

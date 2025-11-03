@@ -1,11 +1,12 @@
 import Link from "next/link";
+import { Container } from "@/components/site-layout/container";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t bg-card">
-      <div className="max-w-7xl mx-auto px-4 py-12">
+    <footer className="bg-secondary/50 border-t border-secondary/20 text-secondary-foreground px-4 md:px-10">
+      <Container size="full" className="py-12">
         {/* <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div className="md:col-span-1">
             <Link href="/" className="text-xl font-bold mb-4 block">
@@ -71,7 +72,7 @@ export const Footer = () => {
         </div> */}
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
             © {currentYear} AI Proposals. All rights reserved.
           </p>
@@ -84,7 +85,7 @@ export const Footer = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 };

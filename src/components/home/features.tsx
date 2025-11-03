@@ -8,7 +8,8 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { Section } from "../ui/section";
+import { Container } from "@/components/site-layout/container";
+import { Section } from "@/components/site-layout/section";
 
 const features = [
   {
@@ -63,8 +64,8 @@ const features = [
 
 export const FeaturesSection = () => {
   return (
-    <Section className="py-20">
-      <div className="max-w-7xl mx-auto">
+    <Section id="features">
+      <Container>
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Everything you need.
@@ -94,7 +95,7 @@ export const FeaturesSection = () => {
             );
           })}
         </div>
-      </div>
+      </Container>
     </Section>
   );
 };

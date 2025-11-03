@@ -1,5 +1,6 @@
 import { FileText, Send, Sparkles, TrendingUp } from "lucide-react";
-import { Section } from "../ui/section";
+import { Container } from "@/components/site-layout/container";
+import { Section } from "@/components/site-layout/section";
 
 const steps = [
   {
@@ -34,14 +35,14 @@ const steps = [
 
 export const HowItWorksSection = () => {
   return (
-    <Section className="w-full py-20 relative overflow-x-hidden ">
+    <Section id="how-it-works" className="w-full relative overflow-x-hidden">
       {/* Background gradient orbs */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/4 -left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto">
+      <Container>
         <div className="flex flex-col items-center text-center mb-16">
           <div className="inline-block mb-4 relative group">
             <span className="text-sm font-semibold px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 relative z-10">
@@ -100,7 +101,7 @@ export const HowItWorksSection = () => {
             );
           })}
         </div>
-      </div>
+      </Container>
     </Section>
   );
 };

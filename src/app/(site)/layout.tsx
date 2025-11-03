@@ -1,3 +1,5 @@
+import { Footer } from "@/components/home/footer";
+import { Navbar } from "@/components/site-layout/navbar";
 import { cn } from "@/lib/utils";
 
 export default function SiteLayout({
@@ -11,7 +13,9 @@ export default function SiteLayout({
         "group/body antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]",
       )}
     >
-      {children}
+      <Navbar />
+      <main>{children}</main>
+      <Footer />
     </div>
   );
 }

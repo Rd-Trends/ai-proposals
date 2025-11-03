@@ -9,7 +9,7 @@
     [] Social Proof/Testimonials - Build trust with user testimonials
     [] Pricing Section - Clear pricing tiers (if applicable)
     [x] FAQ Section - Answer common questions
-    [] Final CTA Section - Strong call-to-action before footer
+    [x] Final CTA Section - Strong call-to-action before footer
     [] Footer (Optional but recommended)
 [] - Implement proper WYSIWYG (mock tip tap simple editor template)
 [] - add visibility to projects/case studies (public case studies can be sharable and viewed by anyone)

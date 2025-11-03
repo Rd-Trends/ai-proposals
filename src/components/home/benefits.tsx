@@ -1,5 +1,6 @@
 import { Check, X } from "lucide-react";
-import { Section } from "../ui/section";
+import { Container } from "@/components/site-layout/container";
+import { Section } from "@/components/site-layout/section";
 
 const problems = [
   "Spending hours writing custom proposals",
@@ -24,13 +25,13 @@ const stats = [
 
 export const BenefitsSection = () => {
   return (
-    <Section className="w-full overflow-x-clip py-20 relative">
+    <Section id="benefits" className="w-full overflow-x-clip relative">
       {/* Background gradient */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/2 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-5xl mx-auto">
+      <Container size="md">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Stop Losing Clients to{" "}
@@ -111,16 +112,16 @@ export const BenefitsSection = () => {
               key={stat.label}
               className="text-center p-6 rounded-2xl bg-accent/50 border"
             >
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
+              <div className="from-primary to-foreground bg-linear-to-r bg-clip-text text-3xl md:text-4xl font-bold text-foreground drop-shadow-[2px_1px_24px_var(--foreground)] transition-all duration-300">
                 {stat.value}
               </div>
-              <p className="text-xs md:text-sm text-muted-foreground">
+              <p className="text-xs md:text-sm text-muted-foreground pt-2">
                 {stat.label}
               </p>
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </Section>
   );
 };

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+import { Container } from "@/components/site-layout/container";
 import { cn } from "@/lib/utils";
 import { ThemeModeSwitcher } from "../../theme-mode-switcher";
 import { Separator } from "../../ui/separator";
@@ -7,15 +8,16 @@ import { MobileNav } from "../mobile-nav";
 import { UserDropdown } from "./user-dropdown";
 
 const navItems = [
-  { href: "#", label: "Features" },
-  { href: "#", label: "Pricing" },
-  { href: "#", label: "About" },
+  { href: "#features", label: "Features" },
+  { href: "#how-it-works", label: "How it works" },
+  { href: "#benefits", label: "Benefits" },
+  { href: "#faq", label: "FAQ" },
 ] as const;
 
 export const Navbar = () => {
   return (
-    <header className="bg-background/15 backdrop-blur-lg sticky top-0 z-50 w-full">
-      <div className="px-6">
+    <header className="bg-background/15 backdrop-blur-lg sticky top-0 z-50 w-full px-4 md:px-10">
+      <Container size="full">
         <div className="flex h-(--header-height) items-center">
           <Link href="/" className="mr-10">
             <Logo />
@@ -39,7 +41,7 @@ export const Navbar = () => {
             <MobileNav />
           </div>
         </div>
-      </div>
+      </Container>
     </header>
   );
 };

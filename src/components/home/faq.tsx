@@ -1,3 +1,5 @@
+import { Container } from "@/components/site-layout/container";
+import { Section } from "@/components/site-layout/section";
 import {
   Accordion,
   AccordionContent,
@@ -5,7 +7,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "../ui/button";
-import { Section } from "../ui/section";
 
 const faqs = [
   {
@@ -52,14 +53,14 @@ const faqs = [
 
 export const FAQSection = () => {
   return (
-    <Section className="py-20">
-      <div className="max-w-7xl mx-auto">
+    <Section id="faq">
+      <Container>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-muted-foreground text-sm md:text-lg pb-6">
+            <p className="text-muted-foreground text-sm md:text-lg max-w-2xl pb-6">
               Everything you need to know about AI Proposals. Can't find the
               answer you're looking for? Reach out to our support team.
             </p>
@@ -77,7 +78,7 @@ export const FAQSection = () => {
             ))}
           </Accordion>
         </div>
-      </div>
+      </Container>
     </Section>
   );
 };

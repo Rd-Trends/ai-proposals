@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Fragment, Suspense } from "react";
 import { UserMenu } from "@/components/auth/user-menu";
 import { ChatHistory } from "@/components/dashboard/chat-history";
+import { Logo } from "@/components/logo";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -117,16 +118,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton size="lg" asChild>
-                <a href="/dashboard">
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                    <FileText className="size-4" />
-                  </div>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">AI Proposals</span>
-                    <span className="truncate text-xs">Pro</span>
-                  </div>
-                </a>
+              <SidebarMenuButton
+                asChild
+                className="data-[slot=sidebar-menu-button]:!p-1.5"
+              >
+                <Link href="/dashboard">
+                  <Logo size={20} />
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
