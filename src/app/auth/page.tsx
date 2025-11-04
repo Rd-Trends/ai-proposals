@@ -1,8 +1,13 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { MagicLinkAuth } from "@/components/auth/magic-link-auth";
 import { Button } from "@/components/ui/button";
 
 export default function AuthPage() {
+  if (process.env.NODE_ENV !== "development") {
+    redirect("/auth/signin");
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8">

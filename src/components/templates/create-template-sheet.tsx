@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FileText, Plus, Save, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { createTemplate } from "@/actions/template-actions";
@@ -12,14 +12,11 @@ import { AITemplateGenerator } from "@/components/templates/ai-template-generato
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -128,260 +125,280 @@ export function CreateTemplateSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <Form {...form}>
-          <form onSubmit={handleSubmit} className="space-y-6 pt-6 px-4">
-            {/* Basic Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Basic Information</h3>
+        <form onSubmit={handleSubmit} className="space-y-6 pt-6 px-4">
+          {/* Basic Information */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Basic Information</h3>
 
-              <FormField
-                control={form.control}
-                name="title"
-                rules={{ required: "Title is required" }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title *</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g., Web Development Proposal"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      A clear, descriptive name for your template
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Briefly describe what this template is for..."
-                        className="resize-none"
-                        rows={3}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Optional description to help you identify this template
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., web development" {...field} />
-                      </FormControl>
-                      {/* <FormDescription>
-                        Help organize your templates
-                      </FormDescription> */}
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="tone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tone</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select tone" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {PROPOSAL_TONE.map((tone) => (
-                            <SelectItem
-                              key={tone}
-                              value={tone}
-                              className="capitalize"
-                            >
-                              {tone}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Tags */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Tags</h3>
-
-              <div className="space-y-2">
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Add a tag..."
-                    value={newTag}
-                    onChange={(e) => setNewTag(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="flex-1"
-                  />
-                  <Button
-                    type="button"
-                    onClick={addTag}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                {form.watch("tags").length > 0 && (
-                  <div className="flex flex-wrap gap-1">
-                    {form.watch("tags").map((tag) => (
-                      <Badge key={tag} variant="secondary" className="gap-1">
-                        {tag}
-                        <button
-                          type="button"
-                          onClick={() => removeTag(tag)}
-                          className="ml-1 hover:bg-destructive hover:text-destructive-foreground rounded-sm"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <Separator />
-
-            <FormField
+            <Controller
+              name="title"
               control={form.control}
-              name="content"
-              rules={{ required: "Content is required" }}
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center justify-between gap-4">
-                    <FormLabel>Content *</FormLabel>
-                    <AITemplateGenerator
-                      existingData={{
-                        description: form.watch("description"),
-                        category: form.watch("category"),
-                        tone: form.watch("tone"),
-                      }}
-                      hasRequiredData={!!form.watch("description")}
-                      onSuccess={(data) => {
-                        form.setValue("content", data.content);
-                        if (data.category) {
-                          form.setValue("category", data.category);
-                        }
-                        if (data.tone) {
-                          form.setValue("tone", data.tone);
-                        }
-                        if (data.description) {
-                          form.setValue("description", data.description);
-                        }
-                      }}
-                    />
-                  </div>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Enter your template content here. You can use placeholders like {{client_name}}, {{project_description}}, etc."
-                      className="resize-none min-h-[200px]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Use placeholders like {`{{client_name}}`} for dynamic
-                    content that can be filled in later
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="template-title">Title *</FieldLabel>
+                  <Input
+                    {...field}
+                    id="template-title"
+                    placeholder="e.g., Web Development Proposal"
+                    aria-invalid={fieldState.invalid}
+                    disabled={isPending}
+                  />
+                  <FieldDescription>
+                    A clear, descriptive name for your template
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
               )}
             />
 
-            <Separator />
+            <Controller
+              name="description"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="template-description">
+                    Description
+                  </FieldLabel>
+                  <Textarea
+                    {...field}
+                    id="template-description"
+                    placeholder="Briefly describe what this template is for..."
+                    className="resize-none"
+                    rows={3}
+                    aria-invalid={fieldState.invalid}
+                    disabled={isPending}
+                  />
+                  <FieldDescription>
+                    Optional description to help you identify this template
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
-            {/* Settings */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Settings</h3>
-
-              <FormField
+            <div className="grid grid-cols-2 gap-4">
+              <Controller
+                name="category"
                 control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="template-category">
+                      Category
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="template-category"
+                      placeholder="e.g., web development"
+                      aria-invalid={fieldState.invalid}
+                      disabled={isPending}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="tone"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="template-tone">Tone</FieldLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      disabled={isPending}
                     >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                      </FormControl>
+                      <SelectTrigger
+                        id="template-tone"
+                        aria-invalid={fieldState.invalid}
+                      >
+                        <SelectValue placeholder="Select tone" />
+                      </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="archived">Archived</SelectItem>
+                        {PROPOSAL_TONE.map((tone) => (
+                          <SelectItem
+                            key={tone}
+                            value={tone}
+                            className="capitalize"
+                          >
+                            {tone}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
-                    <FormDescription>
-                      Draft templates won&apos;t be shown in your active
-                      templates list
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
                 )}
               />
             </div>
+          </div>
 
-            {/* Submit Button */}
-            <div className="flex justify-end gap-3 py-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange?.(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isPending}>
-                {isPending ? (
-                  <>
-                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-b-transparent" />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <Save className="mr-2 h-4 w-4" />
-                    Create Template
-                  </>
-                )}
-              </Button>
+          <Separator />
+
+          {/* Tags */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Tags</h3>
+
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Add a tag..."
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  onClick={addTag}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {form.watch("tags").length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {form.watch("tags").map((tag) => (
+                    <Badge key={tag} variant="secondary" className="gap-1">
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(tag)}
+                        className="ml-1 hover:bg-destructive hover:text-destructive-foreground rounded-sm"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
-          </form>
-        </Form>
+          </div>
+
+          <Separator />
+
+          <Controller
+            name="content"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <div className="flex items-center justify-between gap-4">
+                  <FieldLabel htmlFor="template-content">Content *</FieldLabel>
+                  <AITemplateGenerator
+                    existingData={{
+                      description: form.watch("description"),
+                      category: form.watch("category"),
+                      tone: form.watch("tone"),
+                    }}
+                    hasRequiredData={!!form.watch("description")}
+                    onSuccess={(data) => {
+                      form.setValue("content", data.content);
+                      if (data.category) {
+                        form.setValue("category", data.category);
+                      }
+                      if (data.tone) {
+                        form.setValue("tone", data.tone);
+                      }
+                      if (data.description) {
+                        form.setValue("description", data.description);
+                      }
+                    }}
+                  />
+                </div>
+                <Textarea
+                  {...field}
+                  id="template-content"
+                  placeholder="Enter your template content here. You can use placeholders like {{client_name}}, {{project_description}}, etc."
+                  className="resize-none min-h-[200px]"
+                  aria-invalid={fieldState.invalid}
+                  disabled={isPending}
+                />
+                <FieldDescription>
+                  Use placeholders like {`{{client_name}}`} for dynamic content
+                  that can be filled in later
+                </FieldDescription>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
+          <Separator />
+
+          {/* Settings */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Settings</h3>
+
+            <Controller
+              name="status"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="template-status">Status</FieldLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isPending}
+                  >
+                    <SelectTrigger
+                      id="template-status"
+                      aria-invalid={fieldState.invalid}
+                    >
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="archived">Archived</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FieldDescription>
+                    Draft templates won&apos;t be shown in your active templates
+                    list
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-end gap-3 py-6">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange?.(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? (
+                <>
+                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-b-transparent" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  Create Template
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
       </SheetContent>
     </Sheet>
   );

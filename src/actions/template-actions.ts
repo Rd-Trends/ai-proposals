@@ -14,6 +14,16 @@ import {
 } from "@/lib/db";
 import * as templateServices from "@/lib/db/operations/template";
 
+const generateTemplateInputSchema = z
+  .string()
+  .min(10, "Input must be at least 10 characters")
+  .max(2000, "Input must be less than 2000 characters");
+
+const templateIdSchema = z
+  .string()
+  .min(1, "Template ID is required")
+  .uuid("Invalid Template ID");
+
 const getPrompt = (user: User) => {
   const userContext = `
 USER INFORMATION:
@@ -198,6 +208,8 @@ Generate a complete, ready-to-use proposal template that follows these principle
 
 export const generateTemplateContent = async (input: string) => {
   try {
+    generateTemplateInputSchema.parse(input);
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -267,6 +279,7 @@ export const updateTemplate = async (
   data: Partial<InsertTemplate>,
 ) => {
   try {
+    templateIdSchema.parse(id);
     // Validate and process the data as needed
     const validatedData = updateTemplateSchema.parse(data);
 
@@ -301,6 +314,8 @@ export const updateTemplate = async (
 
 export const duplicateTemplate = async (id: string) => {
   try {
+    templateIdSchema.parse(id);
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -345,6 +360,8 @@ export const duplicateTemplate = async (id: string) => {
 
 export const deleteTemplate = async (id: string) => {
   try {
+    templateIdSchema.parse(id);
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -373,6 +390,8 @@ export const deleteTemplate = async (id: string) => {
 
 export const toggleTemplateFavorite = async (id: string) => {
   try {
+    templateIdSchema.parse(id);
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });

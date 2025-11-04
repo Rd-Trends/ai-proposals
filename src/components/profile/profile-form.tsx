@@ -3,20 +3,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { updateProfile } from "@/actions/profile-actions";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { User } from "@/lib/auth-client";
@@ -58,67 +56,77 @@ export function ProfileForm({ user }: { user: User }) {
   });
 
   return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <FormField
-          control={form.control}
+    <form id="profile-form" onSubmit={handleSubmit}>
+      <FieldGroup>
+        <Controller
           name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Your name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="profile-name">Name</FieldLabel>
+              <Input
+                {...field}
+                id="profile-name"
+                placeholder="Your name"
+                aria-invalid={fieldState.invalid}
+                disabled={isPending}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
         />
 
-        <FormField
-          control={form.control}
+        <Controller
           name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  type="email"
-                  placeholder="your.email@example.com"
-                  disabled
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="profile-email">Email</FieldLabel>
+              <Input
+                {...field}
+                id="profile-email"
+                type="email"
+                placeholder="your.email@example.com"
+                aria-invalid={fieldState.invalid}
+                disabled
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
         />
 
-        <FormField
-          control={form.control}
+        <Controller
           name="bio"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Professional Bio</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Describe your professional background, key skills, expertise, notable projects, achievements, and what makes you unique as a freelancer..."
-                  className="min-h-[240px]"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="profile-bio">Professional Bio</FieldLabel>
+              <Textarea
+                {...field}
+                id="profile-bio"
+                placeholder="Describe your professional background, key skills, expertise, notable projects, achievements, and what makes you unique as a freelancer..."
+                className="min-h-[240px]"
+                aria-invalid={fieldState.invalid}
+                disabled={isPending}
+              />
+              <FieldDescription>
                 Describe your expertise, experience, and what makes you stand
                 out as a freelancer.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
+              </FieldDescription>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
         />
 
-        <Button type="submit" disabled={isPending} className="w-full">
+        <Button
+          type="submit"
+          form="profile-form"
+          disabled={isPending}
+          className="w-full"
+        >
           {isPending ? "Saving..." : "Save Changes"}
         </Button>
-      </form>
-    </Form>
+      </FieldGroup>
+    </form>
   );
 }

@@ -8,6 +8,8 @@ import {
   updateConversationTitle,
 } from "@/lib/db/operations/conversation";
 
+const conversationIdSchema = z.string().uuid("Invalid conversation ID");
+
 const updateConversationSchema = z.object({
   title: z
     .string()
@@ -29,6 +31,7 @@ export async function GET(
     }
 
     const { id } = await ctx.params;
+    conversationIdSchema.parse(id);
 
     const conversation = await getConversationById({ id });
 
@@ -51,6 +54,12 @@ export async function GET(
 
     return NextResponse.json({ conversation });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: error.errors[0]?.message || "Invalid conversation ID" },
+        { status: 400 },
+      );
+    }
     console.error("Error fetching conversation:", error);
     return NextResponse.json(
       { error: "Failed to fetch conversation" },
@@ -73,6 +82,7 @@ export async function PATCH(
     }
 
     const { id } = await ctx.params;
+    conversationIdSchema.parse(id);
 
     // Check if conversation exists and belongs to user
     const existingConversation = await getConversationById({ id });
@@ -118,6 +128,12 @@ export async function PATCH(
       message: "Conversation updated successfully",
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: error.errors[0]?.message || "Invalid request" },
+        { status: 400 },
+      );
+    }
     console.error("Error updating conversation:", error);
     return NextResponse.json(
       { error: "Failed to update conversation" },
@@ -140,6 +156,7 @@ export async function DELETE(
     }
 
     const { id } = await ctx.params;
+    conversationIdSchema.parse(id);
 
     // Check if conversation exists and belongs to user
     const existingConversation = await getConversationById({ id });
@@ -168,6 +185,12 @@ export async function DELETE(
       message: "Conversation deleted successfully",
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: error.errors[0]?.message || "Invalid conversation ID" },
+        { status: 400 },
+      );
+    }
     console.error("Error deleting conversation:", error);
     return NextResponse.json(
       { error: "Failed to delete conversation" },

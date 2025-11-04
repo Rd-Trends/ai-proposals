@@ -1,0 +1,22 @@
+import { headers } from "next/headers";
+import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+
+export async function GET() {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return NextResponse.json({ isAdmin: false }, { status: 401 });
+    }
+
+    const isAdmin = session.user.email === process.env.ADMIN_EMAIL;
+
+    return NextResponse.json({ isAdmin });
+  } catch (error) {
+    console.error("Error checking admin status:", error);
+    return NextResponse.json({ isAdmin: false }, { status: 500 });
+  }
+}

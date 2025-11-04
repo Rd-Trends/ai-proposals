@@ -72,14 +72,16 @@ Address the client by name if available. Avoid casual greetings like "Hey there"
 
 **Example:** "Hi [Client Name],"
 
-#### 2. Engaging Introduction (20-40 words)
-Capture attention by addressing the client's specific needs, goals, or pain points. The first few lines are critical. Do NOT waste this space by:
+#### 2. Engaging Introduction (Maximum 40 words, aim for ~30)
+Capture attention by addressing the client's specific needs, goals, or pain points. The first few lines are critical and must be SHORT and PUNCHY. **NEVER exceed 40 words. Strive to keep it around 30 words for maximum impact.**
+
+Do NOT waste this space by:
 - Using a long greeting
 - Introducing yourself (your name, title, and rate are already visible to them)
-- Repeating what’s in the job post
+- Repeating what's in the job post
 - Talking about how excited you are about the job
 
-Instead, pose a solution or ask a thoughtful question that demonstrates your knowledge. Avoid asking questions where the answer is already stated in the job description. Your goal is to show you've understood the core problem and can offer unique value.
+Instead, pose a solution or ask a thoughtful question that demonstrates your knowledge. Avoid asking questions where the answer is already stated in the job description. Your goal is to show you've understood the core problem and can offer unique value in the fewest words possible.
 
 **Example 1:**
 

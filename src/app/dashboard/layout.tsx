@@ -3,7 +3,7 @@ import { InstallPWAPrompt } from "@/components/install-pwa";
 
 const Layout = ({ children }: React.PropsWithChildren) => {
   return (
-    <DashboardLayout>
+    <DashboardLayout >
       {children}
       <InstallPWAPrompt />
     </DashboardLayout>

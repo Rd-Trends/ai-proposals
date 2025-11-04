@@ -26,4 +26,10 @@ export const queryKeys = {
         ? ([...queryKeys.conversations.all, "history", pageSize] as const)
         : ([...queryKeys.conversations.all, "history"] as const),
   },
+
+  // User keys
+  user: {
+    all: ["user"] as const,
+    adminStatus: () => [...queryKeys.user.all, "admin-status"] as const,
+  },
 } as const;

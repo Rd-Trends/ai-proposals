@@ -10,6 +10,11 @@ import {
 } from "@/lib/db";
 import * as projectServices from "@/lib/db/operations/project";
 
+const projectIdSchema = z
+  .string()
+  .min(1, "Project ID is required")
+  .uuid("Invalid Project ID");
+
 export const createProject = async (data: NewProject) => {
   try {
     // Validate and process the data as needed
@@ -38,6 +43,7 @@ export const createProject = async (data: NewProject) => {
 
 export const updateProject = async (id: string, data: Partial<NewProject>) => {
   try {
+    projectIdSchema.parse(id);
     // Validate and process the data as needed
     const validatedData = updateProjectSchema.parse(data);
 
@@ -72,6 +78,8 @@ export const updateProject = async (id: string, data: Partial<NewProject>) => {
 
 export const deleteProject = async (id: string) => {
   try {
+    projectIdSchema.parse(id);
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });

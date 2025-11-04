@@ -4,20 +4,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { updateProject } from "@/actions/project-actions";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import {
@@ -86,51 +84,56 @@ export function UpdateProjectSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <Form {...form}>
-          <form onSubmit={handleSubmit} className="space-y-6 pt-6 px-4">
-            <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Project Title *</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g., E-commerce Website for Fashion Brand"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      A clear, descriptive name for your project
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <form id="update-project-form" onSubmit={handleSubmit}>
+          <FieldGroup className="space-y-4 pt-6 px-4">
+            <Controller
+              name="title"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="update-project-title">
+                    Project Title *
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="update-project-title"
+                    placeholder="e.g., E-commerce Website for Fashion Brand"
+                    aria-invalid={fieldState.invalid}
+                    disabled={isPending}
+                  />
+                  <FieldDescription>
+                    A clear, descriptive name for your project
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="details"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Project Details *</FormLabel>
-                    <FormControl>
-                      <RichTextEditor
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder="Describe your project in detail. Include challenges solved, technologies used, outcomes achieved, links to demos, and any other relevant information..."
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Use the rich text editor to format your project details.
-                      You can add headings, lists, links, and more.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <Controller
+              name="details"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="update-project-details">
+                    Project Details *
+                  </FieldLabel>
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Describe your project in detail. Include challenges solved, technologies used, outcomes achieved, links to demos, and any other relevant information..."
+                  />
+                  <FieldDescription>
+                    Use the rich text editor to format your project details. You
+                    can add headings, lists, links, and more.
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
             {/* Submit Button */}
             <div className="flex justify-end gap-3 py-6">
@@ -141,7 +144,11 @@ export function UpdateProjectSheet({
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isPending}>
+              <Button
+                type="submit"
+                form="update-project-form"
+                disabled={isPending}
+              >
                 {isPending ? (
                   <>
                     <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-b-transparent" />
@@ -155,8 +162,8 @@ export function UpdateProjectSheet({
                 )}
               </Button>
             </div>
-          </form>
-        </Form>
+          </FieldGroup>
+        </form>
       </SheetContent>
     </Sheet>
   );

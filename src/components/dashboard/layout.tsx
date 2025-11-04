@@ -8,6 +8,7 @@ import {
   MessageSquare,
   MessageSquareQuote,
   Settings,
+  Users,
 } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
@@ -41,12 +42,14 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAdminStatus } from "@/hooks/use-admin-status";
 import { cn } from "@/lib/utils";
 
 type NavigationItem = {
   title: string;
   url: Route;
   icon: React.ElementType;
+  adminOnly?: boolean;
 };
 
 // Navigation items
@@ -82,6 +85,12 @@ const navigation: Array<NavigationItem> = [
     icon: MessageSquareQuote,
   },
   {
+    title: "Waitlist",
+    url: "/dashboard/waitlist",
+    icon: Users,
+    adminOnly: true,
+  },
+  {
     title: "Profile",
     url: "/dashboard/profile",
     icon: Settings,
@@ -105,6 +114,14 @@ const NavLink = (item: NavigationItem) => {
 };
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const { data: adminStatus } = useAdminStatus();
+  const isAdmin = adminStatus?.isAdmin ?? false;
+
+  // Filter navigation items based on admin status
+  const filteredNavigation = navigation.filter(
+    (item) => !item.adminOnly || isAdmin,
+  );
+
   return (
     <SidebarProvider
       style={
@@ -135,7 +152,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <SidebarGroupLabel>Navigation</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {navigation.map((item) => (
+                {filteredNavigation.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <NavLink {...item} />
                   </SidebarMenuItem>

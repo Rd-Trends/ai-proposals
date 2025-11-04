@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { type ProposalTracking, updateProposalTrackingSchema } from "@/lib/db";
 import {
@@ -8,11 +9,17 @@ import {
   updateProposalTracking,
 } from "@/lib/db/operations/proposal";
 
+const proposalIdSchema = z
+  .string()
+  .min(1, "Proposal ID is required")
+  .uuid("Invalid Proposal ID");
+
 export const updateProposal = async (
   proposalId: string,
   data: Partial<ProposalTracking>,
 ) => {
   try {
+    proposalIdSchema.parse(proposalId);
     const validatedData = updateProposalTrackingSchema.parse(data);
 
     const session = await auth.api.getSession({

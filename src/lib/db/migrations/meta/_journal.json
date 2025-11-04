@@ -29,6 +29,13 @@
       "when": 1761516836691,
       "tag": "0003_save-chat-conversations",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1762214731316,
+      "tag": "0004_add-waitlist",
+      "breakpoints": true
     }
   ]
 }

@@ -2,17 +2,16 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 
@@ -91,33 +90,40 @@ export function MagicLinkAuth() {
           Enter your email and we&apos;ll send you a magic link to sign in
         </p>
       </div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
+      <form id="magic-link-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <FieldGroup>
+          <Controller
             name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    disabled={isPending}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <Input
+                  {...field}
+                  id="magic-link-email"
+                  type="email"
+                  placeholder="Enter your email"
+                  aria-invalid={fieldState.invalid}
+                  disabled={isPending}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isPending}>
+          <Button
+            type="submit"
+            form="magic-link-form"
+            className="w-full"
+            disabled={isPending}
+          >
             {isPending ? "Sending..." : "Send magic link"}
           </Button>
-        </form>
-      </Form>
-      <p className="text-xs text-center text-gray-500">
+        </FieldGroup>
+      </form>
+      <FieldDescription className="text-xs text-center">
         By signing in, you agree to our terms of service and privacy policy.
-      </p>
+      </FieldDescription>
     </div>
   );
 }

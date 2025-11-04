@@ -2,18 +2,16 @@
 
 import { Loader2, Sparkles } from "lucide-react";
 import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { generateTemplateContent } from "@/actions/template-actions";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import {
   Popover,
   PopoverContent,
@@ -117,70 +115,75 @@ export function AITemplateGenerator({
             </p>
           </div>
 
-          <Form {...form}>
-            <form
-              id="create-template-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                // prevent submit button from submitting other forms on the page
-                e.stopPropagation();
+          <form
+            id="create-template-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              // prevent submit button from submitting other forms on the page
+              e.stopPropagation();
 
-                form.handleSubmit(handleGenerate)(e);
-              }}
-              className="space-y-4"
-            >
-              <FormField
-                control={form.control}
+              form.handleSubmit(handleGenerate)(e);
+            }}
+            className="space-y-4"
+          >
+            <FieldGroup>
+              <Controller
                 name="description"
+                control={form.control}
                 rules={{ required: "Description is required" }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Template Description *</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Describe what kind of proposal template you want to create. For example: 'A web development proposal template for e-commerce projects including timeline, features, and pricing sections.'"
-                        className="resize-none min-h-[120px] max-h-60"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="ai-template-description">
+                      Template Description *
+                    </FieldLabel>
+                    <Textarea
+                      {...field}
+                      id="ai-template-description"
+                      placeholder="Describe what kind of proposal template you want to create. For example: 'A web development proposal template for e-commerce projects including timeline, features, and pricing sections.'"
+                      className="resize-none min-h-[120px] max-h-60"
+                      aria-invalid={fieldState.invalid}
+                      disabled={isPending}
+                    />
+                    <FieldDescription>
                       Be specific about the type of proposal, industry, and key
                       sections you want included
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
+                    </FieldDescription>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
                 )}
               />
+            </FieldGroup>
 
-              <div className="flex justify-end gap-3 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setOpen(false)}
-                  disabled={isPending}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  form="create-template-form"
-                  disabled={isPending}
-                >
-                  {isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="mr-2 h-4 w-4" />
-                      Generate Template
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
-          </Form>
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                form="create-template-form"
+                disabled={isPending}
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Generate Template
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
         </div>
       </PopoverContent>
     </Popover>

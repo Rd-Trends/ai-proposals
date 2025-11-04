@@ -10,6 +10,11 @@ import {
 } from "@/lib/db";
 import * as testimonialServices from "@/lib/db/operations/testimonial";
 
+const testimonialIdSchema = z
+  .string()
+  .min(1, "Testimonial ID is required")
+  .uuid("Invalid Testimonial ID");
+
 export const createTestimonial = async (data: NewTestimonial) => {
   try {
     const validatedData = insertTestimonialSchema.parse(data);
@@ -44,6 +49,7 @@ export const updateTestimonial = async (
   data: Partial<NewTestimonial>,
 ) => {
   try {
+    testimonialIdSchema.parse(id);
     const validatedData = updateTestimonialSchema.parse(data);
 
     const session = await auth.api.getSession({
@@ -85,6 +91,8 @@ export const updateTestimonial = async (
 
 export const deleteTestimonial = async (id: string) => {
   try {
+    testimonialIdSchema.parse(id);
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });

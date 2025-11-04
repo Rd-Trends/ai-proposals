@@ -4,20 +4,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { updateTestimonial } from "@/actions/testimonial-actions";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   Sheet,
@@ -86,84 +84,108 @@ export function UpdateTestimonialSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <Form {...form}>
-          <form onSubmit={handleSubmit} className="space-y-6 pt-6 px-4">
-            <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="clientName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Client Name *</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Sarah Johnson" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      The name of the client who provided this testimonial
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <form id="update-testimonial-form" onSubmit={handleSubmit}>
+          <FieldGroup className="space-y-4 pt-6 px-4">
+            <Controller
+              name="clientName"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="update-testimonial-client-name">
+                    Client Name *
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="update-testimonial-client-name"
+                    placeholder="e.g., Sarah Johnson"
+                    aria-invalid={fieldState.invalid}
+                    disabled={isPending}
+                  />
+                  <FieldDescription>
+                    The name of the client who provided this testimonial
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="clientTitle"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Client Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., CEO at TechCorp" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      The client's role and company (optional)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <Controller
+              name="clientTitle"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="update-testimonial-client-title">
+                    Client Title
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="update-testimonial-client-title"
+                    placeholder="e.g., CEO at TechCorp"
+                    aria-invalid={fieldState.invalid}
+                    disabled={isPending}
+                  />
+                  <FieldDescription>
+                    The client's role and company (optional)
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="content"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Testimonial *</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="What did the client say about your work?"
-                        className="min-h-[150px] resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      The testimonial text from your client
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <Controller
+              name="content"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="update-testimonial-content">
+                    Testimonial *
+                  </FieldLabel>
+                  <Textarea
+                    {...field}
+                    id="update-testimonial-content"
+                    placeholder="What did the client say about your work?"
+                    className="min-h-[150px] resize-none"
+                    aria-invalid={fieldState.invalid}
+                    disabled={isPending}
+                  />
+                  <FieldDescription>
+                    The testimonial text from your client
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="projectTitle"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Project Title</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g., E-commerce Website Redesign"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      The project this testimonial is related to (optional)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <Controller
+              name="projectTitle"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="update-testimonial-project-title">
+                    Project Title
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="update-testimonial-project-title"
+                    placeholder="e.g., E-commerce Website Redesign"
+                    aria-invalid={fieldState.invalid}
+                    disabled={isPending}
+                  />
+                  <FieldDescription>
+                    The project this testimonial is related to (optional)
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
             {/* Submit Button */}
             <div className="flex justify-end gap-3 py-6">
@@ -174,7 +196,11 @@ export function UpdateTestimonialSheet({
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isPending}>
+              <Button
+                type="submit"
+                form="update-testimonial-form"
+                disabled={isPending}
+              >
                 {isPending ? (
                   <>
                     <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-b-transparent" />
@@ -188,8 +214,8 @@ export function UpdateTestimonialSheet({
                 )}
               </Button>
             </div>
-          </form>
-        </Form>
+          </FieldGroup>
+        </form>
       </SheetContent>
     </Sheet>
   );
