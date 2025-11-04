@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { DefaultChatTransport, type UIMessage } from "ai";
+import { DefaultChatTransport } from "ai";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ChatHeader } from "@/components/chats/chat-header";
@@ -10,6 +10,7 @@ import { ChatInput } from "@/components/chats/chat-input";
 import type { Conversation as TConversation } from "@/lib/db";
 import { ChatSDKError } from "@/lib/error";
 import { queryKeys } from "@/lib/query-keys";
+import type { ChatMessage } from "@/lib/types";
 import { fetchWithErrorHandlers, generateUUID } from "@/lib/utils";
 import { ChatMessages } from "./chat-messages";
 
@@ -19,12 +20,12 @@ export function Chat({
   conversation,
 }: {
   id: string;
-  initialMessages?: UIMessage[];
+  initialMessages?: ChatMessage[];
   conversation?: TConversation | null;
 }) {
   const [input, setInput] = useState("");
   const queryClient = useQueryClient();
-  const { sendMessage, messages, status } = useChat({
+  const { sendMessage, messages, status, setMessages, regenerate } = useChat({
     id, // use the provided chat ID
     messages: initialMessages, // load initial messages
     generateId: generateUUID,
@@ -89,6 +90,8 @@ export function Chat({
         messages={messages}
         status={status}
         onPromptSelect={handleQuickPrompt}
+        setMessages={setMessages}
+        regenerate={regenerate}
       />
 
       <ChatInput

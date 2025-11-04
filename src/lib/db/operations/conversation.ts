@@ -1,4 +1,4 @@
-import { asc, count, desc, eq } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte } from "drizzle-orm";
 import { ChatSDKError } from "@/lib/error";
 import type { PaginatedResult, PaginationParams } from "@/lib/types";
 import { db } from "../drizzle";
@@ -122,4 +122,36 @@ export const getMessagesByConversationId = async (conversationId: string) => {
     .where(eq(messages_table.conversationId, conversationId))
     .orderBy(asc(messages_table.createdAt));
   return conversationMessages;
+};
+
+export const getMessageById = async ({ id }: { id: string }) => {
+  try {
+    const message = await db.query.messages.findFirst({
+      where: eq(messages_table.id, id),
+      with: { conversation: true },
+    });
+    return message;
+  } catch (_error) {
+    throw new ChatSDKError(
+      "bad_request:database",
+      "Failed to get message by id",
+    );
+  }
+};
+
+export const deleteMessagesByConversationIdAfterTimestamp = async ({
+  conversationId,
+  timestamp,
+}: {
+  conversationId: string;
+  timestamp: Date;
+}) => {
+  await db
+    .delete(messages_table)
+    .where(
+      and(
+        eq(messages_table.conversationId, conversationId),
+        gte(messages_table.createdAt, timestamp),
+      ),
+    );
 };

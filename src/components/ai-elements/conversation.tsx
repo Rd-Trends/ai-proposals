@@ -2,7 +2,7 @@
 
 import { ArrowDownIcon } from "lucide-react";
 import type { ComponentProps } from "react";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -30,10 +30,13 @@ export const ConversationContent = ({
   <StickToBottom.Content className={cn("p-4", className)} {...props} />
 );
 
-export type ConversationScrollButtonProps = ComponentProps<typeof Button>;
+export type ConversationScrollButtonProps = ComponentProps<typeof Button> & {
+  shouldAutoScroll?: boolean;
+};
 
 export const ConversationScrollButton = ({
   className,
+  shouldAutoScroll = false,
   ...props
 }: ConversationScrollButtonProps) => {
   const { isAtBottom, scrollToBottom } = useStickToBottomContext();
@@ -41,6 +44,12 @@ export const ConversationScrollButton = ({
   const handleScrollToBottom = useCallback(() => {
     scrollToBottom();
   }, [scrollToBottom]);
+
+  useEffect(() => {
+    if (shouldAutoScroll && !isAtBottom) {
+      scrollToBottom();
+    }
+  }, [shouldAutoScroll, isAtBottom, scrollToBottom]);
 
   return (
     !isAtBottom && (

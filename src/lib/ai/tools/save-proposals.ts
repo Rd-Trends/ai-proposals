@@ -7,9 +7,13 @@ import { incrementTemplateUsage } from "@/lib/db/operations/template";
 export const saveProposals = (user: User) =>
   tool({
     description:
-      "Save user proposal to the database if it's generated off a template.",
+      "Save generated proposals to the database so users can track their progress.",
     inputSchema: z.object({
-      templateId: z.string().uuid().describe("The ID of the template"),
+      templateId: z
+        .string()
+        .uuid()
+        .describe("The ID of the template if generated off a template")
+        .nullable(),
       proposalContent: z.string().describe("The full proposal text"),
       proposalLength: z
         .number()
@@ -28,24 +32,30 @@ export const saveProposals = (user: User) =>
       platform: z
         .string()
         .max(50)
-        .optional()
-        .describe("The platform name if available, e.g., Upwork"),
+        .describe("The platform name if e.g., Upwork"),
     }),
     execute: async (input) => {
-      const proposal = await createProposalTracking({
-        userId: user.id,
-        templateId: input.templateId,
-        proposalContent: input.proposalContent,
-        proposalLength: input.proposalLength,
-        jobTitle: input.jobTitle,
-        jobDescription: input.jobDescription,
-        jobPostingUrl: input.jobPostingUrl,
-        platform: input.platform,
-        currentOutcome: "proposal_sent",
-      });
+      try {
+        const proposal = await createProposalTracking({
+          userId: user.id,
+          templateId: input.templateId,
+          proposalContent: input.proposalContent,
+          proposalLength: input.proposalLength,
+          jobTitle: input.jobTitle,
+          jobDescription: input.jobDescription,
+          jobPostingUrl: input.jobPostingUrl,
+          platform: input.platform,
+          currentOutcome: "proposal_sent",
+        });
 
-      await incrementTemplateUsage(input.templateId);
+        if (input.templateId) {
+          await incrementTemplateUsage(input.templateId);
+        }
 
-      return { proposalId: proposal.id };
+        return { proposalId: proposal.id };
+      } catch (error) {
+        console.error("Error saving proposal:", error);
+        throw error;
+      }
     },
   });

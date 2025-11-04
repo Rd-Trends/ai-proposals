@@ -2,6 +2,12 @@
 
 import { openai } from "@ai-sdk/openai";
 import { generateText, type UIMessage } from "ai";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import {
+  deleteMessagesByConversationIdAfterTimestamp,
+  getMessageById,
+} from "@/lib/db/operations/conversation";
 
 export async function generateTitleFromUserMessage({
   message,
@@ -25,4 +31,29 @@ export async function generateTitleFromUserMessage({
   }
 
   return title.trim();
+}
+
+export async function deleteTrailingMessages({ id }: { id: string }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    throw new Error("Not authenticated");
+  }
+
+  const message = await getMessageById({ id });
+
+  if (!message) {
+    throw new Error("Message not found");
+  }
+
+  if (message.conversation.userId !== session.user.id) {
+    throw new Error("Unauthorized");
+  }
+
+  await deleteMessagesByConversationIdAfterTimestamp({
+    conversationId: message.conversationId,
+    timestamp: message.createdAt,
+  });
 }
