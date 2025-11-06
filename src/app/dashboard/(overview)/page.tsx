@@ -1,5 +1,12 @@
 import { formatDistanceToNow } from "date-fns";
-import { Award, FileText, MessageSquare, TrendingUp } from "lucide-react";
+import {
+  Award,
+  Briefcase,
+  FileText,
+  MessageSquare,
+  Quote,
+  TrendingUp,
+} from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -77,6 +84,16 @@ export default async function DashboardPage() {
                 variant="outline"
                 asChild
               >
+                <Link href="/dashboard/chat">
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Open AI Chat
+                </Link>
+              </Button>
+              <Button
+                className="w-full justify-start"
+                variant="outline"
+                asChild
+              >
                 <Link href="/dashboard/proposals">
                   <FileText className="mr-2 h-4 w-4" />
                   View Proposals
@@ -97,9 +114,19 @@ export default async function DashboardPage() {
                 variant="outline"
                 asChild
               >
-                <Link href="/dashboard/chat">
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  Open AI Chat
+                <Link href="/dashboard/projects">
+                  <Briefcase className="mr-2 h-4 w-4" />
+                  Manage Projects
+                </Link>
+              </Button>
+              <Button
+                className="w-full justify-start"
+                variant="outline"
+                asChild
+              >
+                <Link href="/dashboard/testimonials">
+                  <Quote className="mr-2 h-4 w-4" />
+                  View Testimonials
                 </Link>
               </Button>
             </CardContent>

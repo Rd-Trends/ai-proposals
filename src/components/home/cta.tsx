@@ -38,10 +38,15 @@ export const CTASection = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button size="lg" className="w-full sm:w-auto">
-            <Link href="/auth/signup">Get Started Free</Link>
+          <Button size="lg" className="w-full sm:w-auto" asChild>
+            <Link href="/auth/signup">Get Started for Free</Link>
           </Button>
-          <Button size="lg" variant="outline" className="w-full sm:w-auto">
+          <Button
+            size="lg"
+            variant="outline"
+            className="w-full sm:w-auto"
+            asChild
+          >
             <Link href="/auth/signin">Sign In</Link>
           </Button>
         </div>

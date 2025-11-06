@@ -71,6 +71,7 @@ Build the proposal with the following components:
 Address the client by name if available. Avoid casual greetings like "Hey there" or overly formal ones like "Sir/Ma'am".
 
 **Example:** "Hi [Client Name],"
+**Example if no name:** "Hello,"
 
 #### 2. Engaging Introduction (Maximum 40 words, aim for ~30)
 Capture attention by addressing the client's specific needs, goals, or pain points. The first few lines are critical and must be SHORT and PUNCHY. **NEVER exceed 40 words. Strive to keep it around 30 words for maximum impact.**
@@ -81,7 +82,9 @@ Do NOT waste this space by:
 - Repeating what's in the job post
 - Talking about how excited you are about the job
 
-Instead, pose a solution or ask a thoughtful question that demonstrates your knowledge. Avoid asking questions where the answer is already stated in the job description. Your goal is to show you've understood the core problem and can offer unique value in the fewest words possible.
+Focus on demonstrating understanding of their needs and hinting at your solution. present a compelling value proposition that makes them want to read more. 
+
+NOTE: This section MUST be concise, straight to the point and attention-grabbing. it should not exceed 40 words.
 
 **Example 1:**
 

@@ -28,27 +28,23 @@ export const HeroSection = () => {
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 blur-sm opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300" />
         </div>
 
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-center mb-4 max-w-4xl relative">
-          Write Winning Proposals in{" "}
+        <h1 className="text-3xl md:text-5xl xl:text-7xl font-bold text-center mb-4 max-w-6xl relative">
+          Stop Sending Generic Proposals. Start{" "}
           <span className="relative inline-block">
             <span className="relative z-10 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              Minutes
+              Landing Interviews.
             </span>
           </span>
-          , Not Hours
         </h1>
 
         <p className="text-base md:text-lg text-center text-muted-foreground max-w-2xl mb-8">
-          Our AI-powered proposal generator helps you create persuasive,
-          client-winning proposals with ease.{" "}
-          <span className="text-foreground font-semibold">
-            Stop wasting time and start landing more clients
-          </span>
-          .
+          QuickRite uses AI to craft personalized proposals that reflect your
+          experience and grab clients' attention—so you can spend less time
+          writing and more time landing interviews.
         </p>
 
-        <Button size="lg" className="shadow-lg">
-          <Link href="/auth/signup">Get Started Free</Link>
+        <Button size="lg" className="shadow-lg" asChild>
+          <Link href="/auth/signup">Get Started for Free</Link>
         </Button>
       </Container>
     </Section>

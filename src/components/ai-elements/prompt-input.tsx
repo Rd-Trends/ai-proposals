@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
 export type PromptInputProps = HTMLAttributes<HTMLFormElement>;
@@ -44,8 +45,10 @@ export const PromptInputTextarea = ({
   maxHeight = 164,
   ...props
 }: PromptInputTextareaProps) => {
+  const isMobile = useIsMobile();
+
   const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !isMobile) {
       // Don't submit if IME composition is in progress
       if (e.nativeEvent.isComposing) {
         return;

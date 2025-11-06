@@ -65,7 +65,7 @@ export const FAQSection = () => {
               you're looking for? Reach out to our support team.
             </p>
             <Button asChild>
-              <a href="mailto:support@aiproposals.com">Contact Support</a>
+              <a href="mailto:dannirolands@gmail.com">Contact Support</a>
             </Button>
           </div>
 

@@ -16,11 +16,9 @@ export default function RequestAccessPage() {
         <RequestAccessForm />
         <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
           Already have access?{" "}
-          <Link href="/auth/signin">
-            <Button variant="link" className="p-0 h-auto">
-              Sign in
-            </Button>
-          </Link>
+          <Button variant="link" className="p-0 h-auto" asChild>
+            <Link href="/auth/signin">Sign in</Link>
+          </Button>
         </div>
       </div>
     </div>

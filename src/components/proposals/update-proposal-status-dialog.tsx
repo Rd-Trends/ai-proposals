@@ -33,7 +33,7 @@ import { PROPOSAL_OUTCOME, type ProposalTracking } from "@/lib/db";
 import { getProposalStatusLabel } from "./helpers";
 
 const updateStatusSchema = z.object({
-  status: z.enum(PROPOSAL_OUTCOME),
+  currentOutcome: z.enum(PROPOSAL_OUTCOME),
   notes: z.string().optional(),
 });
 
@@ -56,7 +56,7 @@ export function UpdateProposalStatusDialog({
   const form = useForm<UpdateStatusFormData>({
     resolver: zodResolver(updateStatusSchema),
     defaultValues: {
-      status: proposal.currentOutcome || "proposal_sent",
+      currentOutcome: proposal.currentOutcome || "proposal_sent",
       notes: proposal.notes || "",
     },
   });
@@ -94,15 +94,15 @@ export function UpdateProposalStatusDialog({
         <form id="update-proposal-status-form" onSubmit={handleSubmit}>
           <FieldGroup className="space-y-4">
             <Controller
-              name="status"
+              name="currentOutcome"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="proposal-status">Status</FieldLabel>
                   <Select
+                    name={field.name}
+                    value={field.value}
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={isPending}
                   >
                     <SelectTrigger
                       id="proposal-status"
@@ -111,27 +111,11 @@ export function UpdateProposalStatusDialog({
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="proposal_sent">
-                        {getProposalStatusLabel("proposal_sent")}
-                      </SelectItem>
-                      <SelectItem value="proposal_viewed">
-                        {getProposalStatusLabel("proposal_viewed")}
-                      </SelectItem>
-                      <SelectItem value="client_responded">
-                        {getProposalStatusLabel("client_responded")}
-                      </SelectItem>
-                      <SelectItem value="interviewed">
-                        {getProposalStatusLabel("interviewed")}
-                      </SelectItem>
-                      <SelectItem value="job_awarded">
-                        {getProposalStatusLabel("job_awarded")}
-                      </SelectItem>
-                      <SelectItem value="proposal_rejected">
-                        {getProposalStatusLabel("proposal_rejected")}
-                      </SelectItem>
-                      <SelectItem value="no_response">
-                        {getProposalStatusLabel("no_response")}
-                      </SelectItem>
+                      {PROPOSAL_OUTCOME.map((outcome) => (
+                        <SelectItem key={outcome} value={outcome}>
+                          {getProposalStatusLabel(outcome)}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   {fieldState.invalid && (

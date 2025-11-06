@@ -21,16 +21,12 @@ export default function AuthPage() {
             </div>
 
             <div className="space-y-3">
-              <Link href="/auth/signin">
-                <Button className="w-full" size="lg">
-                  Sign In
-                </Button>
-              </Link>
-              <Link href="/auth/signup">
-                <Button variant="outline" className="w-full" size="lg">
-                  Create Account
-                </Button>
-              </Link>
+              <Button className="w-full" size="lg" asChild>
+                <Link href="/auth/signin">Sign In</Link>
+              </Button>
+              <Button variant="outline" className="w-full" size="lg" asChild>
+                <Link href="/auth/signup">Create Account</Link>
+              </Button>
             </div>
 
             <div className="relative">
