@@ -70,17 +70,6 @@ export function SignInForm() {
   };
 
   return (
-    // <div className="space-y-4">
-    //   <div className="space-y-2 text-center">
-    //     <h2 className="text-2xl font-bold">Welcome back</h2>
-    //     <p className="text-gray-600">Sign in to your AI Proposals account</p>
-    //   </div>
-
-    //   <FieldDescription className="text-xs text-center">
-    //     By signing in, you agree to our terms of service and privacy policy.
-    //   </FieldDescription>
-    // </div>
-
     <div className="flex flex-col gap-6">
       <Card>
         <CardHeader className="text-center">

@@ -72,7 +72,7 @@ export const FeaturesSection = () => {
             <br />
             Nothing you don&apos;t.
           </h2>
-          <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-sm md:text-lg max-w-md mx-auto">
             All the tools you need to create winning proposals and grow your
             freelancing business
           </p>

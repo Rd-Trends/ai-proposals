@@ -85,7 +85,7 @@ export function MagicLinkAuth() {
   return (
     <div className="space-y-4">
       <div className="space-y-2 text-center">
-        <h2 className="text-2xl font-bold">Sign in to AI Proposals</h2>
+        <h2 className="text-2xl font-bold">Sign in to QuickRite</h2>
         <p className="text-gray-600">
           Enter your email and we&apos;ll send you a magic link to sign in
         </p>

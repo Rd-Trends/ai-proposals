@@ -35,16 +35,16 @@ export const auth = betterAuth({
         // await resend.emails.send({
         //   from: "noreply@yourdomain.com", // Replace with your domain
         //   to: [email],
-        //   subject: "Sign in to AI Proposals",
+        //   subject: "Sign in to QuickRite",
         //   html: `
         //     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        //       <h1 style="color: #333; text-align: center;">Sign in to AI Proposals</h1>
+        //       <h1 style="color: #333; text-align: center;">Sign in to QuickRite</h1>
         //       <p style="color: #666; font-size: 16px;">
         //         Click the button below to sign in to your account. This link will expire in 10 minutes.
         //       </p>
         //       <div style="text-align: center; margin: 30px 0;">
-        //         <a 
-        //           href="${url}" 
+        //         <a
+        //           href="${url}"
         //           style="
         //             background-color: #007cba;
         //             color: white;

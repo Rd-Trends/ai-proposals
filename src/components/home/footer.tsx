@@ -10,7 +10,7 @@ export const Footer = () => {
         {/* <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div className="md:col-span-1">
             <Link href="/" className="text-xl font-bold mb-4 block">
-              AI Proposals
+              QuickRite
             </Link>
             <p className="text-sm text-muted-foreground max-w-sm">
               AI-powered proposal generator for freelancers. Create winning
@@ -74,7 +74,7 @@ export const Footer = () => {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © {currentYear} AI Proposals. All rights reserved.
+            © {currentYear} QuickRite. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-muted-foreground">
             <Link href="#" className="hover:text-foreground transition-colors">

@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "AI Proposals",
-    short_name: "AI Proposals",
+    name: "QuickRite",
+    short_name: "QuickRite",
     description:
       "Write better proposals for freelancing platforms with AI assistance. Create templates, generate proposals, and track performance.",
     start_url: "/dashboard/chat",

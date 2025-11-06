@@ -7,7 +7,7 @@ These rules are binding for all Copilot Chat responses in this repo. Default to 
 
 ## Project Overview
 
-This project is a web application designed to help freelancers (web developers, creative writers, UI/UX designers, etc.) write better proposals for job postings on platforms like Upwork, Contra, and Fiverr. Users can create proposals templates (with or without AI assistance), users can generate proposals using AI for job postings (with or without templates). users can track proposal performance, and users can manage their profiles.
+This project (QuickRite) is a web application designed to help freelancers (web developers, creative writers, UI/UX designers, etc.) write better proposals for job postings on platforms like Upwork, Contra, and Fiverr. Users can create proposals templates (with or without AI assistance), users can generate proposals using AI for job postings (with or without templates). users can track proposal performance, and users can manage their profiles.
 
 ## Technology Stack
 

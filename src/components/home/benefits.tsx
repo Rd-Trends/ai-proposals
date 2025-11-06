@@ -3,17 +3,17 @@ import { Container } from "@/components/site-layout/container";
 import { Section } from "@/components/site-layout/section";
 
 const problems = [
-  "Spending hours writing custom proposals",
-  "Struggling to stand out from competitors",
-  "Missing deadlines due to proposal backlogs",
-  "Inconsistent proposal quality",
+  "Wasting valuable time drafting proposals",
+  "Struggling to stand out from the competition",
+  "Delivering proposals with inconsistent quality",
+  "Lacking insights on what proposals work",
 ];
 
 const solutions = [
-  "Generate proposals in under 2 minutes",
-  "AI-crafted personalized proposals that win",
-  "Submit more proposals, win more clients",
-  "Professional quality, every single time",
+  "Generate tailored proposals in under 2 minutes",
+  "Stand out with high-impact, unique proposals",
+  "Include social proof and relevant case studies",
+  "Get data-driven insights to optimize proposals",
 ];
 
 const stats = [
@@ -39,9 +39,9 @@ export const BenefitsSection = () => {
               Slow Proposals
             </span>
           </h2>
-          <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto">
-            While you're spending hours crafting the perfect proposal, your
-            competitors are already submitting theirs. Time to level up.
+          <p className="text-muted-foreground text-sm md:text-lg max-w-md mx-auto">
+            Writing quality proposals can be time-consuming and difficult.
+            Competitors move fast. Time to level up.
           </p>
         </div>
 
@@ -54,7 +54,7 @@ export const BenefitsSection = () => {
               </span>
             </div>
             <h3 className="text-2xl md:text-3xl font-bold mb-6 text-muted-foreground">
-              Without AI Proposals
+              Without QuickRite
             </h3>
             <div className="space-y-4">
               {problems.map((problem) => (
@@ -84,7 +84,7 @@ export const BenefitsSection = () => {
               </span>
             </div>
             <h3 className="text-2xl md:text-3xl font-bold mb-6">
-              With AI Proposals
+              With QuickRite
             </h3>
             <div className="space-y-4">
               {solutions.map((solution) => (

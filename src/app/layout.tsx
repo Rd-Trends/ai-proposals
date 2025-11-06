@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Proposals - Smart Proposal Templates",
+  title: "QuickRite - Smart Proposal Templates",
   description:
     "Create winning proposals with AI-powered templates. Track your success and optimize your freelance business.",
 };

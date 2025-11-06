@@ -10,19 +10,19 @@ import { Button } from "../ui/button";
 
 const faqs = [
   {
-    question: "How does the AI proposal generator work?",
+    question: "How does the QuickRite AI proposal generator work?",
     answer:
-      "Our AI analyzes the job posting you provide, along with your profile information, portfolio, and testimonials. It then generates a personalized, compelling proposal tailored to the specific client's needs and requirements. You can review and edit the proposal before submitting it.",
+      "QuickRite's AI analyzes the job posting you provide, along with your profile information, portfolio, and testimonials. It then generates a personalized, compelling proposal tailored to the specific client's needs and requirements. You can review and edit the proposal before submitting it.",
   },
   {
     question: "Can I customize the AI-generated proposals?",
     answer:
-      "Absolutely! The AI generates a draft proposal that you can fully customize and edit. You can adjust the tone, add personal touches, or modify any section to better match your style. You can also create and save custom templates to speed up future proposals.",
+      "Absolutely! QuickRite's AI generates a draft proposal that you can fully customize and edit. You can adjust the tone, add personal touches, or modify any section to better match your style. You can also create and save custom templates to speed up future proposals.",
   },
   {
-    question: "What platforms does AI Proposals work with?",
+    question: "What platforms does QuickRite work with?",
     answer:
-      "AI Proposals works with all major freelancing platforms including Upwork, Fiverr, Contra, Freelancer.com, and any other platform where you need to submit proposals. Simply copy your generated proposal and paste it into the platform of your choice.",
+      "QuickRite works with all major freelancing platforms including Upwork, Fiverr, Contra, Freelancer.com, and any other platform where you need to submit proposals. Simply copy your generated proposal and paste it into the platform of your choice.",
   },
   {
     question: "How do I track my proposal success rate?",
@@ -37,7 +37,7 @@ const faqs = [
   {
     question: "Can I use my own templates?",
     answer:
-      "Yes! You can create unlimited custom templates with or without AI assistance. Save your best-performing proposals as templates and reuse them for similar projects. The AI can also help you create professional templates based on your niche and style.",
+      "Yes! You can create unlimited custom templates with or without AI assistance. Save your best-performing proposals as templates and reuse them for similar projects. QuickRite's AI can also help you create professional templates based on your niche and style.",
   },
   {
     question: "What if I'm not satisfied with the generated proposal?",
@@ -45,9 +45,9 @@ const faqs = [
       "You can regenerate proposals as many times as you need. Each generation considers your feedback and produces a new variation. You also have full editing control to refine any proposal to your exact specifications.",
   },
   {
-    question: "Do I need technical skills to use AI Proposals?",
+    question: "Do I need technical skills to use QuickRite?",
     answer:
-      "Not at all! AI Proposals is designed to be user-friendly and intuitive. Simply paste the job posting, and our AI handles the rest. No technical skills or AI knowledge required—just focus on winning more clients.",
+      "Not at all! QuickRite is designed to be user-friendly and intuitive. Simply paste the job posting, and QuickRite's AI handles the rest. No technical skills or AI knowledge required—just focus on winning more clients.",
   },
 ];
 
@@ -60,9 +60,9 @@ export const FAQSection = () => {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-muted-foreground text-sm md:text-lg max-w-2xl pb-6">
-              Everything you need to know about AI Proposals. Can't find the
-              answer you're looking for? Reach out to our support team.
+            <p className="text-muted-foreground text-sm md:text-lg max-w-md pb-6">
+              Everything you need to know about QuickRite. Can't find the answer
+              you're looking for? Reach out to our support team.
             </p>
             <Button asChild>
               <a href="mailto:support@aiproposals.com">Contact Support</a>
