@@ -54,16 +54,6 @@ export const CTASection = () => {
         <p className="text-xs md:text-sm text-muted-foreground mt-6">
           No credit card required • Free forever plan • Cancel anytime
         </p>
-
-        <p className="text-xs text-muted-foreground mt-2">
-          Don't have access yet?{" "}
-          <Link
-            href="/auth/request-access"
-            className="underline hover:text-primary"
-          >
-            Request an invite
-          </Link>
-        </p>
       </Container>
     </Section>
   );

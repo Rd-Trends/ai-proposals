@@ -14,12 +14,14 @@ import {
 
 interface AdminAccessRequestEmailProps {
   email: string;
+  name: string;
   requestedAt?: string;
   dashboardUrl?: string;
 }
 
 export const AdminAccessRequestEmail = ({
   email,
+  name,
   requestedAt = new Date().toLocaleString(),
   dashboardUrl = process.env.NEXT_PUBLIC_APP_URL
     ? `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/waitlist`
@@ -28,12 +30,17 @@ export const AdminAccessRequestEmail = ({
   return (
     <Html>
       <Head />
-      <Preview>New access request from {email}</Preview>
+      <Preview>
+        New access request from {name} ({email})
+      </Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>New Access Request 📬</Heading>
           <Text style={text}>Someone has requested access to QuickRite:</Text>
           <Section style={infoBox}>
+            <Text style={infoText}>
+              <strong>Name:</strong> {name}
+            </Text>
             <Text style={infoText}>
               <strong>Email:</strong> {email}
             </Text>

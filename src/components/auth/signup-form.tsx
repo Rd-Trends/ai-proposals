@@ -7,7 +7,7 @@ import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { checkEmailAllowed, markEmailUsed } from "@/actions/waitlist-actions";
+import { joinWaitlistAction } from "@/actions/waitlist-actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -57,13 +57,7 @@ export function SignUpForm() {
   const onSubmit = async (formData: FormValues) => {
     startTransition(async () => {
       try {
-        // Check if email is allowed (only in production)
-        const { allowed, message } = await checkEmailAllowed(formData.email);
-        if (!allowed) {
-          toast.error(message || "Access denied");
-          return;
-        }
-
+        // Create the user account
         const { error } = await authClient.signUp.email({
           email: formData.email,
           password: formData.password,
@@ -78,10 +72,20 @@ export function SignUpForm() {
             error.message || "Failed to create account. Please try again.",
           );
         } else {
-          // Mark waitlist entry as used
-          await markEmailUsed(formData.email);
-          toast.success("Account created successfully! Redirecting...");
-          router.push("/dashboard");
+          const res = await joinWaitlistAction({
+            name: formData.name,
+            email: formData.email,
+          });
+
+          if (!res.isInWaitlist) {
+            toast.success(
+              "Account created! You'll be able to sign in once your account is approved.",
+            );
+          } else {
+            toast.success("Sign up successful! You can now sign in.");
+          }
+
+          router.push("/auth/signin");
         }
       } catch (error) {
         console.error("Unexpected error:", error);
@@ -205,10 +209,7 @@ export function SignUpForm() {
                 <Link href="/auth/signin" className="underline">
                   Sign in
                 </Link>
-                . <br /> Can't Sign Up?{" "}
-                <Link href="/auth/request-access" className="underline">
-                  Request Access
-                </Link>
+                .
               </FieldDescription>
             </FieldGroup>
           </form>

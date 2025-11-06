@@ -7,6 +7,7 @@ import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { checkWaitlistForSignIn } from "@/actions/waitlist-actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -47,6 +48,16 @@ export function SignInForm() {
   const onSubmit = async (formData: FormValues) => {
     startTransition(async () => {
       try {
+        // Check waitlist status before allowing sign in
+        const { allowed, message } = await checkWaitlistForSignIn(
+          formData.email,
+        );
+
+        if (!allowed) {
+          toast.error(message || "Access denied");
+          return;
+        }
+
         const { error } = await authClient.signIn.email({
           email: formData.email,
           password: formData.password,

@@ -7,8 +7,8 @@ import { UserActivatedEmail } from "@/emails/user-activated";
 import {
   addToWaitlist,
   deactivateWaitlistEntry as deactivateEntry,
+  getWaitlistStatus,
   isEmailAllowed,
-  markWaitlistAsUsed,
   reactivateWaitlistEntry as reactivateEntry,
   removeFromWaitlist,
 } from "@/lib/db/operations/waitlist";
@@ -17,10 +17,10 @@ import { sendEmail } from "@/lib/email";
 const emailSchema = z.string().email("Invalid email address");
 
 /**
- * Check if email is allowed to sign up
- * Only enforced in production
+ * Check waitlist status for signin
+ * Returns whether user can sign in and an appropriate message
  */
-export async function checkEmailAllowed(email: string): Promise<{
+export async function checkWaitlistForSignIn(email: string): Promise<{
   allowed: boolean;
   message?: string;
 }> {
@@ -32,17 +32,28 @@ export async function checkEmailAllowed(email: string): Promise<{
       return { allowed: true };
     }
 
-    const allowed = await isEmailAllowed(email);
+    const status = await getWaitlistStatus(email);
 
-    if (!allowed) {
-      return {
-        allowed: false,
-        message:
-          "Your email is not on the waitlist. Please request an invite to join the platform.",
-      };
+    switch (status) {
+      case "not-in-waitlist":
+        // Email not in waitlist, allow normal login
+        return { allowed: true };
+      case "activated":
+        // User is activated, allow login
+        return { allowed: true };
+      case "pending":
+        // User is in waitlist but not activated yet
+        return {
+          allowed: false,
+          message:
+            "Your account is pending approval. We'll notify you when you have been granted access.",
+        };
+      default:
+        return {
+          allowed: false,
+          message: "An unexpected error occurred.",
+        };
     }
-
-    return { allowed: true };
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
@@ -56,40 +67,31 @@ export async function checkEmailAllowed(email: string): Promise<{
 }
 
 /**
- * Mark waitlist entry as used after successful signup
- */
-export async function markEmailUsed(email: string): Promise<void> {
-  try {
-    emailSchema.parse(email);
-
-    if (process.env.NODE_ENV === "production") {
-      await markWaitlistAsUsed(email);
-    }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      throw new Error(error.errors[0].message);
-    }
-
-    throw new Error("An unexpected error occurred.");
-  }
-}
-
-/**
  * Request access to the platform by joining the waitlist
  */
-export async function requestAccess(email: string): Promise<{
+
+const joinWaitlistSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+});
+
+export async function joinWaitlistAction(
+  params: z.infer<typeof joinWaitlistSchema>,
+): Promise<{
   success: boolean;
+  isInWaitlist?: boolean;
   message: string;
 }> {
   try {
-    emailSchema.parse(email);
+    emailSchema.parse(params.email);
 
     // Check if email is already on the waitlist
-    const alreadyOnWaitlist = await isEmailAllowed(email);
+    const alreadyOnWaitlist = await isEmailAllowed(params.email);
 
     if (alreadyOnWaitlist) {
       return {
-        success: false,
+        success: true,
+        isInWaitlist: true,
         message:
           "This email is already on our waitlist. We'll notify you when access is available.",
       };
@@ -97,7 +99,8 @@ export async function requestAccess(email: string): Promise<{
 
     // Add to waitlist
     await addToWaitlist({
-      email: email.toLowerCase(),
+      name: params.name,
+      email: params.email.toLowerCase(),
       invitedBy: "self-request",
       notes: "Requested access via waitlist form",
       isActive: false,
@@ -109,9 +112,10 @@ export async function requestAccess(email: string): Promise<{
       if (adminEmail) {
         await sendEmail({
           to: adminEmail,
-          subject: `New Access Request from ${email}`,
+          subject: `New Access Request from ${params.name}`,
           react: AdminAccessRequestEmail({
-            email: email.toLowerCase(),
+            email: params.email.toLowerCase(),
+            name: params.name,
             requestedAt: new Date().toLocaleString(),
           }),
         });
@@ -123,6 +127,7 @@ export async function requestAccess(email: string): Promise<{
 
     return {
       success: true,
+      isInWaitlist: false,
       message:
         "Thanks for your interest! We've added you to our waitlist and will notify you when access is available.",
     };
@@ -150,41 +155,6 @@ export async function requestAccess(email: string): Promise<{
       message:
         "Unable to process your request at this time. Please try again later.",
     };
-  }
-}
-
-/**
- * Add a new entry to the waitlist (admin action)
- */
-export async function addToWaitlistAction(
-  email: string,
-  invitedBy = "admin",
-  notes?: string,
-): Promise<void> {
-  try {
-    emailSchema.parse(email);
-    await addToWaitlist({ email, invitedBy, notes, isActive: true });
-
-    // Send activation email to the user
-    try {
-      await sendEmail({
-        to: email,
-        subject: "Your Access to QuickRite Has Been Activated! 🎉",
-        react: UserActivatedEmail({
-          email,
-        }),
-      });
-    } catch (emailError) {
-      // Log email error but don't fail the action
-      console.error("Failed to send activation email:", emailError);
-    }
-
-    revalidatePath("/dashboard/waitlist");
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      throw new Error(error.errors[0].message);
-    }
-    throw new Error("Failed to add email to waitlist");
   }
 }
 

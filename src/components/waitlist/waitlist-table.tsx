@@ -1,7 +1,7 @@
 "use client";
 
 import type { Table } from "@tanstack/react-table";
-import { ChevronDown, Plus, Search, Settings2 } from "lucide-react";
+import { ChevronDown, Filter, Search, Settings2 } from "lucide-react";
 import { useCallback, useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 import {
@@ -22,6 +22,10 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -30,7 +34,6 @@ import { createColumns } from "@/components/waitlist/columns";
 import { useClipboard } from "@/hooks/use-clipboard";
 import type { Waitlist } from "@/lib/db";
 import type { PageMetadata } from "@/lib/types";
-import { AddWaitlistSheet } from "./add-waitlist-sheet";
 import { DeleteWaitlistDialog } from "./delete-waitlist-dialog";
 
 type WaitlistTableProps = {
@@ -42,7 +45,6 @@ export function WaitlistTable({ entries, pagination }: WaitlistTableProps) {
   const { copy } = useClipboard();
   const [isPending, startTransition] = useTransition();
   const [selectedEntry, setSelectedEntry] = useState<Waitlist | null>(null);
-  const [showAddSheet, setShowAddSheet] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleCopy = useCallback(
@@ -92,18 +94,11 @@ export function WaitlistTable({ entries, pagination }: WaitlistTableProps) {
             data={entries}
             isLoading={isPending}
             enablePagination={false} // Disable client-side pagination
-            tableHeader={(table) => (
-              <WaitlistTableHeader
-                table={table}
-                onAdd={() => setShowAddSheet(true)}
-              />
-            )}
+            tableHeader={(table) => <WaitlistTableHeader table={table} />}
           />
           {!!pagination?.totalPages && <Pagination {...pagination} />}
         </CardContent>
       </Card>
-
-      <AddWaitlistSheet open={showAddSheet} onOpenChange={setShowAddSheet} />
 
       {selectedEntry && (
         <DeleteWaitlistDialog
@@ -117,13 +112,23 @@ export function WaitlistTable({ entries, pagination }: WaitlistTableProps) {
 }
 
 // Waitlist table header component
-function WaitlistTableHeader<TData>({
-  table,
-  onAdd,
-}: {
-  table: Table<TData>;
-  onAdd?: () => void;
-}) {
+function WaitlistTableHeader<TData>({ table }: { table: Table<TData> }) {
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+
+  const handleStatusFilterChange = (value: string) => {
+    setStatusFilter(value);
+    const column = table.getColumn("isActive");
+    if (!column) return;
+
+    if (value === "all") {
+      column.setFilterValue(undefined);
+    } else if (value === "active") {
+      column.setFilterValue(true);
+    } else if (value === "inactive") {
+      column.setFilterValue(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between">
       <div className="flex flex-1 items-center gap-2">
@@ -138,6 +143,34 @@ function WaitlistTableHeader<TData>({
             className="pl-8"
           />
         </div>
+
+        {/* Status Filter */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="hidden md:flex">
+              <Filter className="mr-2 h-4 w-4" />
+              Status
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-[160px]">
+            <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup
+              value={statusFilter}
+              onValueChange={handleStatusFilterChange}
+            >
+              <DropdownMenuRadioItem value="all">All</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="active">
+                Active
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="inactive">
+                Inactive
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <Drawer>
           <DrawerTrigger asChild>
             <Button variant="outline" size="icon" className="md:hidden">
@@ -149,6 +182,41 @@ function WaitlistTableHeader<TData>({
               <DrawerTitle>Filters</DrawerTitle>
             </DrawerHeader>
             <div className="space-y-4 p-4">
+              {/* Mobile Status Filter */}
+              <div className="space-y-2">
+                <div className="text-sm font-medium">Status</div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-between"
+                    >
+                      {statusFilter === "all"
+                        ? "All"
+                        : statusFilter === "active"
+                          ? "Active"
+                          : "Inactive"}
+                      <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-full">
+                    <DropdownMenuRadioGroup
+                      value={statusFilter}
+                      onValueChange={handleStatusFilterChange}
+                    >
+                      <DropdownMenuRadioItem value="all">
+                        All
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="active">
+                        Active
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="inactive">
+                        Inactive
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <ColumnVisibilityDropdown table={table} />
             </div>
           </DrawerContent>
@@ -158,10 +226,6 @@ function WaitlistTableHeader<TData>({
         <div className="hidden md:block">
           <ColumnVisibilityDropdown table={table} />
         </div>
-        <Button onClick={onAdd}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Entry
-        </Button>
       </div>
     </div>
   );

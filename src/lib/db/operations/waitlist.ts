@@ -1,6 +1,32 @@
-import { and, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNull } from "drizzle-orm";
 import { db } from "@/lib/db/drizzle";
 import { type NewWaitlist, waitlist } from "@/lib/db/schema";
+
+/**
+ * Check waitlist status for an email
+ * Returns status: 'not-in-waitlist' | 'activated' | 'pending'
+ */
+export async function getWaitlistStatus(
+  email: string,
+): Promise<"not-in-waitlist" | "activated" | "pending"> {
+  const result = await db
+    .select()
+    .from(waitlist)
+    .where(eq(waitlist.email, email.toLowerCase()))
+    .limit(1);
+
+  if (result.length === 0) {
+    return "not-in-waitlist";
+  }
+
+  const entry = result[0];
+  // User is activated if they're active OR have already used the invite
+  if (entry.isActive || entry.usedAt !== null) {
+    return "activated";
+  }
+
+  return "pending";
+}
 
 /**
  * Check if an email is on the waitlist and active
@@ -28,25 +54,16 @@ export async function addToWaitlist(data: NewWaitlist): Promise<void> {
  * Add multiple emails to the waitlist
  */
 export async function addMultipleToWaitlist(
-  emails: string[],
+  entries: { email: string; name: string }[],
   invitedBy = "admin",
 ): Promise<void> {
-  const values = emails.map((email) => ({
-    email: email.toLowerCase(),
+  const values = entries.map((entry) => ({
+    email: entry.email.toLowerCase(),
+    name: entry.name,
     invitedBy,
   }));
 
   await db.insert(waitlist).values(values);
-}
-
-/**
- * Mark a waitlist entry as used when user signs up
- */
-export async function markWaitlistAsUsed(email: string): Promise<void> {
-  await db
-    .update(waitlist)
-    .set({ usedAt: new Date() })
-    .where(eq(waitlist.email, email.toLowerCase()));
 }
 
 /**
@@ -72,7 +89,7 @@ export async function deactivateWaitlistEntry(email: string): Promise<void> {
 export async function reactivateWaitlistEntry(email: string): Promise<void> {
   await db
     .update(waitlist)
-    .set({ isActive: true })
+    .set({ isActive: true, usedAt: new Date() })
     .where(eq(waitlist.email, email.toLowerCase()));
 }
 
@@ -80,7 +97,7 @@ export async function reactivateWaitlistEntry(email: string): Promise<void> {
  * Get all waitlist entries
  */
 export async function getAllWaitlistEntries() {
-  return await db.select().from(waitlist);
+  return await db.select().from(waitlist).orderBy(desc(waitlist.invitedAt));
 }
 
 /**

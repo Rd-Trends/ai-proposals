@@ -48,7 +48,12 @@ export const PromptInputTextarea = ({
   const isMobile = useIsMobile();
 
   const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.key === "Enter" && !isMobile) {
+    if (e.key === "Enter") {
+      if (isMobile) {
+        // On mobile, we don't want to submit on Enter key press
+        return;
+      }
+
       // Don't submit if IME composition is in progress
       if (e.nativeEvent.isComposing) {
         return;

@@ -4,6 +4,7 @@ export const waitlist = pgTable("waitlist", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
   email: text("email").notNull().unique(),
   invitedBy: text("invited_by"), // Email of the person who invited them, or "admin"
   invitedAt: timestamp("invited_at")

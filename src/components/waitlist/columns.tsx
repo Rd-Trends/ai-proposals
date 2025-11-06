@@ -37,12 +37,21 @@ export function createColumns({
 }: ColumnActions): ColumnDef<Waitlist>[] {
   return [
     {
+      accessorKey: "name",
+      header: "Name",
+      cell: ({ row }) => (
+        <span className="font-medium">{row.getValue("name")}</span>
+      ),
+    },
+    {
       accessorKey: "email",
       header: "Email",
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <Mail className="h-4 w-4 text-muted-foreground" />
-          <span className="font-medium">{row.getValue("email")}</span>
+          <span className="text-sm text-muted-foreground">
+            {row.getValue("email")}
+          </span>
         </div>
       ),
     },
