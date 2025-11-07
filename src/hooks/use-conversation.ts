@@ -61,13 +61,17 @@ export const useUpdateConversation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, title }: { id: string; title: string }) => {
-      const response = await fetch(`/api/chat/${id}`, {
+    mutationFn: async (payload: {
+      id: string;
+      title?: string;
+      isPublic?: boolean;
+    }) => {
+      const response = await fetch(`/api/chat/${payload.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -76,7 +80,7 @@ export const useUpdateConversation = () => {
 
       return response.json();
     },
-    onMutate: async ({ id, title }) => {
+    onMutate: async (payload) => {
       await queryClient.cancelQueries({
         queryKey: queryKeys.conversations.all,
       });
@@ -95,8 +99,11 @@ export const useUpdateConversation = () => {
             return {
               ...page,
               data: page.data.map((conversation) =>
-                conversation.id === id
-                  ? { ...conversation, title }
+                conversation.id === payload.id
+                  ? {
+                      ...conversation,
+                      ...payload,
+                    }
                   : conversation,
               ),
             };
@@ -107,8 +114,11 @@ export const useUpdateConversation = () => {
             pages: newPages,
           };
         } else {
-          if (oldData.id === id) {
-            return { ...oldData, title };
+          if (oldData.id === payload.id) {
+            return {
+              ...oldData,
+              ...payload,
+            };
           }
         }
       });

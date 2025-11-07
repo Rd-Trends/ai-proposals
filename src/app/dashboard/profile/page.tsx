@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
@@ -8,6 +9,12 @@ import {
 import { ProfileForm } from "@/components/profile/profile-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+
+export const metadata: Metadata = {
+  title: "Profile Settings - QuickRite",
+  description:
+    "Manage your QuickRite profile, update your information, and customize your account settings.",
+};
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({

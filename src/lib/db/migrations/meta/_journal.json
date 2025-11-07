@@ -43,6 +43,13 @@
       "when": 1762464825161,
       "tag": "0005_add-name-to-waitlist",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1762526742481,
+      "tag": "0006_add-conversation-visibility",
+      "breakpoints": true
     }
   ]
 }

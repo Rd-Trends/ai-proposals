@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -14,6 +15,12 @@ import ProposalsTrackingTable from "@/components/proposals/proposal-tracking-tab
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 import { getProposalTrackingByUserId } from "@/lib/db/operations/proposal";
+
+export const metadata: Metadata = {
+  title: "Proposals - QuickRite",
+  description:
+    "Track your proposal submissions, response rates, and success metrics across all freelance platforms.",
+};
 
 type ProposalsPageProps = {
   searchParams: Promise<{

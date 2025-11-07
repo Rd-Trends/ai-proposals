@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
@@ -9,6 +10,12 @@ import { WaitlistStats } from "@/components/waitlist/waitlist-stats";
 import { WaitlistTable } from "@/components/waitlist/waitlist-table";
 import { auth } from "@/lib/auth";
 import { getAllWaitlistEntries } from "@/lib/db/operations/waitlist";
+
+export const metadata: Metadata = {
+  title: "Waitlist - QuickRite",
+  description:
+    "Manage waitlist entries and user access requests. View and process pending registrations.",
+};
 
 type WaitlistPageProps = {
   searchParams: Promise<{

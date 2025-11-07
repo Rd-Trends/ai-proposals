@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -10,6 +11,11 @@ import ProjectsPageTable from "@/components/projects/project-table";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 import { getProjectsByUserId } from "@/lib/db/operations/project";
+
+export const metadata: Metadata = {
+  title: "Projects and Case Studies - QuickRite",
+  description: "Manage your projects and case studies for proposal references",
+};
 
 type ProjectsPageProps = {
   searchParams: Promise<{

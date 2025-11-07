@@ -1,8 +1,9 @@
 import { z } from "zod";
+import { PROPOSAL_TONE } from "@/lib/db";
 
 const textPartSchema = z.object({
   type: z.enum(["text"]),
-  text: z.string().min(1).max(2000),
+  text: z.string().min(1).max(30000),
 });
 
 const filePartSchema = z.object({
@@ -21,7 +22,7 @@ export const postRequestBodySchema = z.object({
     role: z.enum(["user"]),
     parts: z.array(partSchema),
   }),
-  // selectedVisibilityType: z.enum(["public", "private"]),
+  tone: z.enum(PROPOSAL_TONE),
 });
 
 export type PostRequestBody = z.infer<typeof postRequestBodySchema>;

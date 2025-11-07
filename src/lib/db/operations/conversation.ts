@@ -79,10 +79,13 @@ export const getConversationsByUserId = async (
   };
 };
 
-export const updateConversationTitle = async (id: string, title: string) => {
+export const updateConversation = async (
+  id: string,
+  data: { title?: string; isPublic?: boolean },
+) => {
   const [conversation] = await db
     .update(conversations_table)
-    .set({ title, updatedAt: new Date() })
+    .set({ ...data, updatedAt: new Date() })
     .where(eq(conversations_table.id, id))
     .returning();
   return conversation;

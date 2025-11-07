@@ -7,10 +7,18 @@ import {
   Quote,
   TrendingUp,
 } from "lucide-react";
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Dashboard - QuickRite",
+  description:
+    "View your proposal performance metrics, recent activity, and manage your freelance workflow.",
+};
+
 import {
   DashboardGutter,
   DashboardLayoutHeader,

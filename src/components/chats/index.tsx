@@ -3,27 +3,32 @@
 import { useChat } from "@ai-sdk/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { DefaultChatTransport } from "ai";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ChatHeader } from "@/components/chats/chat-header";
 import { ChatInput } from "@/components/chats/chat-input";
-import type { Conversation as TConversation } from "@/lib/db";
+import type { Conversation as TConversation, Tone } from "@/lib/db";
 import { ChatSDKError } from "@/lib/error";
 import { queryKeys } from "@/lib/query-keys";
 import type { ChatMessage } from "@/lib/types";
 import { fetchWithErrorHandlers, generateUUID } from "@/lib/utils";
+import type { PromptInputMessage } from "../ai-elements/prompt-input";
 import { ChatMessages } from "./chat-messages";
 
 export function Chat({
   id,
   initialMessages,
   conversation,
+  isReadonly,
 }: {
   id: string;
   initialMessages?: ChatMessage[];
   conversation?: TConversation | null;
+  isReadonly: boolean;
 }) {
-  const [input, setInput] = useState("");
+  const [text, setText] = useState("");
+  const [tone, setTone] = useState<Tone>("professional");
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const queryClient = useQueryClient();
   const { sendMessage, messages, status, setMessages, regenerate } = useChat({
     id, // use the provided chat ID
@@ -37,6 +42,7 @@ export function Chat({
           body: {
             id: request.id,
             message: request.messages.at(-1),
+            tone,
             ...request.body,
           },
         };
@@ -55,6 +61,8 @@ export function Chat({
           queryKey: queryKeys.conversations.all,
         });
       }
+      // Focus back to the text area after message is sent
+      textAreaRef.current?.focus();
     },
     onError: (error) => {
       if (error instanceof ChatSDKError) {
@@ -71,20 +79,28 @@ export function Chat({
   });
 
   const handleQuickPrompt = (prompt: string) => {
-    setInput(prompt);
+    setText(prompt);
+    textAreaRef.current?.focus();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim()) {
-      sendMessage({ text: input });
-      setInput("");
-    }
+  const handleSubmit = (message: PromptInputMessage) => {
+    console.log("Submitting message:", message);
+    if (!message.text && !message.files?.length) return;
+
+    sendMessage({
+      text: message.text || "Sent with attachments",
+      files: message.files,
+    });
+    setText("");
   };
 
   return (
     <div className="overscroll-behavior-contain flex h-dvh min-w-0 touch-pan-y flex-col bg-background">
-      <ChatHeader conversationId={id} conversation={conversation} />
+      <ChatHeader
+        conversationId={id}
+        conversation={conversation}
+        isReadonly={isReadonly}
+      />
 
       <ChatMessages
         messages={messages}
@@ -92,14 +108,20 @@ export function Chat({
         onPromptSelect={handleQuickPrompt}
         setMessages={setMessages}
         regenerate={regenerate}
+        isReadonly={isReadonly}
       />
 
-      <ChatInput
-        input={input}
-        status={status}
-        onInputChange={setInput}
-        onSubmit={handleSubmit}
-      />
+      {!isReadonly && (
+        <ChatInput
+          ref={textAreaRef}
+          status={status}
+          text={text}
+          setText={setText}
+          tone={tone}
+          setTone={setTone}
+          handleSubmit={handleSubmit}
+        />
+      )}
     </div>
   );
 }

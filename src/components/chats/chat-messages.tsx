@@ -18,12 +18,14 @@ export const ChatMessages = ({
   onPromptSelect,
   setMessages,
   regenerate,
+  isReadonly,
 }: {
   messages: Array<ChatMessage>;
   status: ChatStatus;
   onPromptSelect: (prompt: string) => void;
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];
   regenerate: UseChatHelpers<ChatMessage>["regenerate"];
+  isReadonly: boolean;
 }) => {
   return (
     <Conversation className="flex flex-col gap-4 md:gap-6">
@@ -37,6 +39,7 @@ export const ChatMessages = ({
               message={message}
               setMessages={setMessages}
               regenerate={regenerate}
+              isReadonly={isReadonly}
             />
           ))}
 

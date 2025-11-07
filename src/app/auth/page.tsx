@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { MagicLinkAuth } from "@/components/auth/magic-link-auth";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "Authentication - QuickRite",
+  description:
+    "Sign in to your QuickRite account or create a new account to start writing winning proposals.",
+};
 
 export default function AuthPage() {
   if (process.env.NODE_ENV !== "development") {

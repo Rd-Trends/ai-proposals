@@ -32,10 +32,12 @@ export const RenderChatMessage = ({
   message,
   setMessages,
   regenerate,
+  isReadonly,
 }: {
   message: ChatMessage;
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];
   regenerate: UseChatHelpers<ChatMessage>["regenerate"];
+  isReadonly: boolean;
 }) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
 
@@ -66,11 +68,11 @@ export const RenderChatMessage = ({
                   </MessageContent>
                 </Message>
                 <Actions
-                  className={cn("justify-end -mt-2", {
-                    "max-w-[85%] md:max-w-[80%]": message.role === "assistant",
+                  className={cn("justify-end", {
+                    "-mt-2": message.role === "user",
                   })}
                 >
-                  {message.role === "user" && (
+                  {message.role === "user" && !isReadonly && (
                     <Action
                       data-testid="message-edit-button"
                       onClick={() => setMode("edit")}

@@ -24,6 +24,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
@@ -118,10 +119,9 @@ export function SignInForm() {
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="signin-password">Password</FieldLabel>
-                    <Input
+                    <PasswordInput
                       {...field}
                       id="signin-password"
-                      type="password"
                       placeholder="Enter your password"
                       aria-invalid={fieldState.invalid}
                       disabled={isPending}

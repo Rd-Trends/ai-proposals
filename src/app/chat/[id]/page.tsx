@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Chat } from "@/components/chats";
 import { auth } from "@/lib/auth";
 import {
@@ -18,9 +18,10 @@ export async function generateMetadata(props: {
   return {
     title: conversation?.title
       ? `${conversation.title} - QuickRite`
-      : "Chat - QuickRite",
-    description:
-      "Continue your AI-powered conversation to work on proposals, templates, and freelance projects.",
+      : "Shared Chat - QuickRite",
+    description: conversation?.isPublic
+      ? "View this shared conversation about proposals and freelance projects."
+      : "Access a QuickRite conversation.",
   };
 }
 
@@ -29,10 +30,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     headers: await headers(),
   });
 
-  if (!session?.user) {
-    return redirect("/auth/signin");
-  }
-
   const { id } = await props.params;
 
   const conversation = await getConversationById({
@@ -40,12 +37,15 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   });
 
   if (!conversation) {
-    return redirect("/dashboard/chat");
-  }
-
-  if (conversation.userId !== session.user.id) {
     return notFound();
   }
+
+  if (!conversation.isPublic) {
+    if (!session?.user || session.user.id !== conversation.userId) {
+      return notFound();
+    }
+  }
+
   const messagesFromDb = await getMessagesByConversationId(id);
 
   const uiMessages = convertToUIMessages(messagesFromDb);
@@ -55,7 +55,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       id={id}
       initialMessages={uiMessages}
       conversation={conversation}
-      isReadonly={false}
+      isReadonly={conversation.userId !== session?.user?.id}
     />
   );
 }

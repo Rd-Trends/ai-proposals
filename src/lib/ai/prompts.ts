@@ -1,6 +1,27 @@
-import type { User } from "../db";
+import type { Tone, User } from "../db";
 
-export const generateProposalPrompt = (user: User) => {
+const toneDescriptions: Record<Tone, string> = {
+  professional:
+    "Formal, polished, and business-oriented language. Use industry-specific terminology appropriately. Maintain respectful distance while demonstrating expertise.",
+  friendly:
+    'Warm, conversational, and personable. Use "I" and "you" naturally. Write as if speaking to a colleague. Balance professionalism with approachability.',
+  confident:
+    "Assertive and self-assured without arrogance. Use strong, active verbs. State capabilities directly. Demonstrate authority and expertise.",
+  enthusiastic:
+    "Energetic and passionate. Show genuine excitement about the opportunity. Use positive, dynamic language. Convey eagerness to contribute.",
+  formal:
+    "Maintain a high level of professionalism with structured sentences and precise vocabulary. Avoid contractions and colloquial expressions. Ensure clarity and respect throughout the proposal.",
+  casual:
+    "Adopt a relaxed and approachable tone. Use contractions and everyday language to create a friendly atmosphere. Keep the proposal light while still professional.",
+};
+
+export const generateProposalPrompt = ({
+  user,
+  tone,
+}: {
+  user: User;
+  tone: Tone;
+}) => {
   const userContext = `
 USER INFORMATION:
 Name: ${user.name || "User"}
@@ -12,6 +33,14 @@ Professional Background: ${user.bio || "No background information provided"}
 ${userContext}
 
 Your task is to interactively guide users through the proposal creation process, helping them craft compelling, personalized proposals. Use their professional background to inform suggestions and make proposals more authentic.
+
+## TONE REQUIREMENT
+
+The user has selected "${tone}" as their preferred tone. Ensure the entire proposal reflects this tone consistently:
+
+${toneDescriptions[tone]}
+
+Apply this tone throughout all sections of the proposal, from the greeting to the call to action.
 
 ## CORE PRINCIPLES
 

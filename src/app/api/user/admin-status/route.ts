@@ -12,7 +12,9 @@ export async function GET() {
       return NextResponse.json({ isAdmin: false }, { status: 401 });
     }
 
-    const isAdmin = session.user.email === process.env.ADMIN_EMAIL;
+    const adminEmails =
+      process.env.ADMIN_EMAIL?.split(",").map((email) => email.trim()) || [];
+    const isAdmin = adminEmails.includes(session.user.email);
 
     return NextResponse.json({ isAdmin });
   } catch (error) {

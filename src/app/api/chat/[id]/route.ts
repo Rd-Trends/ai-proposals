@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import {
   deleteConversation,
   getConversationById,
-  updateConversationTitle,
+  updateConversation,
 } from "@/lib/db/operations/conversation";
 
 const conversationIdSchema = z.string().uuid("Invalid conversation ID");
@@ -14,7 +14,9 @@ const updateConversationSchema = z.object({
   title: z
     .string()
     .min(1, "Title is required")
-    .max(80, "Title must be at most 80 characters"),
+    .max(80, "Title must be at most 80 characters")
+    .optional(),
+  isPublic: z.boolean().optional(),
 });
 
 export async function GET(
@@ -73,6 +75,22 @@ export async function PATCH(
   ctx: RouteContext<"/api/chat/[id]">,
 ) {
   try {
+    // Parse and validate request body
+    const json = await request.json();
+    const validationResult = updateConversationSchema.safeParse(json);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error:
+            validationResult.error.errors[0]?.message || "Invalid request body",
+        },
+        { status: 400 },
+      );
+    }
+
+    console.log("Validation result:", validationResult.data);
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -104,24 +122,11 @@ export async function PATCH(
       );
     }
 
-    // Parse and validate request body
-    const json = await request.json();
-    const validationResult = updateConversationSchema.safeParse(json);
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error:
-            validationResult.error.errors[0]?.message || "Invalid request body",
-        },
-        { status: 400 },
-      );
-    }
-
-    const { title } = validationResult.data;
-
-    // Update conversation title
-    const updatedConversation = await updateConversationTitle(id, title);
+    // Update conversation
+    const updatedConversation = await updateConversation(
+      id,
+      validationResult.data,
+    );
 
     return NextResponse.json({
       conversation: updatedConversation,

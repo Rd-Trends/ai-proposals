@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
@@ -9,6 +10,12 @@ import { TestimonialStats } from "@/components/testimonials/testimonial-stats";
 import TestimonialsTable from "@/components/testimonials/testimonial-table";
 import { auth } from "@/lib/auth";
 import { getTestimonialsByUserId } from "@/lib/db/operations/testimonial";
+
+export const metadata: Metadata = {
+  title: "Testimonials - QuickRite",
+  description:
+    "Manage client testimonials and reviews. Showcase your best work and success stories.",
+};
 
 type TestimonialsPageProps = {
   searchParams: Promise<{

@@ -37,7 +37,7 @@ export const RenameChatModal = ({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) => {
-  const { mutate: updateConversation, isPending } = useUpdateConversation();
+  const { mutate, isPending } = useUpdateConversation();
 
   const form = useForm<RenameConversationFormValues>({
     resolver: zodResolver(renameConversationSchema),
@@ -49,7 +49,7 @@ export const RenameChatModal = ({
   const handleSubmit = form.handleSubmit((data) => {
     if (!conversation) return;
 
-    updateConversation(
+    mutate(
       { id: conversation.id, title: data.title },
       {
         onSuccess: () => {

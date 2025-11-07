@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SignInForm } from "@/components/auth/signin-form";
 import { Logo } from "@/components/logo";
+
+export const metadata: Metadata = {
+  title: "Sign In - QuickRite",
+  description:
+    "Sign in to your QuickRite account to access your proposal templates, track your success, and manage your freelance workflow.",
+};
 
 export default function SignInPage() {
   return (

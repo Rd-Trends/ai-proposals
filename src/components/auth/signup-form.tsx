@@ -24,6 +24,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth-client";
 
 const formSchema = z
@@ -156,10 +157,9 @@ export function SignUpForm() {
                         <FieldLabel htmlFor="signup-password">
                           Password
                         </FieldLabel>
-                        <Input
+                        <PasswordInput
                           {...field}
                           id="signup-password"
-                          type="password"
                           aria-invalid={fieldState.invalid}
                           disabled={isPending}
                         />
@@ -177,10 +177,9 @@ export function SignUpForm() {
                         <FieldLabel htmlFor="signup-confirm-password">
                           Confirm Password
                         </FieldLabel>
-                        <Input
+                        <PasswordInput
                           {...field}
                           id="signup-confirm-password"
-                          type="password"
                           aria-invalid={fieldState.invalid}
                           disabled={isPending}
                         />

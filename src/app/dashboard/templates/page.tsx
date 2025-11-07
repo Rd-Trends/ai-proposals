@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -14,6 +15,12 @@ import TemplatesPageTable from "@/components/templates/template-table";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 import { getTemplatesByUserId } from "@/lib/db/operations/template";
+
+export const metadata: Metadata = {
+  title: "Templates - QuickRite",
+  description:
+    "Create, manage, and organize your proposal templates. Build reusable templates with AI assistance.",
+};
 
 type TemplatesPageProps = {
   searchParams: Promise<{

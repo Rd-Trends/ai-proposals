@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SignUpForm } from "@/components/auth/signup-form";
 import { Logo } from "@/components/logo";
+
+export const metadata: Metadata = {
+  title: "Sign Up - QuickRite",
+  description:
+    "Create your QuickRite account and start generating AI-powered proposals to win more freelance jobs on Upwork, Contra, and Fiverr.",
+};
 
 export default function SignUpPage() {
   return (

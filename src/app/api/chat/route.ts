@@ -39,7 +39,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message } = requestBody;
+    const { id, message, tone } = requestBody;
 
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -86,8 +86,8 @@ export async function POST(request: Request) {
         const result = streamText({
           model: openai("gpt-4.1"),
           system: generateProposalPrompt({
-            ...session.user,
-            image: session.user?.image || "",
+            user: { ...session.user, image: session.user?.image || "" },
+            tone,
           }),
           messages: convertToModelMessages(uiMessages),
           stopWhen: stepCountIs(5),
