@@ -18,9 +18,9 @@ interface UserActivatedEmailProps {
 
 export const UserActivatedEmail = ({
   email,
-  signupUrl = process.env.NEXT_PUBLIC_APP_URL
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/auth/signup`
-    : "https://ai-proposals-pro.vercel.app/auth/signup",
+  signupUrl: signinUrl = process.env.NEXT_PUBLIC_APP_URL
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/auth/signin`
+    : "https://ai-proposals-pro.vercel.app/auth/signin",
 }: UserActivatedEmailProps) => {
   return (
     <Html>
@@ -33,19 +33,19 @@ export const UserActivatedEmail = ({
             Great news! Your access to QuickRite has been activated.
           </Text>
           <Text style={text}>
-            You can now sign up and start creating winning proposals for your
+            You can now sign in and start creating winning proposals for your
             freelance projects.
           </Text>
           <Section style={buttonContainer}>
-            <Button style={button} href={signupUrl}>
-              Sign Up Now
+            <Button style={button} href={signinUrl}>
+              Sign In Now
             </Button>
           </Section>
           <Text style={text}>
             Or copy and paste this URL into your browser:
           </Text>
-          <Link href={signupUrl} style={link}>
-            {signupUrl}
+          <Link href={signinUrl} style={link}>
+            {signinUrl}
           </Link>
           <Text style={text}>
             Your registered email: <strong>{email}</strong>
