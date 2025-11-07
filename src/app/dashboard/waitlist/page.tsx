@@ -35,7 +35,9 @@ export default async function WaitlistPage({
     return redirect("/auth/signin");
   }
 
-  const isAdmin = session.user.email === process.env.ADMIN_EMAIL;
+  const adminEmails =
+    process.env.ADMIN_EMAIL?.split(",").map((email) => email.trim()) || [];
+  const isAdmin = adminEmails.some((email) => email === session.user.email);
 
   if (!isAdmin) {
     return redirect("/dashboard");

@@ -14,7 +14,7 @@ export async function GET() {
 
     const adminEmails =
       process.env.ADMIN_EMAIL?.split(",").map((email) => email.trim()) || [];
-    const isAdmin = adminEmails.includes(session.user.email);
+    const isAdmin = adminEmails.some((email) => email === session.user.email);
 
     return NextResponse.json({ isAdmin });
   } catch (error) {
