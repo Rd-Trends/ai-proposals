@@ -12,10 +12,10 @@ const sizeClassMap: Record<ContainerSize, string> = {
   full: "max-w-full",
 };
 
-export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+export type ContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   size?: ContainerSize;
   center?: boolean;
-}
+};
 
 /**
  * Container
@@ -38,7 +38,7 @@ export function Container({
         "w-full",
         center && "mx-auto",
         sizeClassMap[size],
-        className,
+        className
       )}
       {...props}
     />

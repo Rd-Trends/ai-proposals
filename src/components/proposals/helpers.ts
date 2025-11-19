@@ -1,4 +1,4 @@
-import type { ProposalOutcome } from "@/lib/db";
+import type { ProposalOutcome } from "@/lib/db/schema/proposals";
 
 export const getProposalStatusLabel = (outcome: ProposalOutcome) => {
   switch (outcome) {

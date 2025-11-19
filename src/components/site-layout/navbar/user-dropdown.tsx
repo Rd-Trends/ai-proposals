@@ -21,7 +21,7 @@ export function UserDropdown() {
   // Show sign in button if no user
   if (!user) {
     return (
-      <Button asChild variant="default" size="sm">
+      <Button asChild size="sm" variant="default">
         <Link href="/auth/signin">Sign In</Link>
       </Button>
     );
@@ -37,16 +37,16 @@ export function UserDropdown() {
     : user.email[0];
 
   return (
-    <UserDropdownMenu user={user} className="w-56">
+    <UserDropdownMenu className="w-56" user={user}>
       <Button
+        className="hidden rounded-full md:flex"
         size="icon"
         variant="ghost"
-        className="rounded-full hidden md:flex"
       >
         <Avatar className="h-8 w-8">
           <AvatarImage
-            src={user.image || undefined}
             alt={user.name || user.email}
+            src={user.image || undefined}
           />
           <AvatarFallback className="text-sm">
             {userInitials.toUpperCase()}

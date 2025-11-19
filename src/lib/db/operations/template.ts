@@ -1,12 +1,16 @@
 import { and, count, desc, eq, sql } from "drizzle-orm";
+import {
+  type InsertTemplate,
+  type Template,
+  templates,
+} from "@/lib/db/schema/templates";
 import type { PaginatedResult, PaginationParams } from "@/lib/types";
 import { db } from "../drizzle";
-import { type InsertTemplate, type Template, templates } from "../index";
 import { calculateTotalPages, getPaginationOffset } from "./util";
 
 // Create a new template
 export async function createTemplate(
-  templateData: InsertTemplate,
+  templateData: InsertTemplate
 ): Promise<Template> {
   const [template] = await db
     .insert(templates)
@@ -27,7 +31,7 @@ export async function getTemplateById(id: string): Promise<Template | null> {
 // Get templates by user ID with pagination
 export async function getTemplatesByUserId(
   userId: string,
-  params?: PaginationParams & { status?: "draft" | "active" | "archived" },
+  params?: PaginationParams & { status?: "draft" | "active" | "archived" }
 ): Promise<PaginatedResult<Template>> {
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 10;
@@ -74,7 +78,7 @@ export async function getTemplatesByUserId(
 
 // Get favorite templates by user ID
 export async function getFavoriteTemplatesByUserId(
-  userId: string,
+  userId: string
 ): Promise<Template[]> {
   return await db
     .select()
@@ -86,7 +90,7 @@ export async function getFavoriteTemplatesByUserId(
 // Update template
 export async function updateTemplate(
   id: string,
-  templateData: Partial<InsertTemplate>,
+  templateData: Partial<InsertTemplate>
 ): Promise<Template> {
   const [template] = await db
     .update(templates)
@@ -111,7 +115,9 @@ export async function incrementTemplateUsage(id: string): Promise<void> {
 // Toggle favorite
 export async function toggleTemplateFavorite(id: string): Promise<Template> {
   const template = await getTemplateById(id);
-  if (!template) throw new Error("Template not found");
+  if (!template) {
+    throw new Error("Template not found");
+  }
 
   const [updatedTemplate] = await db
     .update(templates)

@@ -31,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ProposalTracking } from "@/lib/db";
+import type { ProposalTracking } from "@/lib/db/schema/proposals";
 import type { PageMetadata } from "@/lib/types";
 import { Button } from "../ui/button";
 
@@ -49,23 +49,25 @@ export default function ProposalsTrackingTable({
   const [showViewDialog, setShowViewDialog] = useState(false);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
 
-  const columns = useMemo(() => {
-    return createProposalColumns({
-      onView: (proposal) => {
-        setSelectedProposal(proposal);
-        setShowViewDialog(true);
-      },
-      onUpdateStatus: (proposal) => {
-        setSelectedProposal(proposal);
-        setShowUpdateDialog(true);
-      },
-      onViewJobPosting: (proposal) => {
-        if (proposal.jobPostingUrl) {
-          window.open(proposal.jobPostingUrl, "_blank");
-        }
-      },
-    });
-  }, []);
+  const columns = useMemo(
+    () =>
+      createProposalColumns({
+        onView: (proposal) => {
+          setSelectedProposal(proposal);
+          setShowViewDialog(true);
+        },
+        onUpdateStatus: (proposal) => {
+          setSelectedProposal(proposal);
+          setShowUpdateDialog(true);
+        },
+        onViewJobPosting: (proposal) => {
+          if (proposal.jobPostingUrl) {
+            window.open(proposal.jobPostingUrl, "_blank");
+          }
+        },
+      }),
+    []
+  );
 
   return (
     <>
@@ -74,14 +76,14 @@ export default function ProposalsTrackingTable({
           <DataTable
             columns={columns}
             data={proposals}
-            isLoading={isLoading}
+            emptyMessage="No proposals found."
             enablePagination={false} // Disable client-side pagination
+            isLoading={isLoading}
             onRowClick={(proposal: ProposalTracking) => {
               setSelectedProposal(proposal);
               setShowViewDialog(true);
             }}
             tableHeader={(table) => <ProposalTableHeader table={table} />}
-            emptyMessage="No proposals found."
           />
           {/* Server-side pagination */}
           {!!pagination?.totalPages && (
@@ -99,16 +101,16 @@ export default function ProposalsTrackingTable({
       {selectedProposal && (
         <>
           <ViewProposalSheet
-            open={showViewDialog}
-            onOpenChange={setShowViewDialog}
-            proposal={selectedProposal}
             key={`${selectedProposal.id}view`}
+            onOpenChange={setShowViewDialog}
+            open={showViewDialog}
+            proposal={selectedProposal}
           />
           <UpdateProposalStatusDialog
-            open={showUpdateDialog}
-            onOpenChange={setShowUpdateDialog}
-            proposal={selectedProposal}
             key={`${selectedProposal.id}update`}
+            onOpenChange={setShowUpdateDialog}
+            open={showUpdateDialog}
+            proposal={selectedProposal}
           />
         </>
       )}
@@ -127,15 +129,15 @@ function StatusFilter<TData>({
 }) {
   return (
     <div className={showLabel ? "space-y-2" : ""}>
-      {showLabel && <div className="text-sm font-medium">Status</div>}
+      {showLabel && <div className="font-medium text-sm">Status</div>}
       <Select
-        value={
-          (table.getColumn("currentOutcome")?.getFilterValue() as string) ?? ""
-        }
         onValueChange={(value) =>
           table
             .getColumn("currentOutcome")
             ?.setFilterValue(value === "all" ? "" : value)
+        }
+        value={
+          (table.getColumn("currentOutcome")?.getFilterValue() as string) ?? ""
         }
       >
         <SelectTrigger className={className}>
@@ -170,14 +172,14 @@ function PlatformFilter<TData>({
 }) {
   return (
     <div className={showLabel ? "space-y-2" : ""}>
-      {showLabel && <div className="text-sm font-medium">Platform</div>}
+      {showLabel && <div className="font-medium text-sm">Platform</div>}
       <Select
-        value={(table.getColumn("platform")?.getFilterValue() as string) ?? ""}
         onValueChange={(value) =>
           table
             .getColumn("platform")
             ?.setFilterValue(value === "all" ? "" : value)
         }
+        value={(table.getColumn("platform")?.getFilterValue() as string) ?? ""}
       >
         <SelectTrigger className={className}>
           <SelectValue placeholder="All platforms" />
@@ -206,10 +208,10 @@ function ColumnVisibilityDropdown<TData>({
 }) {
   return (
     <div className={showLabel ? "space-y-2" : ""}>
-      {showLabel && <div className="text-sm font-medium">Columns</div>}
+      {showLabel && <div className="font-medium text-sm">Columns</div>}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className={className}>
+          <Button className={className} variant="outline">
             <span className="mr-2">Columns</span>
             <ChevronDown className="h-4 w-4" />
           </Button>
@@ -218,18 +220,16 @@ function ColumnVisibilityDropdown<TData>({
           {table
             .getAllColumns()
             .filter((column) => column.getCanHide())
-            .map((column) => {
-              return (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
+            .map((column) => (
+              <DropdownMenuCheckboxItem
+                checked={column.getIsVisible()}
+                className="capitalize"
+                key={column.id}
+                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+              >
+                {column.id}
+              </DropdownMenuCheckboxItem>
+            ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -247,32 +247,32 @@ function ProposalTableHeader({
     <header className="flex items-center justify-between gap-2">
       {/* Search - always visible */}
       <div className="relative flex-1 xl:flex-initial">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute top-2.5 left-2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search proposals..."
-          value={(table.getState().globalFilter as string) ?? ""}
+          className="pl-8 md:max-w-sm"
           onChange={(event) =>
             table.setGlobalFilter(String(event.target.value))
           }
-          className="pl-8 md:max-w-sm"
+          placeholder="Search proposals..."
+          value={(table.getState().globalFilter as string) ?? ""}
         />
       </div>
 
       {/* Desktop filters - hidden on mobile */}
-      <div className="hidden xl:flex items-center space-x-2">
-        <StatusFilter table={table} className="w-[160px]" />
-        <PlatformFilter table={table} className="w-[140px]" />
+      <div className="hidden items-center space-x-2 xl:flex">
+        <StatusFilter className="w-[160px]" table={table} />
+        <PlatformFilter className="w-[140px]" table={table} />
         <ColumnVisibilityDropdown table={table} />
       </div>
 
       {/* Mobile actions */}
-      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+      <Drawer onOpenChange={setIsDrawerOpen} open={isDrawerOpen}>
         <DrawerTrigger asChild>
           <Button
-            variant="outline"
-            size="icon"
             aria-label="Open filters and actions"
             className="xl:hidden"
+            size="icon"
+            variant="outline"
           >
             <Settings2 className="h-4 w-4" />
           </Button>
@@ -281,13 +281,13 @@ function ProposalTableHeader({
           <DrawerHeader>
             <DrawerTitle>Filters & Actions</DrawerTitle>
           </DrawerHeader>
-          <section className="p-4 space-y-4">
-            <StatusFilter table={table} className="w-full" showLabel />
-            <PlatformFilter table={table} className="w-full" showLabel />
+          <section className="space-y-4 p-4">
+            <StatusFilter className="w-full" showLabel table={table} />
+            <PlatformFilter className="w-full" showLabel table={table} />
             <ColumnVisibilityDropdown
-              table={table}
               className="w-full justify-between"
               showLabel
+              table={table}
             />
           </section>
         </DrawerContent>

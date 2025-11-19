@@ -72,8 +72,8 @@ export default async function WaitlistPage({
         ]}
       />
       <DashboardPageHeader
-        title="Waitlist Management"
         description="Manage and monitor waitlist entries for platform access"
+        title="Waitlist Management"
       />
       <DashboardGutter as="main">
         <WaitlistStats entries={allEntries} />

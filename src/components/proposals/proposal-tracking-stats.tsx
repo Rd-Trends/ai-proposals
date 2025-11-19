@@ -8,26 +8,26 @@ const ProposalTrackingStats = async ({ user }: { user: User }) => {
   const stats = await getUserProposalStats(user.id);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 py-6">
+    <div className="grid gap-4 py-6 md:grid-cols-2 lg:grid-cols-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Proposals</CardTitle>
+          <CardTitle className="font-medium text-sm">Total Proposals</CardTitle>
           <FileText className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.totalProposals}</div>
-          <p className="text-xs text-muted-foreground">Last 30 days</p>
+          <div className="font-bold text-2xl">{stats.totalProposals}</div>
+          <p className="text-muted-foreground text-xs">Last 30 days</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
+          <CardTitle className="font-medium text-sm">Success Rate</CardTitle>
           <Award className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.successRate}%</div>
-          <p className="text-xs text-muted-foreground">
+          <div className="font-bold text-2xl">{stats.successRate}%</div>
+          <p className="text-muted-foreground text-xs">
             {stats.jobsAwarded} jobs awarded
           </p>
         </CardContent>
@@ -35,12 +35,12 @@ const ProposalTrackingStats = async ({ user }: { user: User }) => {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Response Rate</CardTitle>
+          <CardTitle className="font-medium text-sm">Response Rate</CardTitle>
           <MessageSquare className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.responseRate}%</div>
-          <p className="text-xs text-muted-foreground">
+          <div className="font-bold text-2xl">{stats.responseRate}%</div>
+          <p className="text-muted-foreground text-xs">
             {stats.clientResponses} client responses
           </p>
         </CardContent>
@@ -48,12 +48,12 @@ const ProposalTrackingStats = async ({ user }: { user: User }) => {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Interviews</CardTitle>
+          <CardTitle className="font-medium text-sm">Interviews</CardTitle>
           <Calendar className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.interviews}</div>
-          <p className="text-xs text-muted-foreground">
+          <div className="font-bold text-2xl">{stats.interviews}</div>
+          <p className="text-muted-foreground text-xs">
             {stats.proposalsViewed} proposals viewed
           </p>
         </CardContent>
@@ -73,7 +73,7 @@ const ProposalTrackingStatsSkeleton = () => {
             <Skeleton className="h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <Skeleton className="h-7 w-8 mb-1" />
+            <Skeleton className="mb-1 h-7 w-8" />
             <Skeleton className="h-3 w-24" />
           </CardContent>
         </Card>

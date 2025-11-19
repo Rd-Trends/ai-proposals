@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
-interface PaginationProps {
+type PaginationProps = {
   page: number;
   pageSize: number;
   total: number;
@@ -27,7 +27,7 @@ interface PaginationProps {
   pageSizeOptions?: number[];
 
   className?: string;
-}
+};
 
 export function Pagination({
   page,
@@ -49,7 +49,9 @@ export function Pagination({
   };
 
   const goToPage = (newPage: number) => {
-    if (newPage < 1 || newPage > totalPages) return;
+    if (newPage < 1 || newPage > totalPages) {
+      return;
+    }
     updateSearchParams("page", String(newPage));
   };
 
@@ -67,11 +69,11 @@ export function Pagination({
     <div
       className={cn(
         "flex flex-col gap-4 px-2 sm:flex-row sm:items-center sm:justify-between",
-        className,
+        className
       )}
     >
       {/* Results info */}
-      <div className="flex-1 text-sm text-muted-foreground">
+      <div className="flex-1 text-muted-foreground text-sm">
         <span className="hidden sm:inline">
           Showing {total === 0 ? 0 : startItem} to {endItem} of {total} results
         </span>
@@ -84,8 +86,8 @@ export function Pagination({
         {/* Rows per page - hidden on mobile */}
         {showRowsPerPage && (
           <div className="hidden items-center gap-2 sm:flex">
-            <p className="text-sm font-medium">Rows per page</p>
-            <Select value={String(pageSize)} onValueChange={changePageSize}>
+            <p className="font-medium text-sm">Rows per page</p>
+            <Select onValueChange={changePageSize} value={String(pageSize)}>
               <SelectTrigger className="h-8 w-[70px]">
                 <SelectValue placeholder={String(pageSize)} />
               </SelectTrigger>
@@ -101,7 +103,7 @@ export function Pagination({
         )}
 
         {/* Page info on mobile */}
-        <div className="flex items-center text-sm font-medium sm:hidden">
+        <div className="flex items-center font-medium text-sm sm:hidden">
           Page {page} of {totalPages}
         </div>
 
@@ -109,11 +111,11 @@ export function Pagination({
         <div className="flex items-center gap-1">
           {/* First page button - hidden on mobile */}
           <Button
-            variant="outline"
-            size="sm"
             className="hidden h-8 w-8 p-0 sm:flex"
-            onClick={() => goToPage(1)}
             disabled={page <= 1}
+            onClick={() => goToPage(1)}
+            size="sm"
+            variant="outline"
           >
             <span className="sr-only">Go to first page</span>
             <ChevronsLeft className="h-4 w-4" />
@@ -121,11 +123,11 @@ export function Pagination({
 
           {/* Previous button */}
           <Button
-            variant="outline"
-            size="sm"
             className="h-8 w-8 p-0 sm:w-8"
-            onClick={() => goToPage(page - 1)}
             disabled={page <= 1}
+            onClick={() => goToPage(page - 1)}
+            size="sm"
+            variant="outline"
           >
             <span className="sr-only">Go to previous page</span>
             <ChevronLeft className="h-4 w-4" />
@@ -133,18 +135,18 @@ export function Pagination({
 
           {/* Page info - hidden on mobile */}
           <div className="hidden items-center px-2 sm:flex">
-            <span className="text-sm font-medium">
+            <span className="font-medium text-sm">
               Page {page} of {totalPages}
             </span>
           </div>
 
           {/* Next button */}
           <Button
-            variant="outline"
-            size="sm"
             className="h-8 w-8 p-0 sm:w-8"
-            onClick={() => goToPage(page + 1)}
             disabled={page >= totalPages}
+            onClick={() => goToPage(page + 1)}
+            size="sm"
+            variant="outline"
           >
             <span className="sr-only">Go to next page</span>
             <ChevronRight className="h-4 w-4" />
@@ -152,11 +154,11 @@ export function Pagination({
 
           {/* Last page button - hidden on mobile */}
           <Button
-            variant="outline"
-            size="sm"
             className="hidden h-8 w-8 p-0 sm:flex"
-            onClick={() => goToPage(totalPages)}
             disabled={page >= totalPages}
+            onClick={() => goToPage(totalPages)}
+            size="sm"
+            variant="outline"
           >
             <span className="sr-only">Go to last page</span>
             <ChevronsRight className="h-4 w-4" />

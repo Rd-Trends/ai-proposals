@@ -22,13 +22,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { Template } from "@/lib/db";
+import type { Template } from "@/lib/db/schema/templates";
 
-interface ViewTemplateSheetProps {
+type ViewTemplateSheetProps = {
   template: Template;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-}
+};
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -67,7 +67,7 @@ export function ViewTemplateSheet({
   open,
   onOpenChange,
 }: ViewTemplateSheetProps) {
-  const [isOpen, setIsOpen] = useState(open || false);
+  const [isOpen, setIsOpen] = useState(open);
 
   const handleOpenChange = (newOpen: boolean) => {
     setIsOpen(newOpen);
@@ -76,8 +76,8 @@ export function ViewTemplateSheet({
 
   return (
     <Sheet
-      open={open !== undefined ? open : isOpen}
       onOpenChange={handleOpenChange}
+      open={open !== undefined ? open : isOpen}
     >
       <SheetContent className="w-full sm:max-w-2xl">
         <ScrollArea className="h-full pr-4">
@@ -90,21 +90,21 @@ export function ViewTemplateSheet({
                 </SheetDescription>
               </div>
               {template.isFavorite && (
-                <Star className="h-5 w-5 text-yellow-500 fill-current" />
+                <Star className="h-5 w-5 fill-current text-yellow-500" />
               )}
             </div>
 
             {/* Status and Meta Info */}
             <div className="flex flex-wrap gap-2">
               <Badge
-                variant={getStatusColor(template.status)}
                 className="capitalize"
+                variant={getStatusColor(template.status)}
               >
                 {template.status}
               </Badge>
               <Badge
-                variant={getToneColor(template.tone)}
                 className="capitalize"
+                variant={getToneColor(template.tone)}
               >
                 {template.tone}
               </Badge>
@@ -126,16 +126,16 @@ export function ViewTemplateSheet({
           <Separator className="my-6" />
 
           {/* Statistics Cards */}
-          <div className="grid grid-cols-2 gap-4 mb-6 px-4">
+          <div className="mb-6 grid grid-cols-2 gap-4 px-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm flex items-center">
+                <CardTitle className="flex items-center text-sm">
                   <TrendingUp className="mr-2 h-4 w-4" />
                   Usage Count
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{template.usageCount}</div>
+                <div className="font-bold text-2xl">{template.usageCount}</div>
               </CardContent>
             </Card>
 
@@ -159,10 +159,10 @@ export function ViewTemplateSheet({
           {/* Tags */}
           {template.tags && template.tags.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-medium mb-2">Tags</h3>
+              <h3 className="mb-2 font-medium text-sm">Tags</h3>
               <div className="flex flex-wrap gap-2">
                 {template.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-xs">
+                  <Badge className="text-xs" key={tag} variant="outline">
                     {tag}
                   </Badge>
                 ))}
@@ -171,14 +171,14 @@ export function ViewTemplateSheet({
           )}
 
           {/* Template Content */}
-          <div className="px-4 mb-6">
-            <h3 className="text-sm font-medium mb-3 flex items-center">
+          <div className="mb-6 px-4">
+            <h3 className="mb-3 flex items-center font-medium text-sm">
               <FileText className="mr-2 h-4 w-4" />
               Template Content
             </h3>
             <Card>
               <CardContent className="p-4">
-                <pre className="whitespace-pre-wrap text-sm font-mono bg-muted p-3 rounded border overflow-x-auto">
+                <pre className="overflow-x-auto whitespace-pre-wrap rounded border bg-muted p-3 font-mono text-sm">
                   {template.content}
                 </pre>
               </CardContent>
@@ -188,25 +188,25 @@ export function ViewTemplateSheet({
           {/* Examples */}
           {template.examples && (
             <div className="mb-6">
-              <h3 className="text-sm font-medium mb-3">Examples & Tips</h3>
+              <h3 className="mb-3 font-medium text-sm">Examples & Tips</h3>
               <Card>
-                <CardContent className="p-4 space-y-4">
+                <CardContent className="space-y-4 p-4">
                   {template.examples.jobDescription && (
                     <div>
-                      <h4 className="text-sm font-medium mb-2">
+                      <h4 className="mb-2 font-medium text-sm">
                         Sample Job Description
                       </h4>
-                      <p className="text-sm text-muted-foreground bg-muted p-3 rounded">
+                      <p className="rounded bg-muted p-3 text-muted-foreground text-sm">
                         {template.examples.jobDescription}
                       </p>
                     </div>
                   )}
                   {template.examples.sampleProposal && (
                     <div>
-                      <h4 className="text-sm font-medium mb-2">
+                      <h4 className="mb-2 font-medium text-sm">
                         Sample Proposal
                       </h4>
-                      <p className="text-sm text-muted-foreground bg-muted p-3 rounded">
+                      <p className="rounded bg-muted p-3 text-muted-foreground text-sm">
                         {template.examples.sampleProposal}
                       </p>
                     </div>
@@ -218,7 +218,7 @@ export function ViewTemplateSheet({
 
           {/* Timestamps */}
           <div className="px-4 py-6">
-            <h3 className="text-sm font-medium mb-3">Timeline</h3>
+            <h3 className="mb-3 font-medium text-sm">Timeline</h3>
             <div className="space-y-2 text-sm">
               <div className="flex items-center text-muted-foreground">
                 <Calendar className="mr-2 h-4 w-4" />

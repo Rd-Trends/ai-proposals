@@ -7,7 +7,8 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ChatHeader } from "@/components/chats/chat-header";
 import { ChatInput } from "@/components/chats/chat-input";
-import type { Conversation as TConversation, Tone } from "@/lib/db";
+import type { Conversation as TConversation } from "@/lib/db/schema/conversations";
+import type { Tone } from "@/lib/db/schema/templates";
 import { ChatSDKError } from "@/lib/error";
 import { queryKeys } from "@/lib/query-keys";
 import type { ChatMessage } from "@/lib/types";
@@ -85,7 +86,9 @@ export function Chat({
 
   const handleSubmit = (message: PromptInputMessage) => {
     console.log("Submitting message:", message);
-    if (!message.text && !message.files?.length) return;
+    if (!(message.text || message.files?.length)) {
+      return;
+    }
 
     sendMessage({
       text: message.text || "Sent with attachments",
@@ -97,29 +100,29 @@ export function Chat({
   return (
     <div className="overscroll-behavior-contain flex h-dvh min-w-0 touch-pan-y flex-col bg-background">
       <ChatHeader
-        conversationId={id}
         conversation={conversation}
+        conversationId={id}
         isReadonly={isReadonly}
       />
 
       <ChatMessages
-        messages={messages}
-        status={status}
-        onPromptSelect={handleQuickPrompt}
-        setMessages={setMessages}
-        regenerate={regenerate}
         isReadonly={isReadonly}
+        messages={messages}
+        onPromptSelect={handleQuickPrompt}
+        regenerate={regenerate}
+        setMessages={setMessages}
+        status={status}
       />
 
       {!isReadonly && (
         <ChatInput
+          handleSubmit={handleSubmit}
           ref={textAreaRef}
+          setText={setText}
+          setTone={setTone}
           status={status}
           text={text}
-          setText={setText}
           tone={tone}
-          setTone={setTone}
-          handleSubmit={handleSubmit}
         />
       )}
     </div>

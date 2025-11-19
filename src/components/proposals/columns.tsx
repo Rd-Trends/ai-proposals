@@ -15,7 +15,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { ProposalOutcome, ProposalTracking } from "@/lib/db";
+import type {
+  ProposalOutcome,
+  ProposalTracking,
+} from "@/lib/db/schema/proposals";
 import {
   getProposalStatusBadgeVariant,
   getProposalStatusLabel,
@@ -32,22 +35,20 @@ export const createProposalColumns = ({
 }): ColumnDef<ProposalTracking>[] => [
   {
     accessorKey: "jobTitle",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2 lg:px-3"
-        >
-          Job Title
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        className="h-8 px-2 lg:px-3"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        variant="ghost"
+      >
+        Job Title
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => {
       const proposal = row.original;
       return (
-        <div className="text-sm font-medium max-w-[300px] whitespace-normal pl-4">
+        <div className="max-w-[300px] whitespace-normal pl-4 font-medium text-sm">
           {proposal.jobTitle || "Untitled Proposal"}
         </div>
       );
@@ -81,40 +82,34 @@ export const createProposalColumns = ({
   },
   {
     accessorKey: "sentAt",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2 lg:px-3"
-        >
-          Sent
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return (
-        <time dateTime={new Date(row.original.sentAt).toISOString()}>
-          {format(new Date(row.original.sentAt), "MMM dd, yyyy")}
-        </time>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        className="h-8 px-2 lg:px-3"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        variant="ghost"
+      >
+        Sent
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <time dateTime={new Date(row.original.sentAt).toISOString()}>
+        {format(new Date(row.original.sentAt), "MMM dd, yyyy")}
+      </time>
+    ),
   },
   {
     accessorKey: "proposalLength",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2 lg:px-3"
-        >
-          Length
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        className="h-8 px-2 lg:px-3"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        variant="ghost"
+      >
+        Length
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => {
       const length = row.getValue("proposalLength") as number;
       return length ? (
@@ -133,7 +128,7 @@ export const createProposalColumns = ({
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button className="h-8 w-8 p-0" variant="ghost">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>

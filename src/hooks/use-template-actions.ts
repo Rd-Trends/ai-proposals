@@ -4,28 +4,27 @@ import { useRouter } from "next/navigation";
 import { useCallback, useTransition } from "react";
 import { toast } from "sonner";
 import {
-  deleteTemplate,
-  duplicateTemplate,
-  toggleTemplateFavorite,
+  deleteTemplateAction,
+  duplicateTemplateAction,
+  toggleTemplateFavoriteAction,
 } from "@/actions/template-actions";
-import type { Template } from "@/lib/db";
+import type { Template } from "@/lib/db/schema/templates";
 
 export function useTemplateActions() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const handleDuplicateTemplate = useCallback(
-    async (template: Template) => {
-      startTransition(async () => {
-        const duplicatePromise = duplicateTemplate(template.id).then(
+    (template: Template) => {
+      startTransition(() => {
+        const duplicatePromise = duplicateTemplateAction(template.id).then(
           (result) => {
             if (result.success) {
               router.refresh();
               return result;
-            } else {
-              throw new Error(result.error || "Failed to duplicate template");
             }
-          },
+            throw new Error(result.error || "Failed to duplicate template");
+          }
         );
 
         toast.promise(duplicatePromise, {
@@ -35,14 +34,14 @@ export function useTemplateActions() {
         });
       });
     },
-    [router],
+    [router]
   );
 
   const handleDeleteTemplate = useCallback(
-    async (template: Template) => {
+    (template: Template) => {
       startTransition(async () => {
         try {
-          const result = await deleteTemplate(template.id);
+          const result = await deleteTemplateAction(template.id);
           if (result.success) {
             toast.success(`Template "${template.title}" deleted successfully`);
             router.refresh();
@@ -55,24 +54,23 @@ export function useTemplateActions() {
         }
       });
     },
-    [router],
+    [router]
   );
 
   const handleToggleFavorite = useCallback(
-    async (template: Template) => {
-      startTransition(async () => {
+    (template: Template) => {
+      startTransition(() => {
         const action = template.isFavorite ? "removed from" : "added to";
         const actionVerb = template.isFavorite ? "Removing from" : "Adding to";
 
-        const togglePromise = toggleTemplateFavorite(template.id).then(
+        const togglePromise = toggleTemplateFavoriteAction(template.id).then(
           (result) => {
             if (result.success) {
               router.refresh();
               return result;
-            } else {
-              throw new Error(result.error || "Failed to update favorites");
             }
-          },
+            throw new Error(result.error || "Failed to update favorites");
+          }
         );
 
         toast.promise(togglePromise, {
@@ -82,7 +80,7 @@ export function useTemplateActions() {
         });
       });
     },
-    [router],
+    [router]
   );
   const handleCopyId = useCallback(async (template: Template) => {
     try {

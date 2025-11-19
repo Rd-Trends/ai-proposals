@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { PROPOSAL_TONE } from "@/lib/db";
+import { PROPOSAL_TONE } from "@/lib/db/schema/templates";
 
 const textPartSchema = z.object({
   type: z.enum(["text"]),
-  text: z.string().min(1).max(30000),
+  text: z.string().min(1).max(30_000),
 });
 
 const filePartSchema = z.object({

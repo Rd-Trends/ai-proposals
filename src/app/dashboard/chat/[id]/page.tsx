@@ -52,9 +52,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   return (
     <Chat
+      conversation={conversation}
       id={id}
       initialMessages={uiMessages}
-      conversation={conversation}
       isReadonly={false}
     />
   );

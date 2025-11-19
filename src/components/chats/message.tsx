@@ -68,8 +68,8 @@ export const RenderChatMessage = ({
                   </MessageContent>
                 </Message>
                 <Actions
-                  className={cn("justify-end", {
-                    "-mt-2": message.role === "user",
+                  className={cn("justify-start", {
+                    "-mt-2 justify-end": message.role === "user",
                   })}
                 >
                   {message.role === "user" && !isReadonly && (
@@ -90,38 +90,38 @@ export const RenderChatMessage = ({
               <MessageEditor
                 key={`${message.id}-${i}`}
                 message={message}
-                setMode={setMode}
-                setMessages={setMessages}
                 regenerate={regenerate}
+                setMessages={setMessages}
+                setMode={setMode}
               />
             );
           }
           case "tool-getTemplates":
             return showToolFeedback ? (
               <ToolCallFeedback
-                text="[Fetching templates...]"
                 key={`${message.id}-${i}`}
+                text="[Fetching templates...]"
               />
             ) : null;
           case "tool-getProjectsAndCaseStudies":
             return showToolFeedback ? (
               <ToolCallFeedback
-                text="[Fetching projects and case studies...]"
                 key={`${message.id}-${i}`}
+                text="[Fetching projects and case studies...]"
               />
             ) : null;
           case "tool-saveProposal":
             return showToolFeedback ? (
               <ToolCallFeedback
-                text="[Saving proposal...]"
                 key={`${message.id}-${i}`}
+                text="[Saving proposal...]"
               />
             ) : null;
           case "tool-createTemplateFromProposal":
             return showToolFeedback ? (
               <ToolCallFeedback
-                text="[Creating template...]"
                 key={`${message.id}-${i}`}
+                text="[Creating template...]"
               />
             ) : null;
           default:
@@ -136,7 +136,7 @@ const CopyAction = ({ text }: { text: string }) => {
   const clipboard = useClipboard();
 
   return (
-    <Action onClick={() => clipboard.copy(text)} label="Copy" tooltip="Copy">
+    <Action label="Copy" onClick={() => clipboard.copy(text)} tooltip="Copy">
       {clipboard.copied ? (
         <CopyCheckIcon className="size-4" />
       ) : (
@@ -146,6 +146,6 @@ const CopyAction = ({ text }: { text: string }) => {
   );
 };
 
-const ToolCallFeedback = ({ text }: { text: string }) => {
-  return <i className="flex text-sm text-muted-foreground">{text}</i>;
-};
+const ToolCallFeedback = ({ text }: { text: string }) => (
+  <i className="flex text-muted-foreground text-sm">{text}</i>
+);

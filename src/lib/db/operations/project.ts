@@ -1,7 +1,11 @@
 import { and, count, desc, eq } from "drizzle-orm";
+import {
+  type NewProject,
+  type Project,
+  projects,
+} from "@/lib/db/schema/projects";
 import type { PaginatedResult, PaginationParams } from "@/lib/types";
 import { db } from "../drizzle";
-import { type NewProject, type Project, projects } from "../index";
 import { calculateTotalPages, getPaginationOffset } from "./util";
 
 // Create a new project
@@ -19,7 +23,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
 // Get projects by user ID with pagination
 export async function getProjectsByUserId(
   userId: string,
-  params?: PaginationParams,
+  params?: PaginationParams
 ): Promise<PaginatedResult<Project>> {
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 10;
@@ -64,7 +68,7 @@ export async function getProjectsByUserId(
 // Update project
 export async function updateProject(
   id: string,
-  projectData: Partial<NewProject>,
+  projectData: Partial<NewProject>
 ): Promise<Project> {
   const [project] = await db
     .update(projects)

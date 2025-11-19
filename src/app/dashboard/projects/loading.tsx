@@ -13,7 +13,7 @@ export default function ProjectsLoading() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {["total", "case-studies", "client-work", "categories"].map(
           (cardType) => (
-            <div key={cardType} className="rounded-lg border p-6">
+            <div className="rounded-lg border p-6" key={cardType}>
               <div className="flex items-center justify-between">
                 <Skeleton className="h-4 w-20" />
                 <Skeleton className="h-4 w-4" />
@@ -21,7 +21,7 @@ export default function ProjectsLoading() {
               <Skeleton className="mt-2 h-8 w-12" />
               <Skeleton className="mt-2 h-3 w-24" />
             </div>
-          ),
+          )
         )}
       </div>
 
@@ -46,7 +46,7 @@ export default function ProjectsLoading() {
 
               {/* Table rows */}
               {["row-1", "row-2", "row-3", "row-4", "row-5"].map((rowId) => (
-                <div key={rowId} className="flex items-center space-x-4 py-3">
+                <div className="flex items-center space-x-4 py-3" key={rowId}>
                   <Skeleton className="h-4 w-4" />
                   <Skeleton className="h-4 flex-1" />
                   <Skeleton className="h-4 w-20" />

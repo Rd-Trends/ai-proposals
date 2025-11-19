@@ -29,7 +29,7 @@ export const proposalTrackingRelations = relations(
       fields: [proposalTracking.templateId],
       references: [templates.id],
     }),
-  }),
+  })
 );
 
 export const projectsRelations = relations(projects, ({ one }) => ({

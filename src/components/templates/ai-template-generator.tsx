@@ -3,7 +3,7 @@
 import { Loader2, Sparkles } from "lucide-react";
 import { useState, useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { generateTemplateContent } from "@/actions/template-actions";
+import { generateTemplateContentAction } from "@/actions/template-actions";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -20,7 +20,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 type AIOutputSuccessData = ReturnType<
-  typeof generateTemplateContent
+  typeof generateTemplateContentAction
 > extends Promise<infer U>
   ? U
   : never;
@@ -31,11 +31,11 @@ type AIGenerationData = {
   tone?: string;
 };
 
-interface AITemplateGeneratorProps {
+type AITemplateGeneratorProps = {
   onSuccess: (data: AIOutputSuccessData) => Promise<void> | void;
   hasRequiredData?: boolean;
   existingData?: Partial<AIGenerationData>;
-}
+};
 
 export function AITemplateGenerator({
   onSuccess,
@@ -54,7 +54,7 @@ export function AITemplateGenerator({
   const handleGenerate = (data: AIGenerationData) => {
     startTransition(async () => {
       try {
-        const result = await generateTemplateContent(data.description);
+        const result = await generateTemplateContentAction(data.description);
         await onSuccess(result);
         setOpen(false);
       } catch (error) {
@@ -66,13 +66,13 @@ export function AITemplateGenerator({
   if (hasRequiredData) {
     return (
       <Button
-        type="button"
-        variant="outline"
-        size="icon"
+        disabled={isPending}
         onClick={() =>
           handleGenerate({ description: existingData?.description || "" })
         }
-        disabled={isPending}
+        size="icon"
+        type="button"
+        variant="outline"
       >
         {isPending ? (
           <>
@@ -90,18 +90,18 @@ export function AITemplateGenerator({
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
-        <Button type="button" variant="ghost" size="icon" disabled={isPending}>
+        <Button disabled={isPending} size="icon" type="button" variant="ghost">
           <Sparkles className="h-4 w-4" />
           <span className="sr-only">Generate with AI</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-full max-w-sm p-4"
         align="start"
-        side="bottom"
+        className="w-full max-w-sm p-4"
         collisionPadding={16}
+        side="bottom"
       >
         <div className="space-y-4">
           <div className="space-y-2">
@@ -109,13 +109,14 @@ export function AITemplateGenerator({
               <Sparkles className="h-5 w-5" />
               <h3 className="font-medium">Generate Template with AI</h3>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Provide a description of your proposal template and AI will
               generate the content for you.
             </p>
           </div>
 
           <form
+            className="space-y-4"
             id="create-template-form"
             onSubmit={(e) => {
               e.preventDefault();
@@ -124,13 +125,11 @@ export function AITemplateGenerator({
 
               form.handleSubmit(handleGenerate)(e);
             }}
-            className="space-y-4"
           >
             <FieldGroup>
               <Controller
-                name="description"
                 control={form.control}
-                rules={{ required: "Description is required" }}
+                name="description"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="ai-template-description">
@@ -138,11 +137,11 @@ export function AITemplateGenerator({
                     </FieldLabel>
                     <Textarea
                       {...field}
+                      aria-invalid={fieldState.invalid}
+                      className="max-h-60 min-h-[120px] resize-none"
+                      disabled={isPending}
                       id="ai-template-description"
                       placeholder="Describe what kind of proposal template you want to create. For example: 'A web development proposal template for e-commerce projects including timeline, features, and pricing sections.'"
-                      className="resize-none min-h-[120px] max-h-60"
-                      aria-invalid={fieldState.invalid}
-                      disabled={isPending}
                     />
                     <FieldDescription>
                       Be specific about the type of proposal, industry, and key
@@ -153,22 +152,23 @@ export function AITemplateGenerator({
                     )}
                   </Field>
                 )}
+                rules={{ required: "Description is required" }}
               />
             </FieldGroup>
 
             <div className="flex justify-end gap-3 pt-4">
               <Button
+                disabled={isPending}
+                onClick={() => setOpen(false)}
                 type="button"
                 variant="outline"
-                onClick={() => setOpen(false)}
-                disabled={isPending}
               >
                 Cancel
               </Button>
               <Button
-                type="submit"
-                form="create-template-form"
                 disabled={isPending}
+                form="create-template-form"
+                type="submit"
               >
                 {isPending ? (
                   <>

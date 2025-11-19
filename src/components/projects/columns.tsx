@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Project } from "@/lib/db";
+import type { Project } from "@/lib/db/schema/projects";
 
 export type ProjectColumnProps = {
   onView: (project: Project) => void;
@@ -32,19 +32,19 @@ export const createColumns = ({
     id: "select",
     header: ({ table }) => (
       <Checkbox
+        aria-label="Select all"
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
+        aria-label="Select row"
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
       />
     ),
     enableSorting: false,
@@ -60,9 +60,9 @@ export const createColumns = ({
         .replace(/<[^>]*>/g, "")
         .substring(0, 100);
       return (
-        <div className="flex flex-col max-w-md">
+        <div className="flex max-w-md flex-col">
           <span className="font-medium">{project.title}</span>
-          <span className="text-sm text-muted-foreground line-clamp-1">
+          <span className="line-clamp-1 text-muted-foreground text-sm">
             {plainText}...
           </span>
         </div>
@@ -101,30 +101,48 @@ export const createColumns = ({
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button className="h-8 w-8 p-0" variant="ghost">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onCopy(project.id)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onCopy(project.id);
+              }}
+            >
               <Copy className="mr-2 h-4 w-4" />
               Copy project ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onView(project)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onView(project);
+              }}
+            >
               <Eye className="mr-2 h-4 w-4" />
               View details
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEdit(project)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(project);
+              }}
+            >
               <Pencil className="mr-2 h-4 w-4" />
               Edit project
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => onDelete(project)}
               className="text-destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(project);
+              }}
             >
               <Trash2 className="mr-2 h-4 w-4" />
               Delete project

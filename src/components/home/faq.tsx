@@ -51,34 +51,32 @@ const faqs = [
   },
 ];
 
-export const FAQSection = () => {
-  return (
-    <Section id="faq">
-      <Container>
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-muted-foreground text-sm md:text-lg max-w-md pb-6">
-              Everything you need to know about QuickRite. Can't find the answer
-              you're looking for? Reach out to our support team.
-            </p>
-            <Button asChild>
-              <a href="mailto:dannirolands@gmail.com">Contact Support</a>
-            </Button>
-          </div>
-
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq) => (
-              <AccordionItem key={faq.question} value={faq.question}>
-                <AccordionTrigger>{faq.question}</AccordionTrigger>
-                <AccordionContent>{faq.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+export const FAQSection = () => (
+  <Section id="faq">
+    <Container>
+      <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+          <h2 className="mb-4 font-bold text-3xl md:text-4xl lg:text-5xl">
+            Frequently Asked Questions
+          </h2>
+          <p className="max-w-md pb-6 text-muted-foreground text-sm md:text-lg">
+            Everything you need to know about QuickRite. Can't find the answer
+            you're looking for? Reach out to our support team.
+          </p>
+          <Button asChild>
+            <a href="mailto:dannirolands@gmail.com">Contact Support</a>
+          </Button>
         </div>
-      </Container>
-    </Section>
-  );
-};
+
+        <Accordion className="space-y-4" collapsible type="single">
+          {faqs.map((faq) => (
+            <AccordionItem key={faq.question} value={faq.question}>
+              <AccordionTrigger>{faq.question}</AccordionTrigger>
+              <AccordionContent>{faq.answer}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </Container>
+  </Section>
+);

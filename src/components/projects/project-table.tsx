@@ -27,7 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
 import { useProjectActions } from "@/hooks/use-project-actions";
-import type { Project } from "@/lib/db";
+import type { Project } from "@/lib/db/schema/projects";
 import type { PageMetadata } from "@/lib/types";
 
 export default function ProjectsPageTable({
@@ -70,7 +70,7 @@ export default function ProjectsPageTable({
         onDelete: handleDeleteProject,
         onCopy: handleCopyId,
       }),
-    [handleCopyId, handleViewProject, handleEditProject, handleDeleteProject],
+    [handleCopyId, handleViewProject, handleEditProject, handleDeleteProject]
   );
 
   return (
@@ -80,19 +80,19 @@ export default function ProjectsPageTable({
           <DataTable
             columns={columns}
             data={projects}
-            isLoading={isLoading}
+            emptyMessage="No projects found."
             enablePagination={false} // Disable client-side pagination
+            isLoading={isLoading}
             onRowClick={(project) => {
               setSelectedProject(project);
               setShowViewProject(true);
             }}
             tableHeader={(table) => (
               <ProjectTableHeader
-                table={table}
                 onNewProject={() => setShowCreateProject(true)}
+                table={table}
               />
             )}
-            emptyMessage="No projects found."
           />
           {/* Server-side pagination */}
           {!!pagination?.totalPages && (
@@ -108,31 +108,31 @@ export default function ProjectsPageTable({
       </Card>
 
       <CreateProjectSheet
-        open={showCreateProject}
         onOpenChange={setShowCreateProject}
+        open={showCreateProject}
       />
 
       {selectedProject && (
         <>
           <ViewProjectSheet
-            project={selectedProject}
-            open={showViewProject}
+            key={`${selectedProject.id}-view`}
             onOpenChange={setShowViewProject}
-            key={`${selectedProject.id}view`}
+            open={showViewProject}
+            project={selectedProject}
           />
 
           <UpdateProjectSheet
-            project={selectedProject}
-            open={showUpdateProject}
+            key={`${selectedProject.id}-update`}
             onOpenChange={setShowUpdateProject}
-            key={`${selectedProject.id}update`}
+            open={showUpdateProject}
+            project={selectedProject}
           />
 
           <DeleteProjectDialog
-            project={selectedProject}
-            open={showDeleteProject}
+            key={`${selectedProject.id}-delete`}
             onOpenChange={setShowDeleteProject}
-            key={`${selectedProject.id}delete`}
+            open={showDeleteProject}
+            project={selectedProject}
           />
         </>
       )}
@@ -154,19 +154,19 @@ function ProjectTableHeader<TData>({
     <header className="flex items-center justify-between gap-2">
       {/* Search - always visible */}
       <div className="relative flex-1 xl:flex-initial">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute top-2.5 left-2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search projects..."
-          value={(table.getState().globalFilter as string) ?? ""}
+          className="pl-8 md:max-w-sm"
           onChange={(event) =>
             table.setGlobalFilter(String(event.target.value))
           }
-          className="pl-8 md:max-w-sm"
+          placeholder="Search projects..."
+          value={(table.getState().globalFilter as string) ?? ""}
         />
       </div>
 
       {/* Desktop filters - hidden on mobile */}
-      <div className="hidden xl:flex items-center space-x-2">
+      <div className="hidden items-center space-x-2 xl:flex">
         <ColumnVisibilityDropdown table={table} />
 
         {/* New project button */}
@@ -183,9 +183,9 @@ function ProjectTableHeader<TData>({
         {/* Add Project button - mobile only */}
         {onNewProject && (
           <Button
+            aria-label="Create new project"
             onClick={onNewProject}
             variant="outline"
-            aria-label="Create new project"
           >
             <Plus className="h-4 w-4" />
             <span className="sr-only">New Project</span>
@@ -193,12 +193,12 @@ function ProjectTableHeader<TData>({
         )}
 
         {/* Column visibility - mobile only */}
-        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <Drawer onOpenChange={setIsDrawerOpen} open={isDrawerOpen}>
           <DrawerTrigger asChild>
             <Button
-              variant="outline"
-              size="icon"
               aria-label="Open column visibility"
+              size="icon"
+              variant="outline"
             >
               <Settings2 className="h-4 w-4" />
             </Button>
@@ -207,7 +207,7 @@ function ProjectTableHeader<TData>({
             <DrawerHeader>
               <DrawerTitle>Column Visibility</DrawerTitle>
             </DrawerHeader>
-            <div className="p-4 space-y-4">
+            <div className="space-y-4 p-4">
               <ColumnVisibilityDropdown table={table} />
             </div>
           </DrawerContent>
@@ -222,7 +222,7 @@ function ColumnVisibilityDropdown<TData>({ table }: { table: Table<TData> }) {
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="ml-auto">
+          <Button className="ml-auto" variant="outline">
             Columns <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -230,18 +230,16 @@ function ColumnVisibilityDropdown<TData>({ table }: { table: Table<TData> }) {
           {table
             .getAllColumns()
             .filter((column) => column.getCanHide())
-            .map((column) => {
-              return (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
+            .map((column) => (
+              <DropdownMenuCheckboxItem
+                checked={column.getIsVisible()}
+                className="capitalize"
+                key={column.id}
+                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+              >
+                {column.id}
+              </DropdownMenuCheckboxItem>
+            ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

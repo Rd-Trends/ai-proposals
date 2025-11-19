@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
+import { type NewUser, type User, users } from "@/lib/db/schema/auth";
 import { db } from "../drizzle";
-import { type NewUser, type User, users } from "../index";
 
 // Create a new user
 export async function createUser(userData: NewUser): Promise<User> {
@@ -23,7 +23,7 @@ export async function getUserById(id: string): Promise<User | null> {
 // Update user
 export async function updateUser(
   id: string,
-  userData: Partial<NewUser>,
+  userData: Partial<NewUser>
 ): Promise<User> {
   const [user] = await db
     .update(users)

@@ -1,16 +1,16 @@
 import { and, count, desc, eq } from "drizzle-orm";
-import type { PaginatedResult, PaginationParams } from "@/lib/types";
-import { db } from "../drizzle";
 import {
   type NewProposalTracking,
   type ProposalTracking,
   proposalTracking,
-} from "../index";
+} from "@/lib/db/schema/proposals";
+import type { PaginatedResult, PaginationParams } from "@/lib/types";
+import { db } from "../drizzle";
 import { calculateTotalPages, getPaginationOffset } from "./util";
 
 // Create a new proposal tracking entry
 export async function createProposalTracking(
-  proposalData: NewProposalTracking,
+  proposalData: NewProposalTracking
 ): Promise<ProposalTracking> {
   const [proposal] = await db
     .insert(proposalTracking)
@@ -21,7 +21,7 @@ export async function createProposalTracking(
 
 // Get proposal by ID
 export async function getProposalTrackingById(
-  id: string,
+  id: string
 ): Promise<ProposalTracking | null> {
   const [proposal] = await db
     .select()
@@ -33,7 +33,7 @@ export async function getProposalTrackingById(
 // Get proposals by user ID with pagination
 export async function getProposalTrackingByUserId(
   userId: string,
-  params?: PaginationParams,
+  params?: PaginationParams
 ): Promise<PaginatedResult<ProposalTracking>> {
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 10;
@@ -78,7 +78,7 @@ export async function getProposalTrackingByUserId(
 // Update proposal tracking
 export async function updateProposalTracking(
   id: string,
-  data: Partial<ProposalTracking>,
+  data: Partial<ProposalTracking>
 ): Promise<ProposalTracking> {
   const [proposal] = await db
     .update(proposalTracking)
@@ -92,7 +92,7 @@ export async function updateProposalTracking(
 // Update proposal with notes
 export async function addProposalTrackingNotes(
   id: string,
-  notes: string,
+  notes: string
 ): Promise<ProposalTracking> {
   const [proposal] = await db
     .update(proposalTracking)

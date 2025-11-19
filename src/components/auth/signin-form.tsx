@@ -46,12 +46,12 @@ export function SignInForm() {
     },
   });
 
-  const onSubmit = async (formData: FormValues) => {
+  const onSubmit = (formData: FormValues) => {
     startTransition(async () => {
       try {
         // Check waitlist status before allowing sign in
         const { allowed, message } = await checkWaitlistForSignIn(
-          formData.email,
+          formData.email
         );
 
         if (!allowed) {
@@ -68,7 +68,7 @@ export function SignInForm() {
         if (error) {
           console.error("Sign in error:", error);
           toast.error(
-            error.message || "Invalid email or password. Please try again.",
+            error.message || "Invalid email or password. Please try again."
           );
         } else {
           toast.success("Signed in successfully! Redirecting...");
@@ -94,18 +94,18 @@ export function SignInForm() {
           <form id="signin-form" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
               <Controller
-                name="email"
                 control={form.control}
+                name="email"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="signin-email">Email</FieldLabel>
                     <Input
                       {...field}
-                      id="signin-email"
-                      type="email"
-                      placeholder="Enter your email"
                       aria-invalid={fieldState.invalid}
                       disabled={isPending}
+                      id="signin-email"
+                      placeholder="Enter your email"
+                      type="email"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -114,17 +114,17 @@ export function SignInForm() {
                 )}
               />
               <Controller
-                name="password"
                 control={form.control}
+                name="password"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="signin-password">Password</FieldLabel>
                     <PasswordInput
                       {...field}
-                      id="signin-password"
-                      placeholder="Enter your password"
                       aria-invalid={fieldState.invalid}
                       disabled={isPending}
+                      id="signin-password"
+                      placeholder="Enter your password"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -135,10 +135,10 @@ export function SignInForm() {
 
               <Field>
                 <Button
-                  type="submit"
-                  form="signin-form"
                   className="w-full"
                   disabled={isPending}
+                  form="signin-form"
+                  type="submit"
                 >
                   {isPending ? "Signing in..." : "Sign in"}
                 </Button>
@@ -153,11 +153,11 @@ export function SignInForm() {
       </Card>
       <FieldDescription className="px-6 text-center text-xs">
         By clicking continue, you agree to our{" "}
-        <Link href="#" className="underline">
+        <Link className="underline" href="#">
           Terms of Service
         </Link>{" "}
         and{" "}
-        <Link href="#" className="underline">
+        <Link className="underline" href="#">
           Privacy Policy
         </Link>
         .

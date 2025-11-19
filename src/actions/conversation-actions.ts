@@ -9,7 +9,7 @@ import {
   getMessageById,
 } from "@/lib/db/operations/conversation";
 
-export async function generateTitleFromUserMessage({
+export async function generateTitleFromUserMessageAction({
   message,
 }: {
   message: UIMessage;
@@ -33,7 +33,7 @@ export async function generateTitleFromUserMessage({
   return title.trim();
 }
 
-export async function deleteTrailingMessages({ id }: { id: string }) {
+export async function deleteTrailingMessagesAction({ id }: { id: string }) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

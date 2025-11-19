@@ -4,18 +4,23 @@ import { headers } from "next/headers";
 import z from "zod";
 import { auth } from "@/lib/auth";
 import {
+  createProject,
+  deleteProject,
+  getProjectById,
+  updateProject,
+} from "@/lib/db/operations/project";
+import {
   insertProjectSchema,
   type NewProject,
   updateProjectSchema,
-} from "@/lib/db";
-import * as projectServices from "@/lib/db/operations/project";
+} from "@/lib/db/schema/projects";
 
 const projectIdSchema = z
   .string()
   .min(1, "Project ID is required")
   .uuid("Invalid Project ID");
 
-export const createProject = async (data: NewProject) => {
+export const createProjectAction = async (data: NewProject) => {
   try {
     // Validate and process the data as needed
     const validatedData = insertProjectSchema.parse(data);
@@ -26,7 +31,7 @@ export const createProject = async (data: NewProject) => {
       throw new Error("Unauthorized");
     }
 
-    const project = await projectServices.createProject({
+    const project = await createProject({
       ...validatedData,
       userId: session.user.id,
     });
@@ -41,7 +46,10 @@ export const createProject = async (data: NewProject) => {
   }
 };
 
-export const updateProject = async (id: string, data: Partial<NewProject>) => {
+export const updateProjectAction = async (
+  id: string,
+  data: Partial<NewProject>
+) => {
   try {
     projectIdSchema.parse(id);
     // Validate and process the data as needed
@@ -55,7 +63,7 @@ export const updateProject = async (id: string, data: Partial<NewProject>) => {
     }
 
     // Get the existing project to verify ownership
-    const existingProject = await projectServices.getProjectById(id);
+    const existingProject = await getProjectById(id);
     if (!existingProject) {
       return { data: null, error: "Project not found", success: false };
     }
@@ -64,7 +72,7 @@ export const updateProject = async (id: string, data: Partial<NewProject>) => {
       return { data: null, error: "Unauthorized", success: false };
     }
 
-    const project = await projectServices.updateProject(id, validatedData);
+    const project = await updateProject(id, validatedData);
 
     return { data: project, error: null, success: true };
   } catch (error) {
@@ -76,7 +84,7 @@ export const updateProject = async (id: string, data: Partial<NewProject>) => {
   }
 };
 
-export const deleteProject = async (id: string) => {
+export const deleteProjectAction = async (id: string) => {
   try {
     projectIdSchema.parse(id);
 
@@ -88,7 +96,7 @@ export const deleteProject = async (id: string) => {
     }
 
     // Get the existing project to verify ownership
-    const existingProject = await projectServices.getProjectById(id);
+    const existingProject = await getProjectById(id);
     if (!existingProject) {
       return { data: null, error: "Project not found", success: false };
     }
@@ -97,7 +105,7 @@ export const deleteProject = async (id: string) => {
       return { data: null, error: "Unauthorized", success: false };
     }
 
-    await projectServices.deleteProject(id);
+    await deleteProject(id);
 
     return { data: null, error: null, success: true };
   } catch (error) {

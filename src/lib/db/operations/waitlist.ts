@@ -1,13 +1,13 @@
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { db } from "@/lib/db/drizzle";
-import { type NewWaitlist, waitlist } from "@/lib/db/schema";
+import { type NewWaitlist, waitlist } from "@/lib/db/schema/waitlist";
 
 /**
  * Check waitlist status for an email
  * Returns status: 'not-in-waitlist' | 'activated' | 'pending'
  */
 export async function getWaitlistStatus(
-  email: string,
+  email: string
 ): Promise<"not-in-waitlist" | "activated" | "pending"> {
   const result = await db
     .select()
@@ -36,7 +36,7 @@ export async function isEmailAllowed(email: string): Promise<boolean> {
     .select()
     .from(waitlist)
     .where(
-      and(eq(waitlist.email, email.toLowerCase()), eq(waitlist.isActive, true)),
+      and(eq(waitlist.email, email.toLowerCase()), eq(waitlist.isActive, true))
     )
     .limit(1);
 
@@ -55,7 +55,7 @@ export async function addToWaitlist(data: NewWaitlist): Promise<void> {
  */
 export async function addMultipleToWaitlist(
   entries: { email: string; name: string }[],
-  invitedBy = "admin",
+  invitedBy = "admin"
 ): Promise<void> {
   const values = entries.map((entry) => ({
     email: entry.email.toLowerCase(),

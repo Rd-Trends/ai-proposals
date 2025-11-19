@@ -3,14 +3,13 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { magicLink } from "better-auth/plugins/magic-link";
 import { db } from "@/lib/db/drizzle";
-import * as schema from "@/lib/db/schema";
-// import { resend } from "./email";
+import { accounts, sessions, users, verifications } from "./db/schema/auth";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
     usePlural: true,
-    schema,
+    schema: { users, sessions, accounts, verifications },
   }),
   user: {
     additionalFields: {
@@ -25,7 +24,7 @@ export const auth = betterAuth({
   plugins: [
     nextCookies(),
     magicLink({
-      sendMagicLink: async ({ email, url }) => {
+      sendMagicLink: ({ email, url }) => {
         if (process.env.NODE_ENV === "development") {
           // In development, just log the magic link
           console.log(`Magic link for ${email}: ${url}`);

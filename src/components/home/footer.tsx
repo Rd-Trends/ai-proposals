@@ -5,8 +5,8 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-secondary/50 border-t border-secondary/20 text-secondary-foreground px-4 md:px-10">
-      <Container size="full" className="py-12">
+    <footer className="border-secondary/20 border-t bg-secondary/50 px-4 text-secondary-foreground md:px-10">
+      <Container className="py-12" size="full">
         {/* <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div className="md:col-span-1">
             <Link href="/" className="text-xl font-bold mb-4 block">
@@ -72,15 +72,15 @@ export const Footer = () => {
         </div> */}
 
         {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+          <p className="text-muted-foreground text-sm">
             © {currentYear} QuickRite. All rights reserved.
           </p>
-          <div className="flex gap-6 text-sm text-muted-foreground">
-            <Link href="#" className="hover:text-foreground transition-colors">
+          <div className="flex gap-6 text-muted-foreground text-sm">
+            <Link className="transition-colors hover:text-foreground" href="#">
               Privacy Policy
             </Link>
-            <Link href="#" className="hover:text-foreground transition-colors">
+            <Link className="transition-colors hover:text-foreground" href="#">
               Terms of Service
             </Link>
           </div>

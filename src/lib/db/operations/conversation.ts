@@ -1,14 +1,14 @@
 import { and, asc, count, desc, eq, gte } from "drizzle-orm";
-import { ChatSDKError } from "@/lib/error";
-import type { PaginatedResult, PaginationParams } from "@/lib/types";
-import { db } from "../drizzle";
 import {
   type Conversation,
   conversations as conversations_table,
   messages as messages_table,
   type NewConversation,
   type NewMessage,
-} from "../schema/conversations";
+} from "@/lib/db/schema/conversations";
+import { ChatSDKError } from "@/lib/error";
+import type { PaginatedResult, PaginationParams } from "@/lib/types";
+import { db } from "../drizzle";
 import { calculateTotalPages, getPaginationOffset } from "./util";
 
 export const createConversation = async (data: NewConversation) => {
@@ -32,14 +32,14 @@ export const getConversationById = async ({ id }: { id: string }) => {
   } catch (_error) {
     throw new ChatSDKError(
       "bad_request:database",
-      "Failed to get conversation by id",
+      "Failed to get conversation by id"
     );
   }
 };
 
 export const getConversationsByUserId = async (
   userId: string,
-  params?: PaginationParams,
+  params?: PaginationParams
 ): Promise<PaginatedResult<Conversation>> => {
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 10;
@@ -81,7 +81,7 @@ export const getConversationsByUserId = async (
 
 export const updateConversation = async (
   id: string,
-  data: { title?: string; isPublic?: boolean },
+  data: { title?: string; isPublic?: boolean }
 ) => {
   const [conversation] = await db
     .update(conversations_table)
@@ -102,8 +102,10 @@ export const deleteConversation = async (id: string) => {
   await db.delete(conversations_table).where(eq(conversations_table.id, id));
 };
 
-export const saveMessages = async (messages: Array<NewMessage>) => {
-  if (messages.length === 0) return [];
+export const saveMessages = async (messages: NewMessage[]) => {
+  if (messages.length === 0) {
+    return [];
+  }
 
   const insertedMessages = await db
     .insert(messages_table)
@@ -137,7 +139,7 @@ export const getMessageById = async ({ id }: { id: string }) => {
   } catch (_error) {
     throw new ChatSDKError(
       "bad_request:database",
-      "Failed to get message by id",
+      "Failed to get message by id"
     );
   }
 };
@@ -154,7 +156,7 @@ export const deleteMessagesByConversationIdAfterTimestamp = async ({
     .where(
       and(
         eq(messages_table.conversationId, conversationId),
-        gte(messages_table.createdAt, timestamp),
-      ),
+        gte(messages_table.createdAt, timestamp)
+      )
     );
 };

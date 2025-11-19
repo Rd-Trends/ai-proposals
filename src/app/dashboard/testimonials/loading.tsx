@@ -16,12 +16,12 @@ export default function TestimonialsLoading() {
         ]}
       />
       <DashboardPageHeader
-        title="Testimonials"
         description="Manage client testimonials to build credibility in your proposals"
+        title="Testimonials"
       />
       <DashboardGutter as="main">
         <TestimonialStatsLoader />
-        <TestimonialsTable testimonials={[]} isLoading />
+        <TestimonialsTable isLoading testimonials={[]} />
       </DashboardGutter>
     </>
   );

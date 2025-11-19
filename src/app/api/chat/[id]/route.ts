@@ -21,7 +21,7 @@ const updateConversationSchema = z.object({
 
 export async function GET(
   _request: Request,
-  ctx: RouteContext<"/api/chat/[id]">,
+  ctx: RouteContext<"/api/chat/[id]">
 ) {
   try {
     const session = await auth.api.getSession({
@@ -40,7 +40,7 @@ export async function GET(
     if (!conversation) {
       return NextResponse.json(
         { error: "Conversation not found" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -50,7 +50,7 @@ export async function GET(
           error:
             "Forbidden: You don't have permission to access this conversation",
         },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -59,20 +59,20 @@ export async function GET(
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: error.errors[0]?.message || "Invalid conversation ID" },
-        { status: 400 },
+        { status: 400 }
       );
     }
     console.error("Error fetching conversation:", error);
     return NextResponse.json(
       { error: "Failed to fetch conversation" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
 export async function PATCH(
   request: Request,
-  ctx: RouteContext<"/api/chat/[id]">,
+  ctx: RouteContext<"/api/chat/[id]">
 ) {
   try {
     // Parse and validate request body
@@ -85,7 +85,7 @@ export async function PATCH(
           error:
             validationResult.error.errors[0]?.message || "Invalid request body",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -108,7 +108,7 @@ export async function PATCH(
     if (!existingConversation) {
       return NextResponse.json(
         { error: "Conversation not found" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -118,14 +118,14 @@ export async function PATCH(
           error:
             "Forbidden: You don't have permission to update this conversation",
         },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
     // Update conversation
     const updatedConversation = await updateConversation(
       id,
-      validationResult.data,
+      validationResult.data
     );
 
     return NextResponse.json({
@@ -136,20 +136,20 @@ export async function PATCH(
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: error.errors[0]?.message || "Invalid request" },
-        { status: 400 },
+        { status: 400 }
       );
     }
     console.error("Error updating conversation:", error);
     return NextResponse.json(
       { error: "Failed to update conversation" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
 export async function DELETE(
   _request: Request,
-  ctx: RouteContext<"/api/chat/[id]">,
+  ctx: RouteContext<"/api/chat/[id]">
 ) {
   try {
     const session = await auth.api.getSession({
@@ -169,7 +169,7 @@ export async function DELETE(
     if (!existingConversation) {
       return NextResponse.json(
         { error: "Conversation not found" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -179,7 +179,7 @@ export async function DELETE(
           error:
             "Forbidden: You don't have permission to delete this conversation",
         },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -193,13 +193,13 @@ export async function DELETE(
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: error.errors[0]?.message || "Invalid conversation ID" },
-        { status: 400 },
+        { status: 400 }
       );
     }
     console.error("Error deleting conversation:", error);
     return NextResponse.json(
       { error: "Failed to delete conversation" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

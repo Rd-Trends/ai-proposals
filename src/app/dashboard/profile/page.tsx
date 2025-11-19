@@ -34,11 +34,11 @@ export default async function ProfilePage() {
         ]}
       />
       <DashboardPageHeader
-        title="Profile Settings"
         description="Update your personal information and preferences."
+        title="Profile Settings"
       />
       <DashboardGutter>
-        <Card className="w-[calc(100vw-2rem)] sm:max-w-xl mx-auto">
+        <Card className="mx-auto w-[calc(100vw-2rem)] sm:max-w-xl">
           <CardContent>
             <ProfileForm user={session.user} />
           </CardContent>

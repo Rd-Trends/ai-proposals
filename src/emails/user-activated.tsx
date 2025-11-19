@@ -11,54 +11,50 @@ import {
   Text,
 } from "@react-email/components";
 
-interface UserActivatedEmailProps {
+type UserActivatedEmailProps = {
   email: string;
   signupUrl?: string;
-}
+};
 
 export const UserActivatedEmail = ({
   email,
   signupUrl: signinUrl = process.env.NEXT_PUBLIC_APP_URL
     ? `${process.env.NEXT_PUBLIC_APP_URL}/auth/signin`
     : "https://ai-proposals-pro.vercel.app/auth/signin",
-}: UserActivatedEmailProps) => {
-  return (
-    <Html>
-      <Head />
-      <Preview>Your access to QuickRite has been activated! 🎉</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Heading style={h1}>Welcome to QuickRite! 🎉</Heading>
-          <Text style={text}>
-            Great news! Your access to QuickRite has been activated.
-          </Text>
-          <Text style={text}>
-            You can now sign in and start creating winning proposals for your
-            freelance projects.
-          </Text>
-          <Section style={buttonContainer}>
-            <Button style={button} href={signinUrl}>
-              Sign In Now
-            </Button>
-          </Section>
-          <Text style={text}>
-            Or copy and paste this URL into your browser:
-          </Text>
-          <Link href={signinUrl} style={link}>
-            {signinUrl}
-          </Link>
-          <Text style={text}>
-            Your registered email: <strong>{email}</strong>
-          </Text>
-          <Text style={footer}>
-            If you didn't request access to QuickRite, you can safely ignore
-            this email.
-          </Text>
-        </Container>
-      </Body>
-    </Html>
-  );
-};
+}: UserActivatedEmailProps) => (
+  <Html>
+    <Head />
+    <Preview>Your access to QuickRite has been activated! 🎉</Preview>
+    <Body style={main}>
+      <Container style={container}>
+        <Heading style={h1}>Welcome to QuickRite! 🎉</Heading>
+        <Text style={text}>
+          Great news! Your access to QuickRite has been activated.
+        </Text>
+        <Text style={text}>
+          You can now sign in and start creating winning proposals for your
+          freelance projects.
+        </Text>
+        <Section style={buttonContainer}>
+          <Button href={signinUrl} style={button}>
+            Sign In Now
+          </Button>
+        </Section>
+        <Text style={text}>Or copy and paste this URL into your browser:</Text>
+        <Link href={signinUrl} style={link}>
+          {signinUrl}
+        </Link>
+        <Text style={text}>
+          Your registered email: <strong>{email}</strong>
+        </Text>
+        <Text style={footer}>
+          If you didn't request access to QuickRite, you can safely ignore this
+          email.
+        </Text>
+      </Container>
+    </Body>
+  </Html>
+);
 
 export default UserActivatedEmail;
 

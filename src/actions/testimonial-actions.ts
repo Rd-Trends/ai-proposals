@@ -4,18 +4,23 @@ import { headers } from "next/headers";
 import z from "zod";
 import { auth } from "@/lib/auth";
 import {
+  createTestimonial,
+  deleteTestimonial,
+  getTestimonialById,
+  updateTestimonial,
+} from "@/lib/db/operations/testimonial";
+import {
   insertTestimonialSchema,
   type NewTestimonial,
   updateTestimonialSchema,
-} from "@/lib/db";
-import * as testimonialServices from "@/lib/db/operations/testimonial";
+} from "@/lib/db/schema/testimonials";
 
 const testimonialIdSchema = z
   .string()
   .min(1, "Testimonial ID is required")
   .uuid("Invalid Testimonial ID");
 
-export const createTestimonial = async (data: NewTestimonial) => {
+export const createTestimonialAction = async (data: NewTestimonial) => {
   try {
     const validatedData = insertTestimonialSchema.parse(data);
     const session = await auth.api.getSession({
@@ -25,7 +30,7 @@ export const createTestimonial = async (data: NewTestimonial) => {
       throw new Error("Unauthorized");
     }
 
-    const testimonial = await testimonialServices.createTestimonial({
+    const testimonial = await createTestimonial({
       ...validatedData,
       userId: session.user.id,
     });
@@ -44,9 +49,9 @@ export const createTestimonial = async (data: NewTestimonial) => {
   }
 };
 
-export const updateTestimonial = async (
+export const updateTestimonialAction = async (
   id: string,
-  data: Partial<NewTestimonial>,
+  data: Partial<NewTestimonial>
 ) => {
   try {
     testimonialIdSchema.parse(id);
@@ -60,8 +65,7 @@ export const updateTestimonial = async (
     }
 
     // Get the existing testimonial to verify ownership
-    const existingTestimonial =
-      await testimonialServices.getTestimonialById(id);
+    const existingTestimonial = await getTestimonialById(id);
     if (!existingTestimonial) {
       return { data: null, error: "Testimonial not found", success: false };
     }
@@ -70,10 +74,7 @@ export const updateTestimonial = async (
       return { data: null, error: "Unauthorized", success: false };
     }
 
-    const testimonial = await testimonialServices.updateTestimonial(
-      id,
-      validatedData,
-    );
+    const testimonial = await updateTestimonial(id, validatedData);
 
     return { data: testimonial, error: null, success: true };
   } catch (error) {
@@ -89,7 +90,7 @@ export const updateTestimonial = async (
   }
 };
 
-export const deleteTestimonial = async (id: string) => {
+export const deleteTestimonialAction = async (id: string) => {
   try {
     testimonialIdSchema.parse(id);
 
@@ -101,8 +102,7 @@ export const deleteTestimonial = async (id: string) => {
     }
 
     // Get the existing testimonial to verify ownership
-    const existingTestimonial =
-      await testimonialServices.getTestimonialById(id);
+    const existingTestimonial = await getTestimonialById(id);
     if (!existingTestimonial) {
       return { data: null, error: "Testimonial not found", success: false };
     }
@@ -111,7 +111,7 @@ export const deleteTestimonial = async (id: string) => {
       return { data: null, error: "Unauthorized", success: false };
     }
 
-    await testimonialServices.deleteTestimonial(id);
+    await deleteTestimonial(id);
 
     return { data: null, error: null, success: true };
   } catch (error) {

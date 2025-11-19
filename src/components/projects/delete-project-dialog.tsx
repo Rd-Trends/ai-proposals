@@ -9,13 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Project } from "@/lib/db";
+import type { Project } from "@/lib/db/schema/projects";
 
-interface DeleteProjectDialogProps {
+type DeleteProjectDialogProps = {
   project: Project;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
+};
 
 export function DeleteProjectDialog({
   project,
@@ -23,7 +23,7 @@ export function DeleteProjectDialog({
   onOpenChange,
 }: DeleteProjectDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Project</DialogTitle>
@@ -33,15 +33,15 @@ export function DeleteProjectDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button onClick={() => onOpenChange(false)} variant="outline">
             Cancel
           </Button>
           <Button
-            variant="destructive"
             onClick={() => {
               // TODO: Implement delete functionality
               onOpenChange(false);
             }}
+            variant="destructive"
           >
             Delete Project
           </Button>

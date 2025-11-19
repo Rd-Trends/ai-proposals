@@ -5,7 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { Conversation } from "@/lib/db";
+import type { Conversation } from "@/lib/db/schema/conversations";
 import { queryKeys } from "@/lib/query-keys";
 import type { PaginatedResult } from "@/lib/types";
 
@@ -15,8 +15,8 @@ export const useGetConversation = ({
 }: {
   id: string;
   initialData?: Conversation | null;
-}) => {
-  return useQuery({
+}) =>
+  useQuery({
     queryKey: queryKeys.conversations.detail(id),
     queryFn: async () => {
       const response = await fetch(`/api/chat/${id}`);
@@ -30,10 +30,9 @@ export const useGetConversation = ({
     },
     initialData: initialData ?? null,
   });
-};
 
-export const useConversationHistory = (pageSize = 10) => {
-  return useInfiniteQuery<PaginatedResult<Conversation>>({
+export const useConversationHistory = (pageSize = 10) =>
+  useInfiniteQuery<PaginatedResult<Conversation>>({
     queryKey: queryKeys.conversations.history(pageSize),
     queryFn: async ({ pageParam = 1 }) => {
       const params = new URLSearchParams({
@@ -55,7 +54,6 @@ export const useConversationHistory = (pageSize = 10) => {
       return page < totalPages ? page + 1 : undefined;
     },
   });
-};
 
 export const useUpdateConversation = () => {
   const queryClient = useQueryClient();
@@ -92,34 +90,33 @@ export const useUpdateConversation = () => {
       queryClient.setQueriesData<
         InfiniteData<PaginatedResult<Conversation>> | Conversation
       >({ queryKey: queryKeys.conversations.all }, (oldData) => {
-        if (!oldData) return oldData;
+        if (!oldData) {
+          return oldData;
+        }
 
         if ("pages" in oldData) {
-          const newPages = oldData.pages.map((page) => {
-            return {
-              ...page,
-              data: page.data.map((conversation) =>
-                conversation.id === payload.id
-                  ? {
-                      ...conversation,
-                      ...payload,
-                    }
-                  : conversation,
-              ),
-            };
-          });
+          const newPages = oldData.pages.map((page) => ({
+            ...page,
+            data: page.data.map((conversation) =>
+              conversation.id === payload.id
+                ? {
+                    ...conversation,
+                    ...payload,
+                  }
+                : conversation
+            ),
+          }));
 
           return {
             ...oldData,
             pages: newPages,
           };
-        } else {
-          if (oldData.id === payload.id) {
-            return {
-              ...oldData,
-              ...payload,
-            };
-          }
+        }
+        if (oldData.id === payload.id) {
+          return {
+            ...oldData,
+            ...payload,
+          };
         }
       });
 
@@ -127,9 +124,9 @@ export const useUpdateConversation = () => {
     },
     onError: (_, __, context) => {
       if (context) {
-        context.forEach(([queryKey, data]) => {
+        for (const [queryKey, data] of context) {
           queryClient.setQueryData(queryKey, data);
-        });
+        }
       }
     },
   });
@@ -162,15 +159,15 @@ export const useDeleteConversation = () => {
       queryClient.setQueriesData<
         InfiniteData<PaginatedResult<Conversation>> | Conversation
       >({ queryKey: queryKeys.conversations.all }, (oldData) => {
-        if (!oldData) return oldData;
+        if (!oldData) {
+          return oldData;
+        }
 
         if ("pages" in oldData) {
-          const newPages = oldData.pages.map((page) => {
-            return {
-              ...page,
-              data: page.data.filter((conversation) => conversation.id !== id),
-            };
-          });
+          const newPages = oldData.pages.map((page) => ({
+            ...page,
+            data: page.data.filter((conversation) => conversation.id !== id),
+          }));
 
           return {
             ...oldData,
@@ -183,9 +180,9 @@ export const useDeleteConversation = () => {
     },
     onError: (_, _id, context) => {
       if (context) {
-        context.forEach(([queryKey, data]) => {
+        for (const [queryKey, data] of context) {
           queryClient.setQueryData(queryKey, data);
-        });
+        }
       }
     },
   });

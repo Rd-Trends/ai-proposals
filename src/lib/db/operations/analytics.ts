@@ -1,11 +1,12 @@
 import { and, count, eq, sql } from "drizzle-orm";
+import { proposalTracking } from "@/lib/db/schema/proposals";
+import { templates } from "@/lib/db/schema/templates";
 import { db } from "../drizzle";
-import { proposalTracking, templates } from "../index";
 
 // Get user proposal summary statistics
 export async function getUserProposalStats(
   userId: string,
-  days: number = 30,
+  days = 30
 ): Promise<{
   totalProposals: number;
   proposalsViewed: number;
@@ -22,24 +23,24 @@ export async function getUserProposalStats(
     .select({
       totalProposals: count(),
       proposalsViewed: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('proposal_viewed', 'client_responded', 'interviewed', 'job_awarded') THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('proposal_viewed', 'client_responded', 'interviewed', 'job_awarded') THEN 1 END`
       ),
       clientResponses: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('client_responded', 'interviewed', 'job_awarded') THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('client_responded', 'interviewed', 'job_awarded') THEN 1 END`
       ),
       interviews: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('interviewed', 'job_awarded') THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('interviewed', 'job_awarded') THEN 1 END`
       ),
       jobsAwarded: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} = 'job_awarded' THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} = 'job_awarded' THEN 1 END`
       ),
     })
     .from(proposalTracking)
     .where(
       and(
         eq(proposalTracking.userId, userId),
-        sql`${proposalTracking.sentAt} >= ${since}`,
-      ),
+        sql`${proposalTracking.sentAt} >= ${since}`
+      )
     );
 
   const total = Number(result.totalProposals) || 0;
@@ -60,7 +61,7 @@ export async function getUserProposalStats(
 // Get template success statistics
 export async function getTemplateStats(
   templateId: string,
-  days: number = 30,
+  days = 30
 ): Promise<{
   usageCount: number;
   lastUsed: Date | null;
@@ -76,10 +77,10 @@ export async function getTemplateStats(
       usageCount: count(),
       lastUsed: sql<Date | null>`MAX(${proposalTracking.sentAt})`,
       jobsAwarded: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} = 'job_awarded' THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} = 'job_awarded' THEN 1 END`
       ),
       clientResponses: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('client_responded', 'interviewed', 'job_awarded') THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('client_responded', 'interviewed', 'job_awarded') THEN 1 END`
       ),
       avgResponseTime: sql<number | null>`
         AVG(
@@ -94,8 +95,8 @@ export async function getTemplateStats(
     .where(
       and(
         eq(proposalTracking.templateId, templateId),
-        sql`${proposalTracking.sentAt} >= ${since}`,
-      ),
+        sql`${proposalTracking.sentAt} >= ${since}`
+      )
     );
 
   const total = Number(result.usageCount) || 0;
@@ -131,10 +132,10 @@ export async function getUserTemplateStats(userId: string): Promise<{
       .select({
         totalTemplates: count(),
         activeTemplates: count(
-          sql`CASE WHEN ${templates.status} = 'active' THEN 1 END`,
+          sql`CASE WHEN ${templates.status} = 'active' THEN 1 END`
         ),
         favoriteTemplates: count(
-          sql`CASE WHEN ${templates.isFavorite} = true THEN 1 END`,
+          sql`CASE WHEN ${templates.isFavorite} = true THEN 1 END`
         ),
         totalUsage: sql<number>`COALESCE(SUM(${templates.usageCount}), 0)`,
       })
@@ -148,7 +149,7 @@ export async function getUserTemplateStats(userId: string): Promise<{
         recentUsage: count(),
         totalProposals: count(),
         jobsAwarded: count(
-          sql`CASE WHEN ${proposalTracking.currentOutcome} = 'job_awarded' THEN 1 END`,
+          sql`CASE WHEN ${proposalTracking.currentOutcome} = 'job_awarded' THEN 1 END`
         ),
       })
       .from(proposalTracking)
@@ -156,8 +157,8 @@ export async function getUserTemplateStats(userId: string): Promise<{
       .where(
         and(
           eq(templates.userId, userId),
-          sql`${proposalTracking.sentAt} >= ${thirtyDaysAgo}`,
-        ),
+          sql`${proposalTracking.sentAt} >= ${thirtyDaysAgo}`
+        )
       )
       .then(([result]) => result),
   ]);
@@ -178,7 +179,7 @@ export async function getUserTemplateStats(userId: string): Promise<{
 // Get daily proposal activity for a user
 export async function getDailyActivity(
   userId: string,
-  days: number = 30,
+  days = 30
 ): Promise<
   Array<{
     date: string;
@@ -196,21 +197,21 @@ export async function getDailyActivity(
       date: sql<string>`DATE(${proposalTracking.sentAt})`,
       proposalsSent: count(),
       proposalsViewed: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('proposal_viewed', 'client_responded', 'interviewed', 'job_awarded') THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('proposal_viewed', 'client_responded', 'interviewed', 'job_awarded') THEN 1 END`
       ),
       responses: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('client_responded', 'interviewed', 'job_awarded') THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('client_responded', 'interviewed', 'job_awarded') THEN 1 END`
       ),
       jobsAwarded: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} = 'job_awarded' THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} = 'job_awarded' THEN 1 END`
       ),
     })
     .from(proposalTracking)
     .where(
       and(
         eq(proposalTracking.userId, userId),
-        sql`${proposalTracking.sentAt} >= ${since}`,
-      ),
+        sql`${proposalTracking.sentAt} >= ${since}`
+      )
     )
     .groupBy(sql`DATE(${proposalTracking.sentAt})`)
     .orderBy(sql`DATE(${proposalTracking.sentAt})`);
@@ -227,7 +228,7 @@ export async function getDailyActivity(
 // Get platform performance analytics
 export async function getPlatformStats(
   userId: string,
-  days: number = 30,
+  days = 30
 ): Promise<
   Array<{
     platform: string;
@@ -244,10 +245,10 @@ export async function getPlatformStats(
       platform: proposalTracking.platform,
       totalProposals: count(),
       jobsAwarded: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} = 'job_awarded' THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} = 'job_awarded' THEN 1 END`
       ),
       responses: count(
-        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('client_responded', 'interviewed', 'job_awarded') THEN 1 END`,
+        sql`CASE WHEN ${proposalTracking.currentOutcome} IN ('client_responded', 'interviewed', 'job_awarded') THEN 1 END`
       ),
     })
     .from(proposalTracking)
@@ -255,8 +256,8 @@ export async function getPlatformStats(
       and(
         eq(proposalTracking.userId, userId),
         sql`${proposalTracking.sentAt} >= ${since}`,
-        sql`${proposalTracking.platform} IS NOT NULL`,
-      ),
+        sql`${proposalTracking.platform} IS NOT NULL`
+      )
     )
     .groupBy(proposalTracking.platform);
 

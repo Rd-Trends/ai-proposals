@@ -22,11 +22,11 @@ const paddingXClassMap: Record<SectionX, string> = {
   lg: "px-4 md:px-10",
 };
 
-export interface SectionProps extends React.HTMLAttributes<HTMLElement> {
+export type SectionProps = React.HTMLAttributes<HTMLElement> & {
   as?: keyof HTMLElementTagNameMap;
   paddingY?: SectionY;
   paddingX?: SectionX;
-}
+};
 
 /**
  * Section
@@ -51,7 +51,7 @@ export function Section({
         "scroll-mt-[var(--header-height)]",
         paddingYMap[paddingY],
         paddingXClassMap[paddingX],
-        className,
+        className
       )}
       {...props}
     />

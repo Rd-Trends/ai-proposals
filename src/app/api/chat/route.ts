@@ -7,7 +7,7 @@ import {
   streamText,
 } from "ai";
 import { headers } from "next/headers";
-import { generateTitleFromUserMessage } from "@/actions/conversation-actions";
+import { generateTitleFromUserMessageAction } from "@/actions/conversation-actions";
 import { generateProposalPrompt } from "@/lib/ai/prompts";
 import { createTemplateFromProposal } from "@/lib/ai/tools/create-template-from-proposal";
 import { getProjectsAndCaseStudies } from "@/lib/ai/tools/get-projects-and-case-studies";
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
         return new ChatSDKError("forbidden:chat").toResponse();
       }
     } else {
-      const title = await generateTitleFromUserMessage({
+      const title = await generateTitleFromUserMessageAction({
         message,
       });
 
@@ -84,11 +84,15 @@ export async function POST(request: Request) {
     const stream = createUIMessageStream({
       execute: ({ writer: dataStream }) => {
         const result = streamText({
-          model: openai("gpt-4.1"),
+          model: openai("gpt-5.1"),
+          providerOptions: {
+            openai: { reasoning: { effort: "none" } },
+          },
           system: generateProposalPrompt({
             user: { ...session.user, image: session.user?.image || "" },
             tone,
           }),
+
           messages: convertToModelMessages(uiMessages),
           stopWhen: stepCountIs(5),
           tools: {
@@ -97,10 +101,10 @@ export async function POST(request: Request) {
             getTestimonials: getTestimonials(session.user),
             saveProposal: saveProposals(session.user),
             createTemplateFromProposal: createTemplateFromProposal(
-              session.user,
+              session.user
             ),
           },
-          onFinish: async ({ usage }) => {
+          onFinish: ({ usage }) => {
             // try {
             //   const providers = await getTokenlensCatalog();
             //   const modelId =
@@ -149,7 +153,7 @@ export async function POST(request: Request) {
         dataStream.merge(
           result.toUIMessageStream({
             sendReasoning: true,
-          }),
+          })
         );
       },
       generateId: generateUUID,
@@ -162,7 +166,7 @@ export async function POST(request: Request) {
             createdAt: new Date(),
             attachments: [],
             conversationId: id,
-          })),
+          }))
         );
         // if (finalMergedUsage) {
         //   try {
@@ -175,9 +179,7 @@ export async function POST(request: Request) {
         //   }
         // }
       },
-      onError: () => {
-        return "Oops, an error occurred!";
-      },
+      onError: () => "Oops, an error occurred!",
     });
 
     return new Response(stream.pipeThrough(new JsonToSseTransformStream()));
@@ -190,7 +192,7 @@ export async function POST(request: Request) {
     if (
       error instanceof Error &&
       error.message?.includes(
-        "AI Gateway requires a valid credit card on file to service requests",
+        "AI Gateway requires a valid credit card on file to service requests"
       )
     ) {
       return new ChatSDKError("bad_request:activate_gateway").toResponse();

@@ -9,18 +9,18 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { ProposalTracking } from "@/lib/db";
+import type { ProposalTracking } from "@/lib/db/schema/proposals";
 import { Button } from "../ui/button";
 import {
   getProposalStatusBadgeVariant,
   getProposalStatusLabel,
 } from "./helpers";
 
-interface ViewProposalSheetProps {
+type ViewProposalSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   proposal: ProposalTracking;
-}
+};
 
 export function ViewProposalSheet({
   open,
@@ -28,8 +28,8 @@ export function ViewProposalSheet({
   proposal,
 }: ViewProposalSheetProps) {
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className=" sm:max-w-2xl flex flex-col">
+    <Sheet onOpenChange={onOpenChange} open={open}>
+      <SheetContent className="flex flex-col sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle>{proposal.jobTitle || "Proposal Details"}</SheetTitle>
           <SheetDescription>
@@ -37,14 +37,14 @@ export function ViewProposalSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="space-y-6 px-4 flex-1 overflow-y-auto pb-4">
+        <div className="flex-1 space-y-6 overflow-y-auto px-4 pb-4">
           <section className="grid grid-cols-2 gap-4">
             <div>
-              <h3 className="text-sm font-medium">Status</h3>
+              <h3 className="font-medium text-sm">Status</h3>
               <div className="mt-1">
                 <Badge
                   variant={getProposalStatusBadgeVariant(
-                    proposal.currentOutcome,
+                    proposal.currentOutcome
                   )}
                 >
                   {getProposalStatusLabel(proposal.currentOutcome)}
@@ -52,14 +52,14 @@ export function ViewProposalSheet({
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-medium">Platform</h3>
+              <h3 className="font-medium text-sm">Platform</h3>
               <div className="mt-1 text-sm">{proposal.platform || "-"}</div>
             </div>
           </section>
 
           {proposal.proposalLength && (
             <section>
-              <h3 className="text-sm font-medium">Word Count</h3>
+              <h3 className="font-medium text-sm">Word Count</h3>
               <div className="mt-1 text-sm">
                 {proposal.proposalLength} words
               </div>
@@ -68,8 +68,8 @@ export function ViewProposalSheet({
 
           {proposal.proposalContent && (
             <section>
-              <h3 className="text-sm font-medium">Proposal Content</h3>
-              <article className="mt-1 p-4 bg-muted rounded-md text-sm whitespace-pre-wrap">
+              <h3 className="font-medium text-sm">Proposal Content</h3>
+              <article className="mt-1 whitespace-pre-wrap rounded-md bg-muted p-4 text-sm">
                 {proposal.proposalContent}
               </article>
             </section>
@@ -77,8 +77,8 @@ export function ViewProposalSheet({
 
           {proposal.notes && (
             <section>
-              <h3 className="text-sm font-medium">Notes</h3>
-              <aside className="mt-1 p-3 bg-muted/50 rounded-md text-sm">
+              <h3 className="font-medium text-sm">Notes</h3>
+              <aside className="mt-1 rounded-md bg-muted/50 p-3 text-sm">
                 {proposal.notes}
               </aside>
             </section>
@@ -86,14 +86,14 @@ export function ViewProposalSheet({
 
           {proposal.jobPostingUrl && (
             <section className="flex flex-col gap-1">
-              <h3 className="text-sm font-medium">Job Posting</h3>
+              <h3 className="font-medium text-sm">Job Posting</h3>
 
-              <Button variant={"link"} asChild>
+              <Button asChild variant={"link"}>
                 <a
-                  className="w-fit !px-0 underline"
+                  className="!px-0 w-fit underline"
                   href={proposal.jobPostingUrl}
-                  target="_blank"
                   rel="noopener noreferrer"
+                  target="_blank"
                 >
                   View Original Job Posting
                 </a>
@@ -103,7 +103,7 @@ export function ViewProposalSheet({
 
           {/* Timeline of events */}
           <section>
-            <h3 className="text-sm font-medium">Timeline</h3>
+            <h3 className="font-medium text-sm">Timeline</h3>
             <dl className="mt-2 space-y-2">
               <div className="flex justify-between text-sm">
                 <dt>Proposal sent</dt>
@@ -111,7 +111,7 @@ export function ViewProposalSheet({
                   <time dateTime={new Date(proposal.sentAt).toISOString()}>
                     {format(
                       new Date(proposal.sentAt),
-                      "MMM dd, yyyy 'at' h:mm a",
+                      "MMM dd, yyyy 'at' h:mm a"
                     )}
                   </time>
                 </dd>
@@ -124,7 +124,7 @@ export function ViewProposalSheet({
                     <time dateTime={new Date(proposal.viewedAt).toISOString()}>
                       {format(
                         new Date(proposal.viewedAt),
-                        "MMM dd, yyyy 'at' h:mm a",
+                        "MMM dd, yyyy 'at' h:mm a"
                       )}
                     </time>
                   </dd>
@@ -140,7 +140,7 @@ export function ViewProposalSheet({
                     >
                       {format(
                         new Date(proposal.respondedAt),
-                        "MMM dd, yyyy 'at' h:mm a",
+                        "MMM dd, yyyy 'at' h:mm a"
                       )}
                     </time>
                   </dd>
@@ -156,7 +156,7 @@ export function ViewProposalSheet({
                     >
                       {format(
                         new Date(proposal.interviewedAt),
-                        "MMM dd, yyyy 'at' h:mm a",
+                        "MMM dd, yyyy 'at' h:mm a"
                       )}
                     </time>
                   </dd>
@@ -172,7 +172,7 @@ export function ViewProposalSheet({
                     >
                       {format(
                         new Date(proposal.completedAt),
-                        "MMM dd, yyyy 'at' h:mm a",
+                        "MMM dd, yyyy 'at' h:mm a"
                       )}
                     </time>
                   </dd>

@@ -59,17 +59,17 @@ export function ProfileForm({ user }: { user: User }) {
     <form id="profile-form" onSubmit={handleSubmit}>
       <FieldGroup>
         <Controller
-          name="name"
           control={form.control}
+          name="name"
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="profile-name">Name</FieldLabel>
               <Input
                 {...field}
-                id="profile-name"
-                placeholder="Your name"
                 aria-invalid={fieldState.invalid}
                 disabled={isPending}
+                id="profile-name"
+                placeholder="Your name"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -77,18 +77,18 @@ export function ProfileForm({ user }: { user: User }) {
         />
 
         <Controller
-          name="email"
           control={form.control}
+          name="email"
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="profile-email">Email</FieldLabel>
               <Input
                 {...field}
-                id="profile-email"
-                type="email"
-                placeholder="your.email@example.com"
                 aria-invalid={fieldState.invalid}
                 disabled
+                id="profile-email"
+                placeholder="your.email@example.com"
+                type="email"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -96,18 +96,18 @@ export function ProfileForm({ user }: { user: User }) {
         />
 
         <Controller
-          name="bio"
           control={form.control}
+          name="bio"
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="profile-bio">Professional Bio</FieldLabel>
               <Textarea
                 {...field}
+                aria-invalid={fieldState.invalid}
+                className="min-h-[240px]"
+                disabled={isPending}
                 id="profile-bio"
                 placeholder="Describe your professional background, key skills, expertise, notable projects, achievements, and what makes you unique as a freelancer..."
-                className="min-h-[240px]"
-                aria-invalid={fieldState.invalid}
-                disabled={isPending}
               />
               <FieldDescription>
                 Describe your expertise, experience, and what makes you stand
@@ -119,10 +119,10 @@ export function ProfileForm({ user }: { user: User }) {
         />
 
         <Button
-          type="submit"
-          form="profile-form"
-          disabled={isPending}
           className="w-full"
+          disabled={isPending}
+          form="profile-form"
+          type="submit"
         >
           {isPending ? "Saving..." : "Save Changes"}
         </Button>

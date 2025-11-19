@@ -7,7 +7,7 @@ import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { createTestimonial } from "@/actions/testimonial-actions";
+import { createTestimonialAction } from "@/actions/testimonial-actions";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -27,10 +27,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useSession } from "@/lib/auth-client";
 
-interface CreateTestimonialSheetProps {
+type CreateTestimonialSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
+};
 
 export function CreateTestimonialSheet({
   open,
@@ -51,10 +51,10 @@ export function CreateTestimonialSheet({
     },
   });
 
-  const handleSubmit = form.handleSubmit(async (data) => {
+  const handleSubmit = form.handleSubmit((data) => {
     startTransition(async () => {
       try {
-        const res = await createTestimonial({
+        const res = await createTestimonialAction({
           ...data,
           userId: user?.id || "",
         });
@@ -74,8 +74,8 @@ export function CreateTestimonialSheet({
   });
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-2xl overflow-y-auto">
+    <Sheet onOpenChange={onOpenChange} open={open}>
+      <SheetContent className="overflow-y-auto sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <MessageSquareQuote className="h-5 w-5" />
@@ -88,10 +88,10 @@ export function CreateTestimonialSheet({
         </SheetHeader>
 
         <form id="create-testimonial-form" onSubmit={handleSubmit}>
-          <FieldGroup className="space-y-4 pt-6 px-4">
+          <FieldGroup className="space-y-4 px-4 pt-6">
             <Controller
-              name="clientName"
               control={form.control}
+              name="clientName"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="testimonial-client-name">
@@ -99,10 +99,10 @@ export function CreateTestimonialSheet({
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="testimonial-client-name"
-                    placeholder="e.g., Sarah Johnson"
                     aria-invalid={fieldState.invalid}
                     disabled={isPending}
+                    id="testimonial-client-name"
+                    placeholder="e.g., Sarah Johnson"
                   />
                   <FieldDescription>
                     The name of the client who provided this testimonial
@@ -115,8 +115,8 @@ export function CreateTestimonialSheet({
             />
 
             <Controller
-              name="clientTitle"
               control={form.control}
+              name="clientTitle"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="testimonial-client-title">
@@ -124,10 +124,10 @@ export function CreateTestimonialSheet({
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="testimonial-client-title"
-                    placeholder="e.g., CEO at TechCorp"
                     aria-invalid={fieldState.invalid}
                     disabled={isPending}
+                    id="testimonial-client-title"
+                    placeholder="e.g., CEO at TechCorp"
                   />
                   <FieldDescription>
                     The client's role and company (optional)
@@ -140,8 +140,8 @@ export function CreateTestimonialSheet({
             />
 
             <Controller
-              name="content"
               control={form.control}
+              name="content"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="testimonial-content">
@@ -149,11 +149,11 @@ export function CreateTestimonialSheet({
                   </FieldLabel>
                   <Textarea
                     {...field}
+                    aria-invalid={fieldState.invalid}
+                    className="min-h-[150px] resize-none"
+                    disabled={isPending}
                     id="testimonial-content"
                     placeholder="What did the client say about your work?"
-                    className="min-h-[150px] resize-none"
-                    aria-invalid={fieldState.invalid}
-                    disabled={isPending}
                   />
                   <FieldDescription>
                     The testimonial text from your client
@@ -166,8 +166,8 @@ export function CreateTestimonialSheet({
             />
 
             <Controller
-              name="projectTitle"
               control={form.control}
+              name="projectTitle"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="testimonial-project-title">
@@ -175,10 +175,10 @@ export function CreateTestimonialSheet({
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="testimonial-project-title"
-                    placeholder="e.g., E-commerce Website Redesign"
                     aria-invalid={fieldState.invalid}
                     disabled={isPending}
+                    id="testimonial-project-title"
+                    placeholder="e.g., E-commerce Website Redesign"
                   />
                   <FieldDescription>
                     The project this testimonial is related to (optional)
@@ -193,16 +193,16 @@ export function CreateTestimonialSheet({
             {/* Submit Button */}
             <div className="flex justify-end gap-3 py-6">
               <Button
+                onClick={() => onOpenChange(false)}
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
               >
                 Cancel
               </Button>
               <Button
-                type="submit"
-                form="create-testimonial-form"
                 disabled={isPending}
+                form="create-testimonial-form"
+                type="submit"
               >
                 {isPending ? (
                   <>

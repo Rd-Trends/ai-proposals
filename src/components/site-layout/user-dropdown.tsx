@@ -27,13 +27,13 @@ export function UserDropdownMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className={className} align="end">
+      <DropdownMenuContent align="end" className={className}>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             {user.name && (
-              <p className="text-sm font-medium leading-none">{user.name}</p>
+              <p className="font-medium text-sm leading-none">{user.name}</p>
             )}
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="text-muted-foreground text-xs leading-none">
               {user.email}
             </p>
           </div>

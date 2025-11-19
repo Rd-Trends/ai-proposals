@@ -40,10 +40,11 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     return notFound();
   }
 
-  if (!conversation.isPublic) {
-    if (!session?.user || session.user.id !== conversation.userId) {
-      return notFound();
-    }
+  if (
+    !conversation.isPublic &&
+    (!session?.user || session.user.id !== conversation.userId)
+  ) {
+    return notFound();
   }
 
   const messagesFromDb = await getMessagesByConversationId(id);
@@ -52,9 +53,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   return (
     <Chat
+      conversation={conversation}
       id={id}
       initialMessages={uiMessages}
-      conversation={conversation}
       isReadonly={conversation.userId !== session?.user?.id}
     />
   );

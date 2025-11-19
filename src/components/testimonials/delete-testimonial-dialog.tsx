@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { deleteTestimonial } from "@/actions/testimonial-actions";
+import { deleteTestimonialAction } from "@/actions/testimonial-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,13 +14,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Testimonial } from "@/lib/db";
+import type { Testimonial } from "@/lib/db/schema/testimonials";
 
-interface DeleteTestimonialDialogProps {
+type DeleteTestimonialDialogProps = {
   testimonial: Testimonial;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
+};
 
 export function DeleteTestimonialDialog({
   testimonial,
@@ -30,13 +30,13 @@ export function DeleteTestimonialDialog({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const handleDeleteTemplate = async () => {
+  const handleDeleteTemplate = () => {
     startTransition(async () => {
       try {
-        const result = await deleteTestimonial(testimonial.id);
+        const result = await deleteTestimonialAction(testimonial.id);
         if (result.success) {
           toast.success(
-            `Testimonial from "${testimonial.clientName}" deleted successfully`,
+            `Testimonial from "${testimonial.clientName}" deleted successfully`
           );
           startTransition(() => {
             onOpenChange(false);
@@ -53,7 +53,7 @@ export function DeleteTestimonialDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Testimonial</DialogTitle>
@@ -63,13 +63,13 @@ export function DeleteTestimonialDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button onClick={() => onOpenChange(false)} variant="outline">
             Cancel
           </Button>
           <Button
-            variant="destructive"
-            onClick={handleDeleteTemplate}
             disabled={isPending}
+            onClick={handleDeleteTemplate}
+            variant="destructive"
           >
             {isPending ? (
               <>

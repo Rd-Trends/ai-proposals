@@ -33,7 +33,7 @@ export function MagicLinkAuth() {
     },
   });
 
-  const onSubmit = async (formData: FormValues) => {
+  const onSubmit = (formData: FormValues) => {
     startTransition(async () => {
       const { error } = await authClient.signIn.magicLink({
         email: formData.email,
@@ -44,7 +44,7 @@ export function MagicLinkAuth() {
         toast.error(
           error.status === 401
             ? error.message || "Unauthorized"
-            : "Failed to send magic link. Please try again.",
+            : "Failed to send magic link. Please try again."
         );
       } else {
         toast.success("Magic link sent! Check your email.");
@@ -60,21 +60,21 @@ export function MagicLinkAuth() {
     return (
       <div className="space-y-4 text-center">
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold">Check your email</h2>
+          <h2 className="font-bold text-2xl">Check your email</h2>
           <p className="text-gray-600">
             We&apos;ve sent a magic link to <strong>{emailValue}</strong>
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-gray-500 text-sm">
             Click the link in your email to sign in. The link will expire in 10
             minutes.
           </p>
         </div>
         <Button
-          variant="outline"
           onClick={() => {
             setIsEmailSent(false);
             form.reset();
           }}
+          variant="outline"
         >
           Try different email
         </Button>
@@ -85,7 +85,7 @@ export function MagicLinkAuth() {
   return (
     <div className="space-y-4">
       <div className="space-y-2 text-center">
-        <h2 className="text-2xl font-bold">Sign in to QuickRite</h2>
+        <h2 className="font-bold text-2xl">Sign in to QuickRite</h2>
         <p className="text-gray-600">
           Enter your email and we&apos;ll send you a magic link to sign in
         </p>
@@ -93,17 +93,17 @@ export function MagicLinkAuth() {
       <form id="magic-link-form" onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <Controller
-            name="email"
             control={form.control}
+            name="email"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <Input
                   {...field}
-                  id="magic-link-email"
-                  type="email"
-                  placeholder="Enter your email"
                   aria-invalid={fieldState.invalid}
                   disabled={isPending}
+                  id="magic-link-email"
+                  placeholder="Enter your email"
+                  type="email"
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -112,16 +112,16 @@ export function MagicLinkAuth() {
             )}
           />
           <Button
-            type="submit"
-            form="magic-link-form"
             className="w-full"
             disabled={isPending}
+            form="magic-link-form"
+            type="submit"
           >
             {isPending ? "Sending..." : "Send magic link"}
           </Button>
         </FieldGroup>
       </form>
-      <FieldDescription className="text-xs text-center">
+      <FieldDescription className="text-center text-xs">
         By signing in, you agree to our terms of service and privacy policy.
       </FieldDescription>
     </div>

@@ -3,11 +3,14 @@
 import { headers } from "next/headers";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
-import { type ProposalTracking, updateProposalTrackingSchema } from "@/lib/db";
 import {
   getProposalTrackingById,
   updateProposalTracking,
 } from "@/lib/db/operations/proposal";
+import {
+  type ProposalTracking,
+  updateProposalTrackingSchema,
+} from "@/lib/db/schema/proposals";
 
 const proposalIdSchema = z
   .string()
@@ -16,7 +19,7 @@ const proposalIdSchema = z
 
 export const updateProposal = async (
   proposalId: string,
-  data: Partial<ProposalTracking>,
+  data: Partial<ProposalTracking>
 ) => {
   try {
     proposalIdSchema.parse(proposalId);
@@ -43,7 +46,7 @@ export const updateProposal = async (
     // Update proposal status
     const updatedProposal = await updateProposalTracking(
       proposalId,
-      validatedData,
+      validatedData
     );
 
     return { data: updatedProposal, error: null, success: true };

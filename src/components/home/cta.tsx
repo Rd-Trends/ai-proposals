@@ -6,52 +6,52 @@ import { Button } from "../ui/button";
 
 export const CTASection = () => {
   return (
-    <Section id="cta" className="relative overflow-x-clip">
+    <Section className="relative overflow-x-clip" id="cta">
       {/* Background gradient orbs */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-3xl" />
+      <div className="-z-10 absolute inset-0">
+        <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 h-[600px] w-[600px] rounded-full bg-primary/20 blur-3xl" />
       </div>
 
       <Container
+        className="relative rounded-3xl border bg-card/50 p-8 text-center backdrop-blur-sm md:p-12 lg:p-16"
         size="md"
-        className="text-center p-8 md:p-12 lg:p-16 rounded-3xl border bg-card/50 backdrop-blur-sm relative"
       >
         {/* Subtle gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 -z-10" />
+        <div className="-z-10 absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5" />
 
-        <div className="inline-block mb-6 relative group">
-          <span className="text-sm font-semibold px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 relative z-10 inline-flex items-center gap-2">
+        <div className="group relative mb-6 inline-block">
+          <span className="relative z-10 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 font-semibold text-primary text-sm">
             <Sparkles className="size-4" />
             Start Your Free Trial
           </span>
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 blur-sm opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300" />
+          <div className="absolute inset-0 animate-pulse rounded-full bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-100" />
         </div>
 
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+        <h2 className="mb-6 font-bold text-3xl md:text-4xl lg:text-5xl">
           Ready to Win More Clients?
         </h2>
 
-        <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+        <p className="mx-auto mb-8 max-w-2xl text-base text-muted-foreground md:text-lg">
           Join thousands of freelancers who are landing more projects with
           AI-powered proposals. Start creating winning proposals today—no credit
           card required.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button size="lg" className="w-full sm:w-auto" asChild>
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Button asChild className="w-full sm:w-auto" size="lg">
             <Link href="/auth/signup">Get Started for Free</Link>
           </Button>
           <Button
+            asChild
+            className="w-full sm:w-auto"
             size="lg"
             variant="outline"
-            className="w-full sm:w-auto"
-            asChild
           >
             <Link href="/auth/signin">Sign In</Link>
           </Button>
         </div>
 
-        <p className="text-xs md:text-sm text-muted-foreground mt-6">
+        <p className="mt-6 text-muted-foreground text-xs md:text-sm">
           No credit card required • Free forever plan • Cancel anytime
         </p>
       </Container>

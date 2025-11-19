@@ -54,7 +54,7 @@ type NavigationItem = {
 };
 
 // Navigation items
-const navigation: Array<NavigationItem> = [
+const navigation: NavigationItem[] = [
   {
     title: "Dashboard",
     url: "/dashboard",
@@ -98,9 +98,9 @@ const navigation: Array<NavigationItem> = [
   },
 ];
 
-interface DashboardLayoutProps {
+type DashboardLayoutProps = {
   children: React.ReactNode;
-}
+};
 
 const NavLink = (item: NavigationItem) => {
   const { setOpenMobile } = useSidebar();
@@ -120,7 +120,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   // Filter navigation items based on admin status
   const filteredNavigation = navigation.filter(
-    (item) => !item.adminOnly || isAdmin,
+    (item) => !item.adminOnly || isAdmin
   );
 
   return (
@@ -184,48 +184,46 @@ export const DashboardLayoutHeader = ({
   breadcrumbs,
 }: {
   breadcrumbs: Array<{ label: string; href?: Route }>;
-}) => {
-  return (
-    <header className="sticky top-0 z-10 px-4 flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
-      <div className="flex flex-1 items-center gap-2">
-        <SidebarTrigger className="-ml-1" />
-        <Separator
-          orientation="vertical"
-          className="mr-2 data-[orientation=vertical]:h-4"
-        />
-        <Breadcrumb>
-          <BreadcrumbList>
-            {breadcrumbs.map((crumb, index) => {
-              const isLast = index === breadcrumbs.length - 1;
-              const hideOnMobile = breadcrumbs.length > 1 && !isLast;
+}) => (
+  <header className="sticky top-0 z-10 flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) supports-[backdrop-filter]:bg-background/60">
+    <div className="flex flex-1 items-center gap-2">
+      <SidebarTrigger className="-ml-1" />
+      <Separator
+        className="mr-2 data-[orientation=vertical]:h-4"
+        orientation="vertical"
+      />
+      <Breadcrumb>
+        <BreadcrumbList>
+          {breadcrumbs.map((crumb, index) => {
+            const isLast = index === breadcrumbs.length - 1;
+            const hideOnMobile = breadcrumbs.length > 1 && !isLast;
 
-              return (
-                <Fragment key={crumb.href || crumb.label}>
-                  {index > 0 && (
-                    <BreadcrumbSeparator className="hidden md:block" />
+            return (
+              <Fragment key={crumb.href || crumb.label}>
+                {index > 0 && (
+                  <BreadcrumbSeparator className="hidden md:block" />
+                )}
+                <BreadcrumbItem
+                  className={hideOnMobile ? "hidden md:block" : ""}
+                >
+                  {isLast || !crumb.href ? (
+                    <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                  ) : (
+                    <BreadcrumbLink asChild>
+                      <Link href={crumb.href}>{crumb.label}</Link>
+                    </BreadcrumbLink>
                   )}
-                  <BreadcrumbItem
-                    className={hideOnMobile ? "hidden md:block" : ""}
-                  >
-                    {isLast || !crumb.href ? (
-                      <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
-                    ) : (
-                      <BreadcrumbLink asChild>
-                        <Link href={crumb.href}>{crumb.label}</Link>
-                      </BreadcrumbLink>
-                    )}
-                  </BreadcrumbItem>
-                </Fragment>
-              );
-            })}
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+                </BreadcrumbItem>
+              </Fragment>
+            );
+          })}
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
 
-      <ThemeModeSwitcher />
-    </header>
-  );
-};
+    <ThemeModeSwitcher />
+  </header>
+);
 
 export const DashboardPageHeader = ({
   title,
@@ -235,19 +233,17 @@ export const DashboardPageHeader = ({
   title: React.ReactNode;
   description?: React.ReactNode;
   action?: React.ReactNode;
-}) => {
-  return (
-    <div className="flex flex-col gap-4 px-4 pt-4 md:flex-row md:items-center md:justify-between md:px-6 lg:px-8">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-        {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
-        )}
-      </div>
-      {action && <div className="flex items-center gap-2">{action}</div>}
+}) => (
+  <div className="flex flex-col gap-4 px-4 pt-4 md:flex-row md:items-center md:justify-between md:px-6 lg:px-8">
+    <div className="flex flex-col gap-1">
+      <h1 className="font-semibold text-2xl tracking-tight">{title}</h1>
+      {description && (
+        <p className="text-muted-foreground text-sm">{description}</p>
+      )}
     </div>
-  );
-};
+    {action && <div className="flex items-center gap-2">{action}</div>}
+  </div>
+);
 
 export const DashboardGutter = ({
   as,
@@ -258,8 +254,8 @@ export const DashboardGutter = ({
   return (
     <Component
       className={cn(
-        "container mx-auto flex flex-1 flex-col gap-6 py-6 px-4 md:px-6 lg:px-8",
-        className,
+        "container mx-auto flex flex-1 flex-col gap-6 px-4 py-6 md:px-6 lg:px-8",
+        className
       )}
     >
       {children}

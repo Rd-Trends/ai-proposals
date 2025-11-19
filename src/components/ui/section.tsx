@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 function Section({ className, ...props }: React.ComponentProps<"section">) {
   return (
     <section
-      data-slot="section"
       className={cn("px-4 py-12 sm:py-24 md:py-32", className)}
+      data-slot="section"
       {...props}
     />
   );

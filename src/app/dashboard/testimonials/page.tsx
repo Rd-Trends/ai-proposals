@@ -53,14 +53,14 @@ export default async function TestimonialsPage({
         ]}
       />
       <DashboardPageHeader
-        title="Testimonials"
         description="Manage client testimonials to build credibility in your proposals"
+        title="Testimonials"
       />
       <DashboardGutter as="main">
         <TestimonialStats total={result.pagination.total} />
         <TestimonialsTable
-          testimonials={result.data}
           pagination={result.pagination}
+          testimonials={result.data}
         />
       </DashboardGutter>
     </>

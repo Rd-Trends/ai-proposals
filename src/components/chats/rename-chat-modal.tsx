@@ -5,7 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useUpdateConversation } from "@/hooks/use-conversation";
-import type { Conversation } from "@/lib/db";
+import type { Conversation } from "@/lib/db/schema/conversations";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -47,7 +47,9 @@ export const RenameChatModal = ({
   });
 
   const handleSubmit = form.handleSubmit((data) => {
-    if (!conversation) return;
+    if (!conversation) {
+      return;
+    }
 
     mutate(
       { id: conversation.id, title: data.title },
@@ -60,19 +62,19 @@ export const RenameChatModal = ({
         onError: () => {
           toast.error("Failed to rename conversation");
         },
-      },
+      }
     );
   });
 
   return (
     <Dialog
-      open={open}
       onOpenChange={(isOpen) => {
         onOpenChange(isOpen);
         if (!isOpen) {
           form.reset();
         }
       }}
+      open={open}
     >
       <DialogContent>
         <DialogHeader>
@@ -82,28 +84,28 @@ export const RenameChatModal = ({
           </DialogDescription>
         </DialogHeader>
         <form
+          className="space-y-4"
           id="rename-chat-form"
           onSubmit={handleSubmit}
-          className="space-y-4"
         >
           <Controller
-            name="title"
             control={form.control}
+            name="title"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="rename-chat-title">Title</FieldLabel>
                 <Input
                   {...field}
-                  id="rename-chat-title"
-                  placeholder="Enter conversation title"
                   aria-invalid={fieldState.invalid}
                   autoComplete="off"
+                  id="rename-chat-title"
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
                       handleSubmit();
                     }
                   }}
+                  placeholder="Enter conversation title"
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -113,17 +115,17 @@ export const RenameChatModal = ({
           />
           <DialogFooter>
             <Button
-              type="button"
-              variant="outline"
+              disabled={isPending}
               onClick={() => {
                 onOpenChange(false);
                 form.reset();
               }}
-              disabled={isPending}
+              type="button"
+              variant="outline"
             >
               Cancel
             </Button>
-            <Button type="submit" form="rename-chat-form" disabled={isPending}>
+            <Button disabled={isPending} form="rename-chat-form" type="submit">
               {isPending ? "Renaming..." : "Rename"}
             </Button>
           </DialogFooter>

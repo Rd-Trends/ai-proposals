@@ -7,12 +7,18 @@ import z from "zod";
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/auth-client";
 import {
+  createTemplate,
+  deleteTemplate,
+  getTemplateById,
+  toggleTemplateFavorite,
+  updateTemplate,
+} from "@/lib/db/operations/template";
+import {
   type InsertTemplate,
   insertTemplateSchema,
   PROPOSAL_TONE,
   updateTemplateSchema,
-} from "@/lib/db";
-import * as templateServices from "@/lib/db/operations/template";
+} from "@/lib/db/schema/templates";
 
 const generateTemplateInputSchema = z
   .string()
@@ -206,7 +212,7 @@ Looking forward to potentially collaborating!
 Generate a complete, ready-to-use proposal template that follows these principles and can be easily customized for specific job applications.`;
 };
 
-export const generateTemplateContent = async (input: string) => {
+export const generateTemplateContentAction = async (input: string) => {
   try {
     generateTemplateInputSchema.parse(input);
 
@@ -228,12 +234,12 @@ export const generateTemplateContent = async (input: string) => {
         tone: z
           .enum(PROPOSAL_TONE)
           .describe(
-            "The tone of the proposal (e.g., professional, friendly, creative)",
+            "The tone of the proposal (e.g., professional, friendly, creative)"
           ),
         category: z
           .string()
           .describe(
-            "The category of the proposal (e.g., web development, design)",
+            "The category of the proposal (e.g., web development, design)"
           ),
         description: z
           .string()
@@ -248,7 +254,7 @@ export const generateTemplateContent = async (input: string) => {
   }
 };
 
-export const createTemplate = async (data: InsertTemplate) => {
+export const createTemplateAction = async (data: InsertTemplate) => {
   try {
     // Validate and process the data as needed
     const validatedData = insertTemplateSchema.parse(data);
@@ -259,7 +265,7 @@ export const createTemplate = async (data: InsertTemplate) => {
       throw new Error("Unauthorized");
     }
 
-    const template = await templateServices.createTemplate({
+    const template = await createTemplate({
       ...validatedData,
       userId: session.user.id,
     });
@@ -274,9 +280,9 @@ export const createTemplate = async (data: InsertTemplate) => {
   }
 };
 
-export const updateTemplate = async (
+export const updateTemplateAction = async (
   id: string,
-  data: Partial<InsertTemplate>,
+  data: Partial<InsertTemplate>
 ) => {
   try {
     templateIdSchema.parse(id);
@@ -291,7 +297,7 @@ export const updateTemplate = async (
     }
 
     // Get the existing template to verify ownership
-    const existingTemplate = await templateServices.getTemplateById(id);
+    const existingTemplate = await getTemplateById(id);
     if (!existingTemplate) {
       return { data: null, error: "Template not found", success: false };
     }
@@ -300,7 +306,7 @@ export const updateTemplate = async (
       return { data: null, error: "Unauthorized", success: false };
     }
 
-    const template = await templateServices.updateTemplate(id, validatedData);
+    const template = await updateTemplate(id, validatedData);
 
     return { data: template, error: null, success: true };
   } catch (error) {
@@ -312,7 +318,7 @@ export const updateTemplate = async (
   }
 };
 
-export const duplicateTemplate = async (id: string) => {
+export const duplicateTemplateAction = async (id: string) => {
   try {
     templateIdSchema.parse(id);
 
@@ -324,7 +330,7 @@ export const duplicateTemplate = async (id: string) => {
     }
 
     // Get the existing template
-    const existingTemplate = await templateServices.getTemplateById(id);
+    const existingTemplate = await getTemplateById(id);
     if (!existingTemplate) {
       return { data: null, error: "Template not found", success: false };
     }
@@ -345,7 +351,7 @@ export const duplicateTemplate = async (id: string) => {
 
     const { id: _, updatedAt: __, createdAt: ___, ...rest } = duplicateData; // Exclude the id field
 
-    const template = await templateServices.createTemplate(rest);
+    const template = await createTemplate(rest);
 
     return { data: template, error: null, success: true };
   } catch (error) {
@@ -358,7 +364,7 @@ export const duplicateTemplate = async (id: string) => {
   }
 };
 
-export const deleteTemplate = async (id: string) => {
+export const deleteTemplateAction = async (id: string) => {
   try {
     templateIdSchema.parse(id);
 
@@ -370,7 +376,7 @@ export const deleteTemplate = async (id: string) => {
     }
 
     // Get the existing template to verify ownership
-    const existingTemplate = await templateServices.getTemplateById(id);
+    const existingTemplate = await getTemplateById(id);
     if (!existingTemplate) {
       return { data: null, error: "Template not found", success: false };
     }
@@ -379,7 +385,7 @@ export const deleteTemplate = async (id: string) => {
       return { data: null, error: "Unauthorized", success: false };
     }
 
-    await templateServices.deleteTemplate(id);
+    await deleteTemplate(id);
 
     return { data: null, error: null, success: true };
   } catch (error) {
@@ -388,7 +394,7 @@ export const deleteTemplate = async (id: string) => {
   }
 };
 
-export const toggleTemplateFavorite = async (id: string) => {
+export const toggleTemplateFavoriteAction = async (id: string) => {
   try {
     templateIdSchema.parse(id);
 
@@ -400,7 +406,7 @@ export const toggleTemplateFavorite = async (id: string) => {
     }
 
     // Get the existing template to verify ownership
-    const existingTemplate = await templateServices.getTemplateById(id);
+    const existingTemplate = await getTemplateById(id);
     if (!existingTemplate) {
       return { data: null, error: "Template not found", success: false };
     }
@@ -409,7 +415,7 @@ export const toggleTemplateFavorite = async (id: string) => {
       return { data: null, error: "Unauthorized", success: false };
     }
 
-    const template = await templateServices.toggleTemplateFavorite(id);
+    const template = await toggleTemplateFavorite(id);
 
     return { data: template, error: null, success: true };
   } catch (error) {

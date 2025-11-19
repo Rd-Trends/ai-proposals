@@ -35,13 +35,13 @@ export async function GET(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid query parameters", details: error.errors },
-        { status: 400 },
+        { status: 400 }
       );
     }
     console.error("Error fetching conversation history:", error);
     return NextResponse.json(
       { error: "Failed to fetch conversation history" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

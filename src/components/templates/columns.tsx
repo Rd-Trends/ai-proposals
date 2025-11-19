@@ -19,7 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Template } from "@/lib/db";
+import type { Template } from "@/lib/db/schema/templates";
 
 export const createColumns = ({
   onView,
@@ -62,18 +62,16 @@ export const createColumns = ({
   // },
   {
     accessorKey: "title",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2 lg:px-3"
-        >
-          Title
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        className="h-8 px-2 lg:px-3"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        variant="ghost"
+      >
+        Title
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => {
       const template = row.original;
       return (
@@ -104,7 +102,7 @@ export const createColumns = ({
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       return category ? (
-        <Badge variant="secondary" className="capitalize">
+        <Badge className="capitalize" variant="secondary">
           {category}
         </Badge>
       ) : (
@@ -117,16 +115,11 @@ export const createColumns = ({
     header: "Status",
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
+      const statusMap = { active: "default", draft: "secondary" } as const;
       return (
         <Badge
-          variant={
-            status === "active"
-              ? "default"
-              : status === "draft"
-                ? "secondary"
-                : "outline"
-          }
           className="capitalize"
+          variant={statusMap[status as keyof typeof statusMap] || "default"}
         >
           {status}
         </Badge>
@@ -139,7 +132,7 @@ export const createColumns = ({
     cell: ({ row }) => {
       const tone = row.getValue("tone") as string;
       return (
-        <Badge variant="outline" className="capitalize">
+        <Badge className="capitalize" variant="outline">
           {tone}
         </Badge>
       );
@@ -147,18 +140,16 @@ export const createColumns = ({
   },
   {
     accessorKey: "usageCount",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2 lg:px-3"
-        >
-          Usage
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        className="h-8 px-2 lg:px-3"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        variant="ghost"
+      >
+        Usage
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => {
       const count = row.getValue("usageCount") as number;
       return <div className="text-center font-medium">{count}</div>;
@@ -166,18 +157,16 @@ export const createColumns = ({
   },
   {
     accessorKey: "updatedAt",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2 lg:px-3"
-        >
-          Updated
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        className="h-8 px-2 lg:px-3"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        variant="ghost"
+      >
+        Updated
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => {
       const date = row.getValue("updatedAt") as Date;
       return (
@@ -194,7 +183,7 @@ export const createColumns = ({
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button className="h-8 w-8 p-0" variant="ghost">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>

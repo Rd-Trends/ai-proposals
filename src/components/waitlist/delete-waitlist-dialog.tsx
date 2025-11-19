@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Waitlist } from "@/lib/db";
+import type { Waitlist } from "@/lib/db/schema/waitlist";
 
 type DeleteWaitlistDialogProps = {
   open: boolean;
@@ -41,7 +41,7 @@ export function DeleteWaitlistDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Waitlist Entry</DialogTitle>
@@ -53,16 +53,16 @@ export function DeleteWaitlistDialog({
         </DialogHeader>
         <DialogFooter>
           <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
             disabled={isPending}
+            onClick={() => onOpenChange(false)}
+            variant="outline"
           >
             Cancel
           </Button>
           <Button
-            variant="destructive"
-            onClick={handleDelete}
             disabled={isPending}
+            onClick={handleDelete}
+            variant="destructive"
           >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Delete

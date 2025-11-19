@@ -20,7 +20,7 @@ export function InstallPWAPrompt() {
       // biome-ignore lint/suspicious/noExplicitAny: navigator userAgent type check
       /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     const isStandaloneMode = window.matchMedia(
-      "(display-mode: standalone)",
+      "(display-mode: standalone)"
     ).matches;
 
     setIsIOS(isIOSDevice);
@@ -37,23 +37,23 @@ export function InstallPWAPrompt() {
   }
 
   return (
-    <Dialog open={showDialog} onOpenChange={setShowDialog}>
+    <Dialog onOpenChange={setShowDialog} open={showDialog}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Install App</DialogTitle>
           <DialogDescription>
             {isIOS ? (
               <div className="space-y-4 pt-4">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   To install this app on your iOS device:
                 </p>
-                <ol className="list-decimal list-inside space-y-2 text-sm">
+                <ol className="list-inside list-decimal space-y-2 text-sm">
                   <li>
                     Tap the share button{" "}
                     <span
-                      role="img"
                       aria-label="share icon"
                       className="text-lg"
+                      role="img"
                     >
                       ⎋
                     </span>{" "}
@@ -61,7 +61,7 @@ export function InstallPWAPrompt() {
                   </li>
                   <li>
                     Scroll down and tap "Add to Home Screen"{" "}
-                    <span role="img" aria-label="plus icon" className="text-lg">
+                    <span aria-label="plus icon" className="text-lg" role="img">
                       ➕
                     </span>
                   </li>
@@ -69,7 +69,7 @@ export function InstallPWAPrompt() {
                 </ol>
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground pt-4">
+              <p className="pt-4 text-muted-foreground text-sm">
                 Install this app on your device for quick and easy access.
               </p>
             )}
@@ -78,7 +78,7 @@ export function InstallPWAPrompt() {
 
         {isIOS && (
           <div className="flex justify-end pt-4">
-            <Button variant="outline" onClick={() => setShowDialog(false)}>
+            <Button onClick={() => setShowDialog(false)} variant="outline">
               Got It
             </Button>
           </div>

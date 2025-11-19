@@ -7,7 +7,7 @@ import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { updateProject } from "@/actions/project-actions";
+import { updateProjectAction } from "@/actions/project-actions";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -25,13 +25,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { Project } from "@/lib/db";
+import type { Project } from "@/lib/db/schema/projects";
 
-interface UpdateProjectSheetProps {
+type UpdateProjectSheetProps = {
   project: Project;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
+};
 
 const schema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -56,10 +56,10 @@ export function UpdateProjectSheet({
     },
   });
 
-  const handleSubmit = form.handleSubmit(async (data) => {
+  const handleSubmit = form.handleSubmit((data) => {
     startTransition(async () => {
       try {
-        const res = await updateProject(project.id, data);
+        const res = await updateProjectAction(project.id, data);
         if (!res.success) {
           toast.error(res.error || "Failed to update project");
           return;
@@ -75,8 +75,8 @@ export function UpdateProjectSheet({
   });
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-2xl overflow-y-auto">
+    <Sheet onOpenChange={onOpenChange} open={open}>
+      <SheetContent className="overflow-y-auto sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle>Edit Project</SheetTitle>
           <SheetDescription>
@@ -85,10 +85,10 @@ export function UpdateProjectSheet({
         </SheetHeader>
 
         <form id="update-project-form" onSubmit={handleSubmit}>
-          <FieldGroup className="space-y-4 pt-6 px-4">
+          <FieldGroup className="space-y-4 px-4 pt-6">
             <Controller
-              name="title"
               control={form.control}
+              name="title"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="update-project-title">
@@ -96,10 +96,10 @@ export function UpdateProjectSheet({
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="update-project-title"
-                    placeholder="e.g., E-commerce Website for Fashion Brand"
                     aria-invalid={fieldState.invalid}
                     disabled={isPending}
+                    id="update-project-title"
+                    placeholder="e.g., E-commerce Website for Fashion Brand"
                   />
                   <FieldDescription>
                     A clear, descriptive name for your project
@@ -112,17 +112,17 @@ export function UpdateProjectSheet({
             />
 
             <Controller
-              name="details"
               control={form.control}
+              name="details"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="update-project-details">
                     Project Details *
                   </FieldLabel>
                   <RichTextEditor
-                    value={field.value}
                     onChange={field.onChange}
                     placeholder="Describe your project in detail. Include challenges solved, technologies used, outcomes achieved, links to demos, and any other relevant information..."
+                    value={field.value}
                   />
                   <FieldDescription>
                     Use the rich text editor to format your project details. You
@@ -138,16 +138,16 @@ export function UpdateProjectSheet({
             {/* Submit Button */}
             <div className="flex justify-end gap-3 py-6">
               <Button
+                onClick={() => onOpenChange(false)}
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
               >
                 Cancel
               </Button>
               <Button
-                type="submit"
-                form="update-project-form"
                 disabled={isPending}
+                form="update-project-form"
+                type="submit"
               >
                 {isPending ? (
                   <>

@@ -7,7 +7,7 @@ import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { updateTestimonial } from "@/actions/testimonial-actions";
+import { updateTestimonialAction } from "@/actions/testimonial-actions";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -25,13 +25,13 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import type { Testimonial } from "@/lib/db";
+import type { Testimonial } from "@/lib/db/schema/testimonials";
 
-interface UpdateTestimonialSheetProps {
+type UpdateTestimonialSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   testimonial: Testimonial;
-}
+};
 
 export function UpdateTestimonialSheet({
   open,
@@ -51,12 +51,14 @@ export function UpdateTestimonialSheet({
     },
   });
 
-  const handleSubmit = form.handleSubmit(async (data) => {
-    if (!testimonial) return;
+  const handleSubmit = form.handleSubmit((data) => {
+    if (!testimonial) {
+      return;
+    }
 
     startTransition(async () => {
       try {
-        const res = await updateTestimonial(testimonial.id, data);
+        const res = await updateTestimonialAction(testimonial.id, data);
         if (!res.success) {
           toast.error(res.error || "Failed to update testimonial");
           return;
@@ -72,8 +74,8 @@ export function UpdateTestimonialSheet({
   });
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-2xl overflow-y-auto">
+    <Sheet onOpenChange={onOpenChange} open={open}>
+      <SheetContent className="overflow-y-auto sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <Pencil className="h-5 w-5" />
@@ -85,10 +87,10 @@ export function UpdateTestimonialSheet({
         </SheetHeader>
 
         <form id="update-testimonial-form" onSubmit={handleSubmit}>
-          <FieldGroup className="space-y-4 pt-6 px-4">
+          <FieldGroup className="space-y-4 px-4 pt-6">
             <Controller
-              name="clientName"
               control={form.control}
+              name="clientName"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="update-testimonial-client-name">
@@ -96,10 +98,10 @@ export function UpdateTestimonialSheet({
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="update-testimonial-client-name"
-                    placeholder="e.g., Sarah Johnson"
                     aria-invalid={fieldState.invalid}
                     disabled={isPending}
+                    id="update-testimonial-client-name"
+                    placeholder="e.g., Sarah Johnson"
                   />
                   <FieldDescription>
                     The name of the client who provided this testimonial
@@ -112,8 +114,8 @@ export function UpdateTestimonialSheet({
             />
 
             <Controller
-              name="clientTitle"
               control={form.control}
+              name="clientTitle"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="update-testimonial-client-title">
@@ -121,10 +123,10 @@ export function UpdateTestimonialSheet({
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="update-testimonial-client-title"
-                    placeholder="e.g., CEO at TechCorp"
                     aria-invalid={fieldState.invalid}
                     disabled={isPending}
+                    id="update-testimonial-client-title"
+                    placeholder="e.g., CEO at TechCorp"
                   />
                   <FieldDescription>
                     The client's role and company (optional)
@@ -137,8 +139,8 @@ export function UpdateTestimonialSheet({
             />
 
             <Controller
-              name="content"
               control={form.control}
+              name="content"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="update-testimonial-content">
@@ -146,11 +148,11 @@ export function UpdateTestimonialSheet({
                   </FieldLabel>
                   <Textarea
                     {...field}
+                    aria-invalid={fieldState.invalid}
+                    className="min-h-[150px] resize-none"
+                    disabled={isPending}
                     id="update-testimonial-content"
                     placeholder="What did the client say about your work?"
-                    className="min-h-[150px] resize-none"
-                    aria-invalid={fieldState.invalid}
-                    disabled={isPending}
                   />
                   <FieldDescription>
                     The testimonial text from your client
@@ -163,8 +165,8 @@ export function UpdateTestimonialSheet({
             />
 
             <Controller
-              name="projectTitle"
               control={form.control}
+              name="projectTitle"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="update-testimonial-project-title">
@@ -172,10 +174,10 @@ export function UpdateTestimonialSheet({
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="update-testimonial-project-title"
-                    placeholder="e.g., E-commerce Website Redesign"
                     aria-invalid={fieldState.invalid}
                     disabled={isPending}
+                    id="update-testimonial-project-title"
+                    placeholder="e.g., E-commerce Website Redesign"
                   />
                   <FieldDescription>
                     The project this testimonial is related to (optional)
@@ -190,16 +192,16 @@ export function UpdateTestimonialSheet({
             {/* Submit Button */}
             <div className="flex justify-end gap-3 py-6">
               <Button
+                onClick={() => onOpenChange(false)}
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
               >
                 Cancel
               </Button>
               <Button
-                type="submit"
-                form="update-testimonial-form"
                 disabled={isPending}
+                form="update-testimonial-form"
+                type="submit"
               >
                 {isPending ? (
                   <>

@@ -7,7 +7,7 @@ import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { createProject } from "@/actions/project-actions";
+import { createProjectAction } from "@/actions/project-actions";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -27,10 +27,10 @@ import {
 } from "@/components/ui/sheet";
 import { useSession } from "@/lib/auth-client";
 
-interface CreateProjectSheetProps {
+type CreateProjectSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
+};
 
 export function CreateProjectSheet({
   open,
@@ -49,10 +49,13 @@ export function CreateProjectSheet({
     },
   });
 
-  const handleSubmit = form.handleSubmit(async (data) => {
+  const handleSubmit = form.handleSubmit((data) => {
     startTransition(async () => {
       try {
-        const res = await createProject({ ...data, userId: user?.id || "" });
+        const res = await createProjectAction({
+          ...data,
+          userId: user?.id || "",
+        });
         if (!res.success) {
           toast.error(res.error || "Failed to create project");
           return;
@@ -69,8 +72,8 @@ export function CreateProjectSheet({
   });
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-2xl overflow-y-auto">
+    <Sheet onOpenChange={onOpenChange} open={open}>
+      <SheetContent className="overflow-y-auto sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <FolderPlus className="h-5 w-5" />
@@ -83,10 +86,10 @@ export function CreateProjectSheet({
         </SheetHeader>
 
         <form id="create-project-form" onSubmit={handleSubmit}>
-          <FieldGroup className="space-y-4 pt-6 px-4">
+          <FieldGroup className="space-y-4 px-4 pt-6">
             <Controller
-              name="title"
               control={form.control}
+              name="title"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="create-project-title">
@@ -94,10 +97,10 @@ export function CreateProjectSheet({
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="create-project-title"
-                    placeholder="e.g., E-commerce Website for Fashion Brand"
                     aria-invalid={fieldState.invalid}
                     disabled={isPending}
+                    id="create-project-title"
+                    placeholder="e.g., E-commerce Website for Fashion Brand"
                   />
                   <FieldDescription>
                     A clear, descriptive name for your project
@@ -110,17 +113,17 @@ export function CreateProjectSheet({
             />
 
             <Controller
-              name="details"
               control={form.control}
+              name="details"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="create-project-details">
                     Project Details *
                   </FieldLabel>
                   <RichTextEditor
-                    value={field.value}
                     onChange={field.onChange}
                     placeholder="Describe your project in detail. Include challenges solved, technologies used, outcomes achieved, links to demos, and any other relevant information..."
+                    value={field.value}
                   />
                   <FieldDescription>
                     Use the rich text editor to format your project details. You
@@ -136,16 +139,16 @@ export function CreateProjectSheet({
             {/* Submit Button */}
             <div className="flex justify-end gap-3 py-6">
               <Button
+                onClick={() => onOpenChange(false)}
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
               >
                 Cancel
               </Button>
               <Button
-                type="submit"
-                form="create-project-form"
                 disabled={isPending}
+                form="create-project-form"
+                type="submit"
               >
                 {isPending ? (
                   <>

@@ -48,10 +48,10 @@ export type ChatMessage = UIMessage<
   ChatTools
 >;
 
-export interface PaginationParams {
+export type PaginationParams = {
   page: number;
   pageSize: number;
-}
+};
 
 export type PageMetadata = {
   page: number;
@@ -60,7 +60,7 @@ export type PageMetadata = {
   totalPages: number;
 };
 
-export interface PaginatedResult<T> {
+export type PaginatedResult<T> = {
   data: T[];
   pagination: PageMetadata;
-}
+};

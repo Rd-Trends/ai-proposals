@@ -10,13 +10,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { Project } from "@/lib/db";
+import type { Project } from "@/lib/db/schema/projects";
 
-interface ViewProjectSheetProps {
+type ViewProjectSheetProps = {
   project: Project;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
+};
 
 export function ViewProjectSheet({
   project,
@@ -32,7 +32,7 @@ export function ViewProjectSheet({
     : null;
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet onOpenChange={onOpenChange} open={open}>
       <SheetContent className="sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle className="text-2xl">{project.title}</SheetTitle>
@@ -44,14 +44,14 @@ export function ViewProjectSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <ScrollArea className="h-[calc(100vh-140px)] pr-4 mt-6">
+        <ScrollArea className="mt-6 h-[calc(100vh-140px)] pr-4">
           <div className="space-y-6 px-4">
             <div>
-              <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">
+              <h3 className="mb-3 font-semibold text-muted-foreground text-sm uppercase tracking-wide">
                 Project Details
               </h3>
               <div
-                className="prose prose-sm max-w-none dark:prose-invert"
+                className="prose prose-sm dark:prose-invert max-w-none"
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: project details is sanitized on input
                 dangerouslySetInnerHTML={{ __html: project.details }}
               />
@@ -59,7 +59,7 @@ export function ViewProjectSheet({
           </div>
         </ScrollArea>
 
-        <div className="flex justify-end gap-3 pt-6 border-t">
+        <div className="flex justify-end gap-3 border-t pt-6">
           <Button onClick={() => onOpenChange(false)}>Close</Button>
         </div>
       </SheetContent>

@@ -49,8 +49,8 @@ export default async function ProposalsPage({
         ]}
       />
       <DashboardPageHeader
-        title="Proposals"
         description="Track your proposal submissions and analyze their performance"
+        title="Proposals"
       />
 
       <DashboardGutter as="main">
@@ -58,11 +58,11 @@ export default async function ProposalsPage({
           <ProposalTrackingStats user={session.user} />
         </Suspense>
         <Suspense
-          fallback={<ProposalsTrackingTable proposals={[]} isLoading />}
+          fallback={<ProposalsTrackingTable isLoading proposals={[]} />}
         >
           <ProposalsTrackingPageContent
-            user={session.user}
             searchParams={searchParams}
+            user={session.user}
           />
         </Suspense>
       </DashboardGutter>
@@ -88,8 +88,8 @@ const ProposalsTrackingPageContent = async ({
 
   return (
     <ProposalsTrackingTable
-      proposals={result.data}
       pagination={result.pagination}
+      proposals={result.data}
     />
   );
 };

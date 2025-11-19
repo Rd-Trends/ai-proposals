@@ -50,17 +50,17 @@ export default async function TemplatesPage({
         ]}
       />
       <DashboardPageHeader
-        title="Templates"
         description="Manage your proposal templates and track their performance"
+        title="Templates"
       />
       <DashboardGutter as="main">
         <Suspense fallback={<TemplateStatsLoader />}>
           <TemplateStats user={session.user} />
         </Suspense>
-        <Suspense fallback={<TemplatesPageTable templates={[]} isLoading />}>
+        <Suspense fallback={<TemplatesPageTable isLoading templates={[]} />}>
           <TemplatesPageContent
-            user={session.user}
             searchParams={searchParams}
+            user={session.user}
           />
         </Suspense>
       </DashboardGutter>
@@ -88,8 +88,8 @@ const TemplatesPageContent = async ({
 
   return (
     <TemplatesPageTable
-      templates={result.data}
       pagination={result.pagination}
+      templates={result.data}
     />
   );
 };

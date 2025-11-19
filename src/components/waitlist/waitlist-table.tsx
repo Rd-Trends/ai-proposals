@@ -32,7 +32,7 @@ import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
 import { createColumns } from "@/components/waitlist/columns";
 import { useClipboard } from "@/hooks/use-clipboard";
-import type { Waitlist } from "@/lib/db";
+import type { Waitlist } from "@/lib/db/schema/waitlist";
 import type { PageMetadata } from "@/lib/types";
 import { DeleteWaitlistDialog } from "./delete-waitlist-dialog";
 
@@ -51,7 +51,7 @@ export function WaitlistTable({ entries, pagination }: WaitlistTableProps) {
     (value: string) => {
       copy(value);
     },
-    [copy],
+    [copy]
   );
 
   const handleToggleActive = useCallback((entry: Waitlist) => {
@@ -82,7 +82,7 @@ export function WaitlistTable({ entries, pagination }: WaitlistTableProps) {
         onToggleActive: handleToggleActive,
         onDelete: handleDelete,
       }),
-    [handleCopy, handleToggleActive, handleDelete],
+    [handleCopy, handleToggleActive, handleDelete]
   );
 
   return (
@@ -92,8 +92,8 @@ export function WaitlistTable({ entries, pagination }: WaitlistTableProps) {
           <DataTable
             columns={columns}
             data={entries}
-            isLoading={isPending}
-            enablePagination={false} // Disable client-side pagination
+            enablePagination={false}
+            isLoading={isPending} // Disable client-side pagination
             tableHeader={(table) => <WaitlistTableHeader table={table} />}
           />
           {!!pagination?.totalPages && <Pagination {...pagination} />}
@@ -102,9 +102,9 @@ export function WaitlistTable({ entries, pagination }: WaitlistTableProps) {
 
       {selectedEntry && (
         <DeleteWaitlistDialog
-          open={showDeleteDialog}
-          onOpenChange={setShowDeleteDialog}
           entry={selectedEntry}
+          onOpenChange={setShowDeleteDialog}
+          open={showDeleteDialog}
         />
       )}
     </>
@@ -118,7 +118,9 @@ function WaitlistTableHeader<TData>({ table }: { table: Table<TData> }) {
   const handleStatusFilterChange = (value: string) => {
     setStatusFilter(value);
     const column = table.getColumn("isActive");
-    if (!column) return;
+    if (!column) {
+      return;
+    }
 
     if (value === "all") {
       column.setFilterValue(undefined);
@@ -133,21 +135,21 @@ function WaitlistTableHeader<TData>({ table }: { table: Table<TData> }) {
     <div className="flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between">
       <div className="flex flex-1 items-center gap-2">
         <div className="relative w-full md:max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search emails..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+            className="pl-8"
             onChange={(event) =>
               table.getColumn("email")?.setFilterValue(event.target.value)
             }
-            className="pl-8"
+            placeholder="Search emails..."
+            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           />
         </div>
 
         {/* Status Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="hidden md:flex">
+            <Button className="hidden md:flex" size="sm" variant="outline">
               <Filter className="mr-2 h-4 w-4" />
               Status
               <ChevronDown className="ml-2 h-4 w-4" />
@@ -157,8 +159,8 @@ function WaitlistTableHeader<TData>({ table }: { table: Table<TData> }) {
             <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuRadioGroup
-              value={statusFilter}
               onValueChange={handleStatusFilterChange}
+              value={statusFilter}
             >
               <DropdownMenuRadioItem value="all">All</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="active">
@@ -173,7 +175,7 @@ function WaitlistTableHeader<TData>({ table }: { table: Table<TData> }) {
 
         <Drawer>
           <DrawerTrigger asChild>
-            <Button variant="outline" size="icon" className="md:hidden">
+            <Button className="md:hidden" size="icon" variant="outline">
               <Settings2 className="h-4 w-4" />
             </Button>
           </DrawerTrigger>
@@ -184,12 +186,12 @@ function WaitlistTableHeader<TData>({ table }: { table: Table<TData> }) {
             <div className="space-y-4 p-4">
               {/* Mobile Status Filter */}
               <div className="space-y-2">
-                <div className="text-sm font-medium">Status</div>
+                <div className="font-medium text-sm">Status</div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
-                      variant="outline"
                       className="w-full justify-between"
+                      variant="outline"
                     >
                       {statusFilter === "all"
                         ? "All"
@@ -201,8 +203,8 @@ function WaitlistTableHeader<TData>({ table }: { table: Table<TData> }) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-full">
                     <DropdownMenuRadioGroup
-                      value={statusFilter}
                       onValueChange={handleStatusFilterChange}
+                      value={statusFilter}
                     >
                       <DropdownMenuRadioItem value="all">
                         All
@@ -236,7 +238,7 @@ function ColumnVisibilityDropdown<TData>({ table }: { table: Table<TData> }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button size="sm" variant="outline">
           Columns
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
@@ -245,18 +247,16 @@ function ColumnVisibilityDropdown<TData>({ table }: { table: Table<TData> }) {
         {table
           .getAllColumns()
           .filter((column) => column.getCanHide())
-          .map((column) => {
-            return (
-              <DropdownMenuCheckboxItem
-                key={column.id}
-                className="capitalize"
-                checked={column.getIsVisible()}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
-              >
-                {column.id}
-              </DropdownMenuCheckboxItem>
-            );
-          })}
+          .map((column) => (
+            <DropdownMenuCheckboxItem
+              checked={column.getIsVisible()}
+              className="capitalize"
+              key={column.id}
+              onCheckedChange={(value) => column.toggleVisibility(!!value)}
+            >
+              {column.id}
+            </DropdownMenuCheckboxItem>
+          ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

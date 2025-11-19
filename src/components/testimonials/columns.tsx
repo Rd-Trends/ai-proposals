@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Testimonial } from "@/lib/db";
+import type { Testimonial } from "@/lib/db/schema/testimonials";
 
 export type TestimonialColumnProps = {
   onView: (testimonial: Testimonial) => void;
@@ -32,19 +32,19 @@ export const createColumns = ({
     id: "select",
     header: ({ table }) => (
       <Checkbox
+        aria-label="Select all"
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
+        aria-label="Select row"
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
       />
     ),
     enableSorting: false,
@@ -59,7 +59,7 @@ export const createColumns = ({
         <div className="flex flex-col">
           <span className="font-medium">{testimonial.clientName}</span>
           {testimonial.clientTitle && (
-            <span className="text-sm text-muted-foreground">
+            <span className="text-muted-foreground text-sm">
               {testimonial.clientTitle}
             </span>
           )}
@@ -74,7 +74,7 @@ export const createColumns = ({
       const content = row.getValue("content") as string;
       return (
         <div className="max-w-md">
-          <span className="text-sm line-clamp-2">{content}</span>
+          <span className="line-clamp-2 text-sm">{content}</span>
         </div>
       );
     },
@@ -87,7 +87,7 @@ export const createColumns = ({
       return projectTitle ? (
         <span className="text-sm">{projectTitle}</span>
       ) : (
-        <span className="text-sm text-muted-foreground">-</span>
+        <span className="text-muted-foreground text-sm">-</span>
       );
     },
   },
@@ -111,30 +111,48 @@ export const createColumns = ({
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button className="h-8 w-8 p-0" variant="ghost">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onCopy(testimonial.id)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onCopy(testimonial.id);
+              }}
+            >
               <Copy className="mr-2 h-4 w-4" />
               Copy testimonial ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onView(testimonial)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onView(testimonial);
+              }}
+            >
               <Eye className="mr-2 h-4 w-4" />
               View details
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEdit(testimonial)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(testimonial);
+              }}
+            >
               <Pencil className="mr-2 h-4 w-4" />
               Edit testimonial
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => onDelete(testimonial)}
               className="text-destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(testimonial);
+              }}
             >
               <Trash2 className="mr-2 h-4 w-4" />
               Delete testimonial

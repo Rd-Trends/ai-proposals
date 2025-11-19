@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useDeleteConversation } from "@/hooks/use-conversation";
-import type { Conversation } from "@/lib/db";
+import type { Conversation } from "@/lib/db/schema/conversations";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -28,7 +28,9 @@ export const DeleteChatModal = ({
   const { mutate: deleteConversation, isPending } = useDeleteConversation();
 
   const handleDelete = () => {
-    if (!conversation) return;
+    if (!conversation) {
+      return;
+    }
 
     deleteConversation(conversation.id, {
       onSuccess: (_, deletedId) => {
@@ -45,7 +47,7 @@ export const DeleteChatModal = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Conversation</DialogTitle>
@@ -56,16 +58,16 @@ export const DeleteChatModal = ({
         </DialogHeader>
         <DialogFooter>
           <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
             disabled={isPending}
+            onClick={() => onOpenChange(false)}
+            variant="outline"
           >
             Cancel
           </Button>
           <Button
-            variant="destructive"
-            onClick={handleDelete}
             disabled={isPending}
+            onClick={handleDelete}
+            variant="destructive"
           >
             {isPending ? "Deleting..." : "Delete"}
           </Button>

@@ -12,12 +12,12 @@ const TemplateStats = async ({ user }: { user: User }) => {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Templates</CardTitle>
+          <CardTitle className="font-medium text-sm">Total Templates</CardTitle>
           <FileText className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.totalTemplates}</div>
-          <p className="text-xs text-muted-foreground">
+          <div className="font-bold text-2xl">{stats.totalTemplates}</div>
+          <p className="text-muted-foreground text-xs">
             {stats.activeTemplates} active templates
           </p>
         </CardContent>
@@ -25,25 +25,25 @@ const TemplateStats = async ({ user }: { user: User }) => {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Usage</CardTitle>
+          <CardTitle className="font-medium text-sm">Total Usage</CardTitle>
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.totalUsage}</div>
-          <p className="text-xs text-muted-foreground">Across all templates</p>
+          <div className="font-bold text-2xl">{stats.totalUsage}</div>
+          <p className="text-muted-foreground text-xs">Across all templates</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Recent Usage</CardTitle>
+          <CardTitle className="font-medium text-sm">Recent Usage</CardTitle>
           <Badge variant={stats.recentUsage > 10 ? "default" : "secondary"}>
             Last 30 days
           </Badge>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.recentUsage}</div>
-          <p className="text-xs text-muted-foreground">
+          <div className="font-bold text-2xl">{stats.recentUsage}</div>
+          <p className="text-muted-foreground text-xs">
             Proposals generated recently
           </p>
         </CardContent>
@@ -51,12 +51,12 @@ const TemplateStats = async ({ user }: { user: User }) => {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Favorites</CardTitle>
+          <CardTitle className="font-medium text-sm">Favorites</CardTitle>
           <Star className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.favoriteTemplates}</div>
-          <p className="text-xs text-muted-foreground">Starred templates</p>
+          <div className="font-bold text-2xl">{stats.favoriteTemplates}</div>
+          <p className="text-muted-foreground text-xs">Starred templates</p>
         </CardContent>
       </Card>
     </div>
@@ -74,7 +74,7 @@ const TemplateStatsSkeleton = () => {
             <Skeleton className="h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <Skeleton className="h-7 w-8 mb-1" />
+            <Skeleton className="mb-1 h-7 w-8" />
             <Skeleton className="h-3 w-24" />
           </CardContent>
         </Card>

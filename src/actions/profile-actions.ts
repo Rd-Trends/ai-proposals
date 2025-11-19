@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db/drizzle";
-import { users } from "@/lib/db/schema";
+import { users } from "@/lib/db/schema/auth";
 
 const profileSchema = z.object({
   name: z.string().min(2),

@@ -55,7 +55,7 @@ export function SignUpForm() {
     },
   });
 
-  const onSubmit = async (formData: FormValues) => {
+  const onSubmit = (formData: FormValues) => {
     startTransition(async () => {
       try {
         // Create the user account
@@ -70,7 +70,7 @@ export function SignUpForm() {
         if (error) {
           console.error("Sign up error:", error);
           toast.error(
-            error.message || "Failed to create account. Please try again.",
+            error.message || "Failed to create account. Please try again."
           );
         } else {
           const res = await joinWaitlistAction({
@@ -78,12 +78,12 @@ export function SignUpForm() {
             email: formData.email,
           });
 
-          if (!res.isInWaitlist) {
-            toast.success(
-              "Account created! You'll be able to sign in once your account is approved.",
-            );
-          } else {
+          if (res.isInWaitlist) {
             toast.success("Sign up successful! You can now sign in.");
+          } else {
+            toast.success(
+              "Account created! You'll be able to sign in once your account is approved."
+            );
           }
 
           router.push("/auth/signin");
@@ -108,18 +108,18 @@ export function SignUpForm() {
           <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
               <Controller
-                name="name"
                 control={form.control}
+                name="name"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="signup-name">Full Name</FieldLabel>
                     <Input
                       {...field}
-                      id="signup-name"
-                      type="text"
-                      placeholder="John Doe"
                       aria-invalid={fieldState.invalid}
                       disabled={isPending}
+                      id="signup-name"
+                      placeholder="John Doe"
+                      type="text"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -128,18 +128,18 @@ export function SignUpForm() {
                 )}
               />
               <Controller
-                name="email"
                 control={form.control}
+                name="email"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="signup-email">Email</FieldLabel>
                     <Input
                       {...field}
-                      id="signup-email"
-                      type="email"
-                      placeholder="m@example.com"
                       aria-invalid={fieldState.invalid}
                       disabled={isPending}
+                      id="signup-email"
+                      placeholder="m@example.com"
+                      type="email"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -150,8 +150,8 @@ export function SignUpForm() {
               <Field>
                 <Field className="grid grid-cols-2 gap-4">
                   <Controller
-                    name="password"
                     control={form.control}
+                    name="password"
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel htmlFor="signup-password">
@@ -159,9 +159,9 @@ export function SignUpForm() {
                         </FieldLabel>
                         <PasswordInput
                           {...field}
-                          id="signup-password"
                           aria-invalid={fieldState.invalid}
                           disabled={isPending}
+                          id="signup-password"
                         />
                         {fieldState.invalid && (
                           <FieldError errors={[fieldState.error]} />
@@ -170,8 +170,8 @@ export function SignUpForm() {
                     )}
                   />
                   <Controller
-                    name="confirmPassword"
                     control={form.control}
+                    name="confirmPassword"
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel htmlFor="signup-confirm-password">
@@ -179,9 +179,9 @@ export function SignUpForm() {
                         </FieldLabel>
                         <PasswordInput
                           {...field}
-                          id="signup-confirm-password"
                           aria-invalid={fieldState.invalid}
                           disabled={isPending}
+                          id="signup-confirm-password"
                         />
                         {fieldState.invalid && (
                           <FieldError errors={[fieldState.error]} />
@@ -196,16 +196,16 @@ export function SignUpForm() {
               </Field>
 
               <Button
-                type="submit"
-                form="signup-form"
-                disabled={isPending}
                 className="w-full"
+                disabled={isPending}
+                form="signup-form"
+                type="submit"
               >
                 {isPending ? "Creating account..." : "Create Account"}
               </Button>
               <FieldDescription className="text-center">
                 Already have an account?{" "}
-                <Link href="/auth/signin" className="underline">
+                <Link className="underline" href="/auth/signin">
                   Sign in
                 </Link>
                 .
@@ -216,11 +216,11 @@ export function SignUpForm() {
       </Card>
       <FieldDescription className="px-6 text-center text-xs">
         By clicking continue, you agree to our{" "}
-        <Link href="#" className="underline">
+        <Link className="underline" href="#">
           Terms of Service
         </Link>{" "}
         and{" "}
-        <Link href="#" className="underline">
+        <Link className="underline" href="#">
           Privacy Policy
         </Link>
         .

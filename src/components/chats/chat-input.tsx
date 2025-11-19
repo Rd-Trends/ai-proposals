@@ -1,15 +1,11 @@
 "use client";
+
 import type { ChatStatus } from "ai";
 import {
   PromptInput,
-  // PromptInputActionAddAttachments,
-  // PromptInputActionMenu,
-  // PromptInputActionMenuContent,
-  // PromptInputActionMenuTrigger,
   PromptInputAttachment,
   PromptInputAttachments,
   PromptInputBody,
-  // PromptInputButton,
   PromptInputFooter,
   PromptInputHeader,
   type PromptInputMessage,
@@ -23,7 +19,7 @@ import {
   PromptInputTextarea,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
-import { PROPOSAL_TONE, type Tone } from "@/lib/db";
+import { PROPOSAL_TONE, type Tone } from "@/lib/db/schema/templates";
 
 type ChatInputProps = {
   handleSubmit: (message: PromptInputMessage) => void;
@@ -45,12 +41,12 @@ export const ChatInput = ({
   setTone,
 }: ChatInputProps) => {
   return (
-    <div className="w-full shrink-0 px-4 pb-4 bg-background border-t sticky bottom-0">
+    <div className="sticky bottom-0 w-full shrink-0 border-t bg-background px-4 pb-4">
       <PromptInput
-        onSubmit={handleSubmit}
-        className="w-full max-w-3xl mx-auto"
+        className="mx-auto w-full max-w-3xl"
         globalDrop
         multiple
+        onSubmit={handleSubmit}
       >
         <PromptInputHeader>
           <PromptInputAttachments>
@@ -60,9 +56,9 @@ export const ChatInput = ({
         <PromptInputBody>
           <PromptInputTextarea
             onChange={(e) => setText(e.target.value)}
+            placeholder="Ask me anything about creating proposals..."
             ref={ref}
             value={text}
-            placeholder="Ask me anything about creating proposals..."
           />
         </PromptInputBody>
         <PromptInputFooter>
@@ -94,68 +90,21 @@ export const ChatInput = ({
                 <PromptInputSelectValue />
               </PromptInputSelectTrigger>
               <PromptInputSelectContent>
-                {PROPOSAL_TONE.map((tone) => (
+                {PROPOSAL_TONE.map((proposalTone) => (
                   <PromptInputSelectItem
-                    key={tone}
-                    value={tone}
                     className="capitalize"
+                    key={proposalTone}
+                    value={proposalTone}
                   >
-                    {tone}
+                    {proposalTone}
                   </PromptInputSelectItem>
                 ))}
               </PromptInputSelectContent>
             </PromptInputSelect>
           </PromptInputTools>
-          <PromptInputSubmit disabled={!text && !status} status={status} />
+          <PromptInputSubmit disabled={!(text || status)} status={status} />
         </PromptInputFooter>
       </PromptInput>
     </div>
   );
 };
-
-// import type { ChatStatus } from "ai";
-// import {
-//   PromptInput,
-//   PromptInputSubmit,
-//   PromptInputTextarea,
-//   PromptInputToolbar,
-// } from "@/components/ai-elements/prompt-input";
-
-// interface ChatInputProps {
-//   input: string;
-//   status: ChatStatus;
-//   onInputChange: (value: string) => void;
-//   onSubmit: (e: React.FormEvent) => void;
-// }
-
-// export const ChatInput = ({
-//   input,
-//   status,
-//   onInputChange,
-//   onSubmit,
-// }: ChatInputProps) => {
-//   return (
-//     <div className="w-full shrink-0 px-4 pb-4 bg-background border-t sticky bottom-0">
-//       <div className="max-w-3xl mx-auto w-full">
-//         <PromptInput onSubmit={onSubmit} className="relative">
-//           <PromptInputTextarea
-//             onChange={(e) => onInputChange(e.target.value)}
-//             value={input}
-//             placeholder="Ask me anything about creating proposals..."
-//             className="pr-10"
-//           />
-//           <PromptInputToolbar>
-//             <PromptInputSubmit
-//               className="absolute right-1 bottom-1"
-//               disabled={!input.trim()}
-//               status={status}
-//             />
-//           </PromptInputToolbar>
-//         </PromptInput>
-//         <p className="text-xs text-muted-foreground text-center py-2">
-//           AI can make mistakes. Please verify important information.
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };

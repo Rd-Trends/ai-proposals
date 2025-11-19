@@ -27,7 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
 import { useClipboard } from "@/hooks/use-clipboard";
-import type { Testimonial } from "@/lib/db";
+import type { Testimonial } from "@/lib/db/schema/testimonials";
 import type { PageMetadata } from "@/lib/types";
 
 export default function TestimonialsTable({
@@ -67,7 +67,7 @@ export default function TestimonialsTable({
     (id: string) => {
       copy(id);
     },
-    [copy],
+    [copy]
   );
 
   const columns = useMemo(
@@ -83,7 +83,7 @@ export default function TestimonialsTable({
       handleViewTestimonial,
       handleEditTestimonial,
       handleDeleteTestimonial,
-    ],
+    ]
   );
 
   return (
@@ -93,19 +93,19 @@ export default function TestimonialsTable({
           <DataTable
             columns={columns}
             data={testimonials}
-            isLoading={isLoading}
+            emptyMessage="No testimonials found."
             enablePagination={false} // Disable client-side pagination
+            isLoading={isLoading}
             onRowClick={(testimonial) => {
               setSelectedTestimonial(testimonial);
               setShowViewTestimonial(true);
             }}
             tableHeader={(table) => (
               <TestimonialTableHeader
-                table={table}
                 onNewTestimonial={() => setShowCreateTestimonial(true)}
+                table={table}
               />
             )}
-            emptyMessage="No testimonials found."
           />
           {/* Server-side pagination */}
           {!!pagination?.totalPages && (
@@ -121,31 +121,31 @@ export default function TestimonialsTable({
       </Card>
 
       <CreateTestimonialSheet
-        open={showCreateTestimonial}
         onOpenChange={setShowCreateTestimonial}
+        open={showCreateTestimonial}
       />
 
       {selectedTestimonial && (
         <>
           <ViewTestimonialSheet
-            testimonial={selectedTestimonial}
-            open={showViewTestimonial}
-            onOpenChange={setShowViewTestimonial}
             key={`${selectedTestimonial?.id}-view`}
+            onOpenChange={setShowViewTestimonial}
+            open={showViewTestimonial}
+            testimonial={selectedTestimonial}
           />
 
           <UpdateTestimonialSheet
-            testimonial={selectedTestimonial}
-            open={showUpdateTestimonial}
-            onOpenChange={setShowUpdateTestimonial}
             key={`${selectedTestimonial?.id}-update`}
+            onOpenChange={setShowUpdateTestimonial}
+            open={showUpdateTestimonial}
+            testimonial={selectedTestimonial}
           />
 
           <DeleteTestimonialDialog
-            testimonial={selectedTestimonial}
-            open={showDeleteTestimonial}
-            onOpenChange={setShowDeleteTestimonial}
             key={`${selectedTestimonial?.id}-delete`}
+            onOpenChange={setShowDeleteTestimonial}
+            open={showDeleteTestimonial}
+            testimonial={selectedTestimonial}
           />
         </>
       )}
@@ -167,19 +167,19 @@ function TestimonialTableHeader<TData>({
     <header className="flex items-center justify-between gap-2">
       {/* Search - always visible */}
       <div className="relative flex-1 xl:flex-initial">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute top-2.5 left-2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search testimonials..."
-          value={(table.getState().globalFilter as string) ?? ""}
+          className="pl-8 md:max-w-sm"
           onChange={(event) =>
             table.setGlobalFilter(String(event.target.value))
           }
-          className="pl-8 md:max-w-sm"
+          placeholder="Search testimonials..."
+          value={(table.getState().globalFilter as string) ?? ""}
         />
       </div>
 
       {/* Desktop filters - hidden on mobile */}
-      <div className="hidden xl:flex items-center space-x-2">
+      <div className="hidden items-center space-x-2 xl:flex">
         <ColumnVisibilityDropdown table={table} />
 
         {/* New testimonial button */}
@@ -196,9 +196,9 @@ function TestimonialTableHeader<TData>({
         {/* Add Testimonial button - mobile only */}
         {onNewTestimonial && (
           <Button
+            aria-label="Create new testimonial"
             onClick={onNewTestimonial}
             variant="outline"
-            aria-label="Create new testimonial"
           >
             <Plus className="h-4 w-4" />
             <span className="sr-only">New Testimonial</span>
@@ -206,12 +206,12 @@ function TestimonialTableHeader<TData>({
         )}
 
         {/* Column visibility - mobile only */}
-        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <Drawer onOpenChange={setIsDrawerOpen} open={isDrawerOpen}>
           <DrawerTrigger asChild>
             <Button
-              variant="outline"
-              size="icon"
               aria-label="Open column visibility"
+              size="icon"
+              variant="outline"
             >
               <Settings2 className="h-4 w-4" />
             </Button>
@@ -220,7 +220,7 @@ function TestimonialTableHeader<TData>({
             <DrawerHeader>
               <DrawerTitle>Column Visibility</DrawerTitle>
             </DrawerHeader>
-            <div className="p-4 space-y-4">
+            <div className="space-y-4 p-4">
               <ColumnVisibilityDropdown table={table} />
             </div>
           </DrawerContent>
@@ -235,7 +235,7 @@ function ColumnVisibilityDropdown<TData>({ table }: { table: Table<TData> }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="ml-auto">
+        <Button className="ml-auto" variant="outline">
           Columns <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -243,18 +243,16 @@ function ColumnVisibilityDropdown<TData>({ table }: { table: Table<TData> }) {
         {table
           .getAllColumns()
           .filter((column) => column.getCanHide())
-          .map((column) => {
-            return (
-              <DropdownMenuCheckboxItem
-                key={column.id}
-                className="capitalize"
-                checked={column.getIsVisible()}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
-              >
-                {column.id}
-              </DropdownMenuCheckboxItem>
-            );
-          })}
+          .map((column) => (
+            <DropdownMenuCheckboxItem
+              checked={column.getIsVisible()}
+              className="capitalize"
+              key={column.id}
+              onCheckedChange={(value) => column.toggleVisibility(!!value)}
+            >
+              {column.id}
+            </DropdownMenuCheckboxItem>
+          ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

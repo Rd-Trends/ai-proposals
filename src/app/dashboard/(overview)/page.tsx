@@ -59,8 +59,6 @@ export default async function DashboardPage() {
     <>
       <DashboardLayoutHeader breadcrumbs={[{ label: "Dashboard" }]} />
       <DashboardPageHeader
-        title="Dashboard"
-        description={`Welcome back, ${user.name || user.email}!`}
         action={
           <Button asChild>
             <Link href="/dashboard/proposals">
@@ -69,6 +67,8 @@ export default async function DashboardPage() {
             </Link>
           </Button>
         }
+        description={`Welcome back, ${user.name || user.email}!`}
+        title="Dashboard"
       />
 
       <DashboardGutter as="main">
@@ -88,9 +88,9 @@ export default async function DashboardPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <Button
+                asChild
                 className="w-full justify-start"
                 variant="outline"
-                asChild
               >
                 <Link href="/dashboard/chat">
                   <MessageSquare className="mr-2 h-4 w-4" />
@@ -98,9 +98,9 @@ export default async function DashboardPage() {
                 </Link>
               </Button>
               <Button
+                asChild
                 className="w-full justify-start"
                 variant="outline"
-                asChild
               >
                 <Link href="/dashboard/proposals">
                   <FileText className="mr-2 h-4 w-4" />
@@ -108,9 +108,9 @@ export default async function DashboardPage() {
                 </Link>
               </Button>
               <Button
+                asChild
                 className="w-full justify-start"
                 variant="outline"
-                asChild
               >
                 <Link href="/dashboard/templates">
                   <FileText className="mr-2 h-4 w-4" />
@@ -118,9 +118,9 @@ export default async function DashboardPage() {
                 </Link>
               </Button>
               <Button
+                asChild
                 className="w-full justify-start"
                 variant="outline"
-                asChild
               >
                 <Link href="/dashboard/projects">
                   <Briefcase className="mr-2 h-4 w-4" />
@@ -128,9 +128,9 @@ export default async function DashboardPage() {
                 </Link>
               </Button>
               <Button
+                asChild
                 className="w-full justify-start"
                 variant="outline"
-                asChild
               >
                 <Link href="/dashboard/testimonials">
                   <Quote className="mr-2 h-4 w-4" />
@@ -156,25 +156,25 @@ const StatsOverview = async ({ user }: { user: User }) => {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Proposals</CardTitle>
+          <CardTitle className="font-medium text-sm">Total Proposals</CardTitle>
           <FileText className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
+          <div className="font-bold text-2xl">
             {proposalStats.totalProposals}
           </div>
-          <p className="text-xs text-muted-foreground">Last 30 days</p>
+          <p className="text-muted-foreground text-xs">Last 30 days</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
+          <CardTitle className="font-medium text-sm">Success Rate</CardTitle>
           <Award className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{proposalStats.successRate}%</div>
-          <p className="text-xs text-muted-foreground">
+          <div className="font-bold text-2xl">{proposalStats.successRate}%</div>
+          <p className="text-muted-foreground text-xs">
             {proposalStats.jobsAwarded} jobs awarded
           </p>
         </CardContent>
@@ -182,14 +182,14 @@ const StatsOverview = async ({ user }: { user: User }) => {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Response Rate</CardTitle>
+          <CardTitle className="font-medium text-sm">Response Rate</CardTitle>
           <MessageSquare className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
+          <div className="font-bold text-2xl">
             {proposalStats.responseRate}%
           </div>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             {proposalStats.clientResponses} client responses
           </p>
         </CardContent>
@@ -197,14 +197,14 @@ const StatsOverview = async ({ user }: { user: User }) => {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Templates</CardTitle>
+          <CardTitle className="font-medium text-sm">Total Templates</CardTitle>
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
+          <div className="font-bold text-2xl">
             {templateStats.totalTemplates}
           </div>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             {templateStats.activeTemplates} active
           </p>
         </CardContent>
@@ -223,7 +223,7 @@ const StatsOverviewSkeleton = () => (
           <Skeleton className="h-4 w-4" />
         </CardHeader>
         <CardContent>
-          <Skeleton className="h-7 w-12 mb-1" />
+          <Skeleton className="mb-1 h-7 w-12" />
           <Skeleton className="h-3 w-32" />
         </CardContent>
       </Card>
@@ -246,15 +246,15 @@ const RecentProposals = async ({ user }: { user: User }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         {recent.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             No proposals yet. Create your first one.
           </p>
         ) : (
           recent.map((p) => (
             <div className="flex items-start justify-between" key={p.id}>
               <div>
-                <p className="text-sm font-medium pb-1">{p.jobTitle}</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="pb-1 font-medium text-sm">{p.jobTitle}</p>
+                <p className="text-muted-foreground text-sm">
                   {p.sentAt
                     ? `Created ${formatDistanceToNow(new Date(p.sentAt), { addSuffix: true })}`
                     : "Created recently"}
@@ -282,7 +282,7 @@ const RecentProposalsSkeleton = () => (
         // biome-ignore lint/suspicious/noArrayIndexKey: index will not change
         <div className="flex items-center justify-between" key={i}>
           <div>
-            <Skeleton className="h-4 w-48 mb-1" />
+            <Skeleton className="mb-1 h-4 w-48" />
             <Skeleton className="h-3 w-32" />
           </div>
           <Skeleton className="h-6 w-20 rounded-full" />

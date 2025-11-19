@@ -20,34 +20,32 @@ export const ChatMessages = ({
   regenerate,
   isReadonly,
 }: {
-  messages: Array<ChatMessage>;
+  messages: ChatMessage[];
   status: ChatStatus;
   onPromptSelect: (prompt: string) => void;
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];
   regenerate: UseChatHelpers<ChatMessage>["regenerate"];
   isReadonly: boolean;
-}) => {
-  return (
-    <Conversation className="flex flex-col gap-4 md:gap-6">
-      {messages.length === 0 ? (
-        <QuickPrompts onPromptSelect={onPromptSelect} />
-      ) : (
-        <ConversationContent className="mx-auto w-full max-w-3xl">
-          {messages.map((message) => (
-            <RenderChatMessage
-              key={message.id}
-              message={message}
-              setMessages={setMessages}
-              regenerate={regenerate}
-              isReadonly={isReadonly}
-            />
-          ))}
+}) => (
+  <Conversation className="flex flex-col gap-4 md:gap-6">
+    {messages.length === 0 ? (
+      <QuickPrompts onPromptSelect={onPromptSelect} />
+    ) : (
+      <ConversationContent className="mx-auto w-full max-w-3xl">
+        {messages.map((message) => (
+          <RenderChatMessage
+            isReadonly={isReadonly}
+            key={message.id}
+            message={message}
+            regenerate={regenerate}
+            setMessages={setMessages}
+          />
+        ))}
 
-          {status === "submitted" && <Loader />}
-        </ConversationContent>
-      )}
+        {status === "submitted" && <Loader />}
+      </ConversationContent>
+    )}
 
-      <ConversationScrollButton shouldAutoScroll={status === "submitted"} />
-    </Conversation>
-  );
-};
+    <ConversationScrollButton shouldAutoScroll={status === "submitted"} />
+  </Conversation>
+);

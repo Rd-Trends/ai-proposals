@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useConversationHistory } from "@/hooks/use-conversation";
 import { useIsMobile } from "@/hooks/use-mobile";
-import type { Conversation } from "@/lib/db";
+import type { Conversation } from "@/lib/db/schema/conversations";
 import { DeleteChatModal } from "../chats/delete-chat-modal";
 import { RenameChatModal } from "../chats/rename-chat-modal";
 
@@ -38,9 +38,10 @@ export const ChatHistory = () => {
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const conversations = useMemo(() => {
-    return data?.pages.flatMap((page) => page.data) || [];
-  }, [data]);
+  const conversations = useMemo(
+    () => data?.pages.flatMap((page) => page.data) || [],
+    [data]
+  );
 
   if (conversations.length > 0) {
     return (
@@ -65,9 +66,9 @@ export const ChatHistory = () => {
                   </SidebarMenuAction>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                  side={isMobile ? "bottom" : "right"}
                   align={isMobile ? "end" : "start"}
                   className="min-w-40 rounded-lg"
+                  side={isMobile ? "bottom" : "right"}
                 >
                   <DropdownMenuItem
                     onSelect={() => {
@@ -79,11 +80,11 @@ export const ChatHistory = () => {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    variant="destructive"
                     onSelect={() => {
                       setSelectedConversation(conversation);
                       setShowDeleteModal(true);
                     }}
+                    variant="destructive"
                   >
                     <Trash2 className="size-4" /> Delete
                   </DropdownMenuItem>
@@ -94,9 +95,9 @@ export const ChatHistory = () => {
           {hasNextPage && (
             <SidebarMenuItem>
               <SidebarMenuButton
-                onClick={() => fetchNextPage()}
-                disabled={isFetchingNextPage}
                 className="w-full"
+                disabled={isFetchingNextPage}
+                onClick={() => fetchNextPage()}
               >
                 {isFetchingNextPage ? "Loading..." : "Load more"}
               </SidebarMenuButton>
@@ -107,16 +108,16 @@ export const ChatHistory = () => {
         {selectedConversation && (
           <>
             <RenameChatModal
-              key={`${selectedConversation.id}-rename-chat`}
               conversation={selectedConversation}
-              open={showRenameModal}
+              key={`${selectedConversation.id}-rename-chat`}
               onOpenChange={setShowRenameModal}
+              open={showRenameModal}
             />
             <DeleteChatModal
-              key={`${selectedConversation.id}-delete-chat`}
               conversation={selectedConversation}
-              open={showDeleteModal}
+              key={`${selectedConversation.id}-delete-chat`}
               onOpenChange={setShowDeleteModal}
+              open={showDeleteModal}
             />
           </>
         )}

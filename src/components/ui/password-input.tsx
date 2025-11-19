@@ -1,7 +1,7 @@
 "use client";
 
 import { Eye, EyeOff } from "lucide-react";
-import * as React from "react";
+import React from "react";
 import type { Input } from "@/components/ui/input";
 import {
   InputGroup,
@@ -10,10 +10,12 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 
-export interface PasswordInputProps
-  extends Omit<React.ComponentProps<typeof Input>, "type"> {
+export type PasswordInputProps = Omit<
+  React.ComponentProps<typeof Input>,
+  "type"
+> & {
   showToggle?: boolean;
-}
+};
 
 export function PasswordInput({
   className,
@@ -30,11 +32,11 @@ export function PasswordInput({
       <InputGroupInput type={showPassword ? "text" : "password"} {...props} />
       <InputGroupAddon align="inline-end">
         <InputGroupButton
+          aria-label={showPassword ? "Hide password" : "Show password"}
+          onClick={togglePasswordVisibility}
+          size="icon-xs"
           type="button"
           variant="ghost"
-          onClick={togglePasswordVisibility}
-          aria-label={showPassword ? "Hide password" : "Show password"}
-          size="icon-xs"
         >
           {showPassword ? <EyeOff /> : <Eye />}
         </InputGroupButton>

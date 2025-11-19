@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { deleteTrailingMessages } from "@/actions/conversation-actions";
+import { deleteTrailingMessagesAction } from "@/actions/conversation-actions";
 import type { ChatMessage } from "@/lib/types";
 import { getTextFromMessage } from "@/lib/utils";
 import { Button } from "../ui/button";
@@ -31,7 +31,7 @@ export function MessageEditor({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [draftContent, setDraftContent] = useState<string>(
-    getTextFromMessage(message),
+    getTextFromMessage(message)
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -80,7 +80,7 @@ export function MessageEditor({
           onClick={async () => {
             setIsSubmitting(true);
 
-            await deleteTrailingMessages({
+            await deleteTrailingMessagesAction({
               id: message.id,
             });
 

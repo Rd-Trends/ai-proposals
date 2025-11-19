@@ -32,38 +32,38 @@ export const quickPromptsData = [
   },
 ];
 
-interface QuickPromptsProps {
+type QuickPromptsProps = {
   onPromptSelect: (prompt: string) => void;
-}
+};
 
 export const QuickPrompts = ({ onPromptSelect }: QuickPromptsProps) => {
   return (
-    <div className="flex flex-col items-center justify-center h-full px-4">
-      <div className="text-center mb-8 max-w-2xl">
-        <h2 className="text-2xl font-semibold mb-4">
+    <div className="flex h-full flex-col items-center justify-center px-4">
+      <div className="mb-8 max-w-2xl text-center">
+        <h2 className="mb-4 font-semibold text-2xl">
           How can I help you create winning proposals?
         </h2>
-        <p className="text-muted-foreground mb-8">
+        <p className="mb-8 text-muted-foreground">
           I can help you analyze job postings, create proposal structures,
           improve existing proposals, and develop pricing strategies.
         </p>
       </div>
 
       {/* Quick Start Prompts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+      <div className="grid w-full max-w-2xl grid-cols-1 gap-4 md:grid-cols-2">
         {quickPromptsData.map((prompt) => (
           <Card
+            className="cursor-pointer border-border/50 p-4 transition-colors hover:bg-accent/50"
             key={prompt.id}
-            className="p-4 cursor-pointer hover:bg-accent/50 transition-colors border-border/50"
             onClick={() => onPromptSelect(prompt.prompt)}
           >
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <prompt.icon className="w-5 h-5 text-primary" />
+              <div className="rounded-lg bg-primary/10 p-2">
+                <prompt.icon className="h-5 w-5 text-primary" />
               </div>
               <div className="flex-1">
-                <h3 className="font-medium text-sm mb-1">{prompt.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <h3 className="mb-1 font-medium text-sm">{prompt.title}</h3>
+                <p className="text-muted-foreground text-xs leading-relaxed">
                   {prompt.prompt.length > 80
                     ? `${prompt.prompt.substring(0, 80)}...`
                     : prompt.prompt}

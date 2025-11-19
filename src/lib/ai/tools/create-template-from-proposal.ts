@@ -1,8 +1,8 @@
 import { tool } from "ai";
 import type { User } from "better-auth";
 import z from "zod";
-import { PROPOSAL_TONE } from "@/lib/db";
 import { createTemplate } from "@/lib/db/operations/template";
+import { PROPOSAL_TONE } from "@/lib/db/schema/templates";
 
 export const createTemplateFromProposal = (user: User) =>
   tool({
@@ -14,7 +14,7 @@ export const createTemplateFromProposal = (user: User) =>
         .string()
         .max(100)
         .describe(
-          "A short title for the template, e.g., 'Upwork Content Writer Proposal'",
+          "A short title for the template, e.g., 'Upwork Content Writer Proposal'"
         ),
       description: z
         .string()
@@ -32,7 +32,7 @@ export const createTemplateFromProposal = (user: User) =>
         .max(5)
         .optional()
         .describe(
-          "Up to 5 tags for the template, e.g., ['writing', 'blogging']",
+          "Up to 5 tags for the template, e.g., ['writing', 'blogging']"
         ),
     }),
     execute: async (input) => {

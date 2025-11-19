@@ -25,50 +25,50 @@ const stats = [
 
 export const BenefitsSection = () => {
   return (
-    <Section id="benefits" className="w-full overflow-x-clip relative">
+    <Section className="relative w-full overflow-x-clip" id="benefits">
       {/* Background gradient */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/2 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+      <div className="-z-10 absolute inset-0">
+        <div className="-right-40 absolute top-1/2 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
       </div>
 
       <Container size="md">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 font-bold text-3xl md:text-4xl lg:text-5xl">
             Stop Losing Clients to{" "}
             <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               Slow Proposals
             </span>
           </h2>
-          <p className="text-muted-foreground text-sm md:text-lg max-w-md mx-auto">
+          <p className="mx-auto max-w-md text-muted-foreground text-sm md:text-lg">
             Writing quality proposals can be time-consuming and difficult.
             Competitors move fast. Time to level up.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12 mx-auto">
+        <div className="mx-auto grid gap-8 md:grid-cols-2 lg:gap-12">
           {/* Problems - Old Way */}
           <div className="relative">
             <div className="mb-6">
-              <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-muted text-muted-foreground border border-border">
+              <span className="inline-block rounded-full border border-border bg-muted px-3 py-1 font-semibold text-muted-foreground text-xs">
                 The Old Way
               </span>
             </div>
-            <h3 className="text-2xl md:text-3xl font-bold mb-6 text-muted-foreground">
+            <h3 className="mb-6 font-bold text-2xl text-muted-foreground md:text-3xl">
               Without QuickRite
             </h3>
             <div className="space-y-4">
               {problems.map((problem) => (
                 <div
+                  className="flex items-start gap-3 rounded-xl border border-border bg-muted/50 p-4"
                   key={problem}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-muted/50 border border-border"
                 >
-                  <div className="size-6 rounded-full bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="mt-0.5 flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-muted">
                     <X
                       className="size-4 text-muted-foreground"
                       strokeWidth={3}
                     />
                   </div>
-                  <p className="text-sm md:text-base text-muted-foreground">
+                  <p className="text-muted-foreground text-sm md:text-base">
                     {problem}
                   </p>
                 </div>
@@ -79,43 +79,43 @@ export const BenefitsSection = () => {
           {/* Solutions - New Way */}
           <div className="relative">
             <div className="mb-6">
-              <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary border border-primary/20">
+              <span className="inline-block rounded-full border border-primary/20 bg-primary/10 px-3 py-1 font-semibold text-primary text-xs">
                 The New Way
               </span>
             </div>
-            <h3 className="text-2xl md:text-3xl font-bold mb-6">
+            <h3 className="mb-6 font-bold text-2xl md:text-3xl">
               With QuickRite
             </h3>
             <div className="space-y-4">
               {solutions.map((solution) => (
                 <div
+                  className="flex items-start gap-3 rounded-xl border border-primary/10 bg-primary/5 p-4 transition-colors hover:bg-primary/10"
                   key={solution}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors"
                 >
-                  <div className="size-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="mt-0.5 flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-primary/20">
                     <Check className="size-4 text-primary" strokeWidth={3} />
                   </div>
-                  <p className="text-sm md:text-base font-medium">{solution}</p>
+                  <p className="font-medium text-sm md:text-base">{solution}</p>
                 </div>
               ))}
             </div>
 
             {/* Glow effect */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-primary/5 to-primary/10 rounded-3xl blur-2xl -z-10 opacity-50" />
+            <div className="-inset-4 -z-10 absolute rounded-3xl bg-gradient-to-r from-primary/5 to-primary/10 opacity-50 blur-2xl" />
           </div>
         </div>
 
         {/* Stats Section */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+        <div className="mt-20 grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
           {stats.map((stat) => (
             <div
+              className="rounded-2xl border bg-accent/50 p-6 text-center"
               key={stat.label}
-              className="text-center p-6 rounded-2xl bg-accent/50 border"
             >
-              <div className="from-primary to-foreground bg-linear-to-r bg-clip-text text-3xl md:text-4xl font-bold text-foreground drop-shadow-[2px_1px_24px_var(--foreground)] transition-all duration-300">
+              <div className="bg-linear-to-r from-primary to-foreground bg-clip-text font-bold text-3xl text-foreground drop-shadow-[2px_1px_24px_var(--foreground)] transition-all duration-300 md:text-4xl">
                 {stat.value}
               </div>
-              <p className="text-xs md:text-sm text-muted-foreground pt-2">
+              <p className="pt-2 text-muted-foreground text-xs md:text-sm">
                 {stat.label}
               </p>
             </div>

@@ -7,7 +7,7 @@ import { useState, useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { updateTemplate } from "@/actions/template-actions";
+import { updateTemplateAction } from "@/actions/template-actions";
 import { AITemplateGenerator } from "@/components/templates/ai-template-generator";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,13 +34,13 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { PROPOSAL_TONE, type Template } from "@/lib/db";
+import { PROPOSAL_TONE, type Template } from "@/lib/db/schema/templates";
 
-interface UpdateTemplateSheetProps {
+type UpdateTemplateSheetProps = {
   template: Template;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-}
+};
 
 export function UpdateTemplateSheet({
   template,
@@ -66,11 +66,11 @@ export function UpdateTemplateSheet({
     },
   });
 
-  const handleSubmit = form.handleSubmit(async (data) => {
+  const handleSubmit = form.handleSubmit((data) => {
     console.log(data);
     startTransition(async () => {
       try {
-        const res = await updateTemplate(template.id, data);
+        const res = await updateTemplateAction(template.id, data);
         if (!res.success) {
           toast.error(res.error || "Failed to update template");
           return;
@@ -99,7 +99,7 @@ export function UpdateTemplateSheet({
     const currentTags = form.getValues("tags");
     form.setValue(
       "tags",
-      currentTags.filter((tag) => tag !== tagToRemove),
+      currentTags.filter((tag) => tag !== tagToRemove)
     );
   };
 
@@ -111,8 +111,8 @@ export function UpdateTemplateSheet({
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-2xl overflow-y-auto">
+    <Sheet onOpenChange={onOpenChange} open={open}>
+      <SheetContent className="overflow-y-auto sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <Edit className="h-5 w-5" />
@@ -124,14 +124,14 @@ export function UpdateTemplateSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 pt-6 px-4">
+        <form className="space-y-6 px-4 pt-6" onSubmit={handleSubmit}>
           {/* Basic Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Basic Information</h3>
+            <h3 className="font-medium text-lg">Basic Information</h3>
 
             <Controller
-              name="title"
               control={form.control}
+              name="title"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="update-template-title">
@@ -139,10 +139,10 @@ export function UpdateTemplateSheet({
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="update-template-title"
-                    placeholder="e.g., Web Development Proposal"
                     aria-invalid={fieldState.invalid}
                     disabled={isPending}
+                    id="update-template-title"
+                    placeholder="e.g., Web Development Proposal"
                   />
                   <FieldDescription>
                     A clear, descriptive name for your template
@@ -155,8 +155,8 @@ export function UpdateTemplateSheet({
             />
 
             <Controller
-              name="description"
               control={form.control}
+              name="description"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="update-template-description">
@@ -164,12 +164,12 @@ export function UpdateTemplateSheet({
                   </FieldLabel>
                   <Textarea
                     {...field}
+                    aria-invalid={fieldState.invalid}
+                    className="resize-none"
+                    disabled={isPending}
                     id="update-template-description"
                     placeholder="Briefly describe what this template is for..."
-                    className="resize-none"
                     rows={3}
-                    aria-invalid={fieldState.invalid}
-                    disabled={isPending}
                   />
                   <FieldDescription>
                     Optional description to help you identify this template
@@ -183,8 +183,8 @@ export function UpdateTemplateSheet({
 
             <div className="grid grid-cols-2 gap-4">
               <Controller
-                name="category"
                 control={form.control}
+                name="category"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="update-template-category">
@@ -192,10 +192,10 @@ export function UpdateTemplateSheet({
                     </FieldLabel>
                     <Input
                       {...field}
-                      id="update-template-category"
-                      placeholder="e.g., web development"
                       aria-invalid={fieldState.invalid}
                       disabled={isPending}
+                      id="update-template-category"
+                      placeholder="e.g., web development"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -205,28 +205,28 @@ export function UpdateTemplateSheet({
               />
 
               <Controller
-                name="tone"
                 control={form.control}
+                name="tone"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="update-template-tone">Tone</FieldLabel>
                     <Select
+                      disabled={isPending}
                       onValueChange={field.onChange}
                       value={field.value}
-                      disabled={isPending}
                     >
                       <SelectTrigger
-                        id="update-template-tone"
                         aria-invalid={fieldState.invalid}
+                        id="update-template-tone"
                       >
                         <SelectValue placeholder="Select tone" />
                       </SelectTrigger>
                       <SelectContent>
                         {PROPOSAL_TONE.map((tone) => (
                           <SelectItem
+                            className="capitalize"
                             key={tone}
                             value={tone}
-                            className="capitalize"
                           >
                             {tone}
                           </SelectItem>
@@ -246,22 +246,22 @@ export function UpdateTemplateSheet({
 
           {/* Tags */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Tags</h3>
+            <h3 className="font-medium text-lg">Tags</h3>
 
             <div className="space-y-2">
               <div className="flex gap-2">
                 <Input
-                  placeholder="Add a tag..."
-                  value={newTag}
+                  className="flex-1"
                   onChange={(e) => setNewTag(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="flex-1"
+                  placeholder="Add a tag..."
+                  value={newTag}
                 />
                 <Button
-                  type="button"
                   onClick={addTag}
-                  variant="outline"
                   size="sm"
+                  type="button"
+                  variant="outline"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -270,12 +270,12 @@ export function UpdateTemplateSheet({
               {form.watch("tags").length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {form.watch("tags").map((tag) => (
-                    <Badge key={tag} variant="secondary" className="gap-1">
+                    <Badge className="gap-1" key={tag} variant="secondary">
                       {tag}
                       <button
-                        type="button"
+                        className="ml-1 rounded-sm hover:bg-destructive hover:text-destructive-foreground"
                         onClick={() => removeTag(tag)}
-                        className="ml-1 hover:bg-destructive hover:text-destructive-foreground rounded-sm"
+                        type="button"
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -289,8 +289,8 @@ export function UpdateTemplateSheet({
           <Separator />
 
           <Controller
-            name="content"
             control={form.control}
+            name="content"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <div className="flex items-center justify-between gap-4">
@@ -320,14 +320,14 @@ export function UpdateTemplateSheet({
                 </div>
                 <Textarea
                   {...field}
+                  aria-invalid={fieldState.invalid}
+                  className="min-h-[200px] resize-none"
+                  disabled={isPending}
                   id="update-template-content"
                   placeholder="Enter your template content here. You can use placeholders like {{client_name}}, {{project_description}}, etc."
-                  className="resize-none min-h-[200px]"
-                  aria-invalid={fieldState.invalid}
-                  disabled={isPending}
                 />
                 <FieldDescription>
-                  Use placeholders like {`{{client_name}}`} for dynamic content
+                  Use placeholders like {"{{client_name}}"} for dynamic content
                   that can be filled in later
                 </FieldDescription>
                 {fieldState.invalid && (
@@ -341,24 +341,24 @@ export function UpdateTemplateSheet({
 
           {/* Settings */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Settings</h3>
+            <h3 className="font-medium text-lg">Settings</h3>
 
             <Controller
-              name="status"
               control={form.control}
+              name="status"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="update-template-status">
                     Status
                   </FieldLabel>
                   <Select
+                    disabled={isPending}
                     onValueChange={field.onChange}
                     value={field.value}
-                    disabled={isPending}
                   >
                     <SelectTrigger
-                      id="update-template-status"
                       aria-invalid={fieldState.invalid}
+                      id="update-template-status"
                     >
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
@@ -381,15 +381,15 @@ export function UpdateTemplateSheet({
 
             <div className="grid grid-cols-2 gap-4">
               <Controller
-                name="isPublic"
                 control={form.control}
+                name="isPublic"
                 render={({
                   field: { value, onChange, ...field },
                   fieldState,
                 }) => (
                   <Field
-                    data-invalid={fieldState.invalid}
                     className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"
+                    data-invalid={fieldState.invalid}
                   >
                     <div className="space-y-0.5">
                       <FieldLabel htmlFor="update-template-isPublic">
@@ -401,28 +401,28 @@ export function UpdateTemplateSheet({
                     </div>
                     <input
                       {...field}
-                      id="update-template-isPublic"
-                      type="checkbox"
-                      checked={value}
-                      onChange={onChange}
-                      className="h-4 w-4"
                       aria-invalid={fieldState.invalid}
+                      checked={value}
+                      className="h-4 w-4"
                       disabled={isPending}
+                      id="update-template-isPublic"
+                      onChange={onChange}
+                      type="checkbox"
                     />
                   </Field>
                 )}
               />
 
               <Controller
-                name="isFavorite"
                 control={form.control}
+                name="isFavorite"
                 render={({
                   field: { value, onChange, ...field },
                   fieldState,
                 }) => (
                   <Field
-                    data-invalid={fieldState.invalid}
                     className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"
+                    data-invalid={fieldState.invalid}
                   >
                     <div className="space-y-0.5">
                       <FieldLabel htmlFor="update-template-isFavorite">
@@ -434,13 +434,13 @@ export function UpdateTemplateSheet({
                     </div>
                     <input
                       {...field}
-                      id="update-template-isFavorite"
-                      type="checkbox"
-                      checked={value}
-                      onChange={onChange}
-                      className="h-4 w-4"
                       aria-invalid={fieldState.invalid}
+                      checked={value}
+                      className="h-4 w-4"
                       disabled={isPending}
+                      id="update-template-isFavorite"
+                      onChange={onChange}
+                      type="checkbox"
                     />
                   </Field>
                 )}
@@ -451,13 +451,13 @@ export function UpdateTemplateSheet({
           {/* Submit Button */}
           <div className="flex justify-end gap-3 py-6">
             <Button
+              onClick={() => onOpenChange?.(false)}
               type="button"
               variant="outline"
-              onClick={() => onOpenChange?.(false)}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending}>
+            <Button disabled={isPending} type="submit">
               {isPending ? (
                 <>
                   <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-b-transparent" />

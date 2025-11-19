@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-export interface UseClipboardOptions {
+export type UseClipboardOptions = {
   /** Time in ms after which the copied state will reset, `2000` by default */
   timeout?: number;
-}
+};
 
-export interface UseClipboardReturnValue {
+export type UseClipboardReturnValue = {
   /** Function to copy value to clipboard */
   copy: (value: string) => void;
 
@@ -17,17 +17,19 @@ export interface UseClipboardReturnValue {
 
   /** Boolean indicating if the value was copied successfully */
   copied: boolean;
-}
+};
 
 export function useClipboard(
-  options: UseClipboardOptions = { timeout: 2000 },
+  options: UseClipboardOptions = { timeout: 2000 }
 ): UseClipboardReturnValue {
   const [error, setError] = useState<Error | null>(null);
   const [copied, setCopied] = useState(false);
   const [copyTimeout, setCopyTimeout] = useState<number | null>(null);
 
   const handleCopyResult = (value: boolean) => {
-    if (copyTimeout) window.clearTimeout(copyTimeout);
+    if (copyTimeout) {
+      window.clearTimeout(copyTimeout);
+    }
     setCopyTimeout(window.setTimeout(() => setCopied(false), options.timeout));
     setCopied(value);
   };
@@ -46,7 +48,9 @@ export function useClipboard(
   const reset = () => {
     setCopied(false);
     setError(null);
-    if (copyTimeout) window.clearTimeout(copyTimeout);
+    if (copyTimeout) {
+      window.clearTimeout(copyTimeout);
+    }
   };
 
   return { copy, reset, error, copied };

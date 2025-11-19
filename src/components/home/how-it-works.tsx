@@ -35,66 +35,66 @@ const steps = [
 
 export const HowItWorksSection = () => {
   return (
-    <Section id="how-it-works" className="w-full relative overflow-x-hidden">
+    <Section className="relative w-full overflow-x-hidden" id="how-it-works">
       {/* Background gradient orbs */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 -left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+      <div className="-z-10 absolute inset-0">
+        <div className="-left-20 absolute top-1/4 h-72 w-72 rounded-full bg-purple-500/10 blur-3xl" />
+        <div className="-right-20 absolute bottom-1/4 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
       </div>
 
       <Container>
-        <div className="flex flex-col items-center text-center mb-16">
-          <div className="inline-block mb-4 relative group">
-            <span className="text-sm font-semibold px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 relative z-10">
+        <div className="mb-16 flex flex-col items-center text-center">
+          <div className="group relative mb-4 inline-block">
+            <span className="relative z-10 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 font-semibold text-primary text-sm">
               Simple Process
             </span>
             {/* Animated glow border */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 blur-sm opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300" />
+            <div className="absolute inset-0 animate-pulse rounded-full bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-100" />
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="mb-4 font-bold text-3xl md:text-4xl lg:text-5xl">
             How It Works
           </h2>
-          <p className="text-muted-foreground text-sm md:text-lg max-w-md text-center">
+          <p className="max-w-md text-center text-muted-foreground text-sm md:text-lg">
             From setup to success in four simple steps. Start winning more
             clients today.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {steps.map((step, index) => {
             return (
-              <article key={step.title} className="relative group">
+              <article className="group relative" key={step.title}>
                 {/* Card */}
-                <div className="relative h-full p-6 rounded-2xl border bg-card hover:bg-accent/50 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
+                <div className="relative h-full rounded-2xl border bg-card p-6 transition-all duration-300 hover:scale-[1.02] hover:bg-accent/50 hover:shadow-lg">
                   {/* Step number with gradient */}
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="relative size-12 rounded-lg bg-accent flex items-center justify-center shadow-lg">
+                  <div className="mb-6 flex items-start justify-between">
+                    <div className="relative flex size-12 items-center justify-center rounded-lg bg-accent shadow-lg">
                       <step.icon className="size-5.5" strokeWidth={2.5} />
                       {/* Glow effect */}
-                      <div className="absolute inset-0 rounded-xl bg-primary blur-xl opacity-50 -z-10" />
+                      <div className="-z-10 absolute inset-0 rounded-xl bg-primary opacity-50 blur-xl" />
                     </div>
-                    <span className="text-4xl font-bold text-muted-foreground/20">
+                    <span className="font-bold text-4xl text-muted-foreground/20">
                       {step.step}
                     </span>
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-lg md:text-xl font-semibold mb-3">
+                  <h3 className="mb-3 font-semibold text-lg md:text-xl">
                     {step.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-muted-foreground text-sm leading-relaxed">
                     {step.description}
                   </p>
 
                   {/* Animated gradient border on hover */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/10 group-hover:via-transparent group-hover:to-primary/10 transition-all duration-300 -z-10" />
+                  <div className="-z-10 absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 transition-all duration-300 group-hover:from-primary/10 group-hover:via-transparent group-hover:to-primary/10" />
                 </div>
 
                 {/* Connector arrow for desktop */}
                 {index < steps.length - 1 && (
-                  <div className="hidden lg:flex absolute top-14 -right-4 z-10 items-center justify-center">
-                    <div className="w-8 h-[2px] bg-gradient-to-r from-primary/60 to-primary/20" />
-                    <div className="w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[8px] border-l-primary/20" />
+                  <div className="-right-4 absolute top-14 z-10 hidden items-center justify-center lg:flex">
+                    <div className="h-[2px] w-8 bg-gradient-to-r from-primary/60 to-primary/20" />
+                    <div className="h-0 w-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[8px] border-l-primary/20" />
                   </div>
                 )}
               </article>

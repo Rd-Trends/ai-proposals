@@ -1,12 +1,16 @@
 import { and, count, desc, eq } from "drizzle-orm";
+import {
+  type NewTestimonial,
+  type Testimonial,
+  testimonials,
+} from "@/lib/db/schema/testimonials";
 import type { PaginatedResult, PaginationParams } from "@/lib/types";
 import { db } from "../drizzle";
-import { type NewTestimonial, type Testimonial, testimonials } from "../index";
 import { calculateTotalPages, getPaginationOffset } from "./util";
 
 // Create a new testimonial
 export async function createTestimonial(
-  testimonialData: NewTestimonial,
+  testimonialData: NewTestimonial
 ): Promise<Testimonial> {
   const [testimonial] = await db
     .insert(testimonials)
@@ -17,7 +21,7 @@ export async function createTestimonial(
 
 // Get testimonial by ID
 export async function getTestimonialById(
-  id: string,
+  id: string
 ): Promise<Testimonial | null> {
   const [testimonial] = await db
     .select()
@@ -29,7 +33,7 @@ export async function getTestimonialById(
 // Get testimonials by user ID with pagination
 export async function getTestimonialsByUserId(
   userId: string,
-  params?: PaginationParams,
+  params?: PaginationParams
 ): Promise<PaginatedResult<Testimonial>> {
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 10;
@@ -74,7 +78,7 @@ export async function getTestimonialsByUserId(
 // Update testimonial
 export async function updateTestimonial(
   id: string,
-  testimonialData: Partial<NewTestimonial>,
+  testimonialData: Partial<NewTestimonial>
 ): Promise<Testimonial> {
   const [testimonial] = await db
     .update(testimonials)

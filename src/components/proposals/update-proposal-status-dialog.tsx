@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import * as z from "zod";
+import { z } from "zod";
 import { updateProposal } from "@/actions/proposal-actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,7 +29,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { PROPOSAL_OUTCOME, type ProposalTracking } from "@/lib/db";
+import {
+  PROPOSAL_OUTCOME,
+  type ProposalTracking,
+} from "@/lib/db/schema/proposals";
 import { getProposalStatusLabel } from "./helpers";
 
 const updateStatusSchema = z.object({
@@ -39,11 +42,11 @@ const updateStatusSchema = z.object({
 
 type UpdateStatusFormData = z.infer<typeof updateStatusSchema>;
 
-interface UpdateProposalStatusDialogProps {
+type UpdateProposalStatusDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   proposal: ProposalTracking;
-}
+};
 
 export function UpdateProposalStatusDialog({
   open,
@@ -61,7 +64,7 @@ export function UpdateProposalStatusDialog({
     },
   });
 
-  const handleSubmit = form.handleSubmit(async (data) => {
+  const handleSubmit = form.handleSubmit((data) => {
     startTransition(async () => {
       try {
         const res = await updateProposal(proposal.id, data);
@@ -82,7 +85,7 @@ export function UpdateProposalStatusDialog({
   });
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Update Proposal Status</DialogTitle>
@@ -94,19 +97,19 @@ export function UpdateProposalStatusDialog({
         <form id="update-proposal-status-form" onSubmit={handleSubmit}>
           <FieldGroup className="space-y-4">
             <Controller
-              name="currentOutcome"
               control={form.control}
+              name="currentOutcome"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="proposal-status">Status</FieldLabel>
                   <Select
                     name={field.name}
-                    value={field.value}
                     onValueChange={field.onChange}
+                    value={field.value}
                   >
                     <SelectTrigger
-                      id="proposal-status"
                       aria-invalid={fieldState.invalid}
+                      id="proposal-status"
                     >
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
@@ -126,8 +129,8 @@ export function UpdateProposalStatusDialog({
             />
 
             <Controller
-              name="notes"
               control={form.control}
+              name="notes"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="proposal-notes">
@@ -135,10 +138,10 @@ export function UpdateProposalStatusDialog({
                   </FieldLabel>
                   <Textarea
                     {...field}
-                    id="proposal-notes"
-                    placeholder="Add any notes about this status update..."
                     aria-invalid={fieldState.invalid}
                     disabled={isPending}
+                    id="proposal-notes"
+                    placeholder="Add any notes about this status update..."
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -149,17 +152,17 @@ export function UpdateProposalStatusDialog({
 
             <div className="flex justify-end space-x-2">
               <Button
+                disabled={isPending}
+                onClick={() => onOpenChange(false)}
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isPending}
               >
                 Cancel
               </Button>
               <Button
-                type="submit"
-                form="update-proposal-status-form"
                 disabled={isPending}
+                form="update-proposal-status-form"
+                type="submit"
               >
                 {isPending ? "Updating..." : "Update"}
               </Button>

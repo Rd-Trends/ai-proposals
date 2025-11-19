@@ -22,7 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Waitlist } from "@/lib/db";
+import type { Waitlist } from "@/lib/db/schema/waitlist";
 
 type ColumnActions = {
   onCopy: (id: string) => void;
@@ -49,7 +49,7 @@ export function createColumns({
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <Mail className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground text-sm">
             {row.getValue("email")}
           </span>
         </div>
@@ -59,7 +59,7 @@ export function createColumns({
       accessorKey: "invitedBy",
       header: "Invited By",
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground">
+        <span className="text-muted-foreground text-sm">
           {row.getValue("invitedBy") || "N/A"}
         </span>
       ),
@@ -70,7 +70,7 @@ export function createColumns({
       cell: ({ row }) => {
         const date = row.getValue("invitedAt") as Date;
         return (
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground text-sm">
             {format(new Date(date), "MMM dd, yyyy")}
           </span>
         );
@@ -86,8 +86,8 @@ export function createColumns({
         if (usedAt) {
           return (
             <Badge
-              variant="default"
               className="gap-1 bg-green-600 hover:bg-green-600/90"
+              variant="default"
             >
               <Check className="h-3 w-3" />
               Used
@@ -96,12 +96,12 @@ export function createColumns({
         }
 
         return isActive ? (
-          <Badge variant="default" className="gap-1">
+          <Badge className="gap-1" variant="default">
             <Check className="h-3 w-3" />
             Active
           </Badge>
         ) : (
-          <Badge variant="secondary" className="gap-1">
+          <Badge className="gap-1" variant="secondary">
             <X className="h-3 w-3" />
             Inactive
           </Badge>
@@ -114,11 +114,11 @@ export function createColumns({
       cell: ({ row }) => {
         const date = row.getValue("usedAt") as Date | null;
         return date ? (
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground text-sm">
             {format(new Date(date), "MMM dd, yyyy")}
           </span>
         ) : (
-          <span className="text-sm text-muted-foreground">Not used</span>
+          <span className="text-muted-foreground text-sm">Not used</span>
         );
       },
     },
@@ -128,7 +128,7 @@ export function createColumns({
       cell: ({ row }) => {
         const notes = row.getValue("notes") as string | null;
         return (
-          <span className="text-sm text-muted-foreground line-clamp-1">
+          <span className="line-clamp-1 text-muted-foreground text-sm">
             {notes || "—"}
           </span>
         );
@@ -142,7 +142,7 @@ export function createColumns({
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button className="h-8 w-8 p-0" variant="ghost">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -173,8 +173,8 @@ export function createColumns({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => onDelete(entry)}
                 className="text-destructive focus:text-destructive"
+                onClick={() => onDelete(entry)}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete

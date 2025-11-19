@@ -16,22 +16,22 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8">
-        <div className="bg-white rounded-lg shadow-md p-8">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md space-y-8 p-8">
+        <div className="rounded-lg bg-white p-8 shadow-md">
           <div className="space-y-6">
-            <div className="text-center space-y-4">
-              <h1 className="text-3xl font-bold">QuickRite</h1>
+            <div className="space-y-4 text-center">
+              <h1 className="font-bold text-3xl">QuickRite</h1>
               <p className="text-gray-600">
                 Choose how you&apos;d like to access your account
               </p>
             </div>
 
             <div className="space-y-3">
-              <Button className="w-full" size="lg" asChild>
+              <Button asChild className="w-full" size="lg">
                 <Link href="/auth/signin">Sign In</Link>
               </Button>
-              <Button variant="outline" className="w-full" size="lg" asChild>
+              <Button asChild className="w-full" size="lg" variant="outline">
                 <Link href="/auth/signup">Create Account</Link>
               </Button>
             </div>

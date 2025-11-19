@@ -44,17 +44,17 @@ export default async function ProjectsPage({
         ]}
       />
       <DashboardPageHeader
-        title="Projects"
         description="Manage your projects and case studies for proposal references"
+        title="Projects"
       />
       <DashboardGutter as="main">
         {/* <Suspense fallback={<ProjectStatsLoader />}>
           <ProjectStats user={session.user} />
         </Suspense> */}
-        <Suspense fallback={<ProjectsPageTable projects={[]} isLoading />}>
+        <Suspense fallback={<ProjectsPageTable isLoading projects={[]} />}>
           <ProjectsPageContent
-            user={session.user}
             searchParams={searchParams}
+            user={session.user}
           />
         </Suspense>
       </DashboardGutter>
@@ -79,6 +79,6 @@ const ProjectsPageContent = async ({
   });
 
   return (
-    <ProjectsPageTable projects={result.data} pagination={result.pagination} />
+    <ProjectsPageTable pagination={result.pagination} projects={result.data} />
   );
 };

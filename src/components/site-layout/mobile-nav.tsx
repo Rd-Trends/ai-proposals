@@ -43,13 +43,13 @@ export const MobileNav = () => {
 
   return (
     <div className="md:hidden">
-      <Drawer open={open} onOpenChange={setOpen} direction="bottom">
+      <Drawer direction="bottom" onOpenChange={setOpen} open={open}>
         <DrawerTrigger asChild>
           <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9"
             aria-label="Open navigation menu"
+            className="h-9 w-9"
+            size="icon"
+            variant="ghost"
           >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Open navigation menu</span>
@@ -62,11 +62,11 @@ export const MobileNav = () => {
           </DrawerHeader>
 
           <div className="p-6">
-            <nav className="pb-10" aria-label="Main navigation">
-              <ul className="grid grid-cols-1 gap-2 list-none">
+            <nav aria-label="Main navigation" className="pb-10">
+              <ul className="grid list-none grid-cols-1 gap-2">
                 {navItems.map((item) => (
                   <li key={item.label}>
-                    <Button variant="link" asChild className="px-0">
+                    <Button asChild className="px-0" variant="link">
                       <Link href={item.href} onClick={handleLinkClick}>
                         {item.label}
                       </Link>
@@ -78,12 +78,12 @@ export const MobileNav = () => {
 
             {/* User Section */}
             {user ? (
-              <UserDropdownMenu user={user} className="w-full">
-                <Button size="lg" variant="outline" className="w-full">
+              <UserDropdownMenu className="w-full" user={user}>
+                <Button className="w-full" size="lg" variant="outline">
                   <Avatar className="h-8 w-8 rounded-lg grayscale">
                     <AvatarImage
-                      src={user.image || undefined}
                       alt={user.name}
+                      src={user.image || undefined}
                     />
                     <AvatarFallback className="rounded-lg">
                       {userInitials.toUpperCase()}
@@ -93,7 +93,7 @@ export const MobileNav = () => {
                     {user.name && (
                       <span className="truncate font-medium">{user.name}</span>
                     )}
-                    <span className="text-muted-foreground truncate text-xs">
+                    <span className="truncate text-muted-foreground text-xs">
                       {user.email}
                     </span>
                   </div>

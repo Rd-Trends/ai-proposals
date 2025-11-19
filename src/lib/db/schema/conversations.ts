@@ -40,7 +40,7 @@ export const conversationsRelations = relations(
       references: [users.id],
     }),
     messages: many(messages),
-  }),
+  })
 );
 
 export const messagesRelations = relations(messages, ({ one }) => ({

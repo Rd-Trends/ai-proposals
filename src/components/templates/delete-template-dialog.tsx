@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { deleteTemplate } from "@/actions/template-actions";
+import { deleteTemplateAction } from "@/actions/template-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,13 +14,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Template } from "@/lib/db";
+import type { Template } from "@/lib/db/schema/templates";
 
-interface DeleteTemplateDialogProps {
+type DeleteTemplateDialogProps = {
   template: Template;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
+};
 
 export function DeleteTemplateDialog({
   template,
@@ -30,10 +30,10 @@ export function DeleteTemplateDialog({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const handleDeleteTemplate = async () => {
+  const handleDeleteTemplate = () => {
     startTransition(async () => {
       try {
-        const result = await deleteTemplate(template.id);
+        const result = await deleteTemplateAction(template.id);
         if (result.success) {
           toast.success(`Template "${template.title}" deleted successfully`);
           startTransition(() => {
@@ -51,7 +51,7 @@ export function DeleteTemplateDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Template</DialogTitle>
@@ -63,16 +63,16 @@ export function DeleteTemplateDialog({
         </DialogHeader>
         <DialogFooter>
           <Button
-            variant="outline"
-            onClick={() => onOpenChange?.(false)}
             disabled={isPending}
+            onClick={() => onOpenChange?.(false)}
+            variant="outline"
           >
             Cancel
           </Button>
           <Button
-            variant="destructive"
-            onClick={handleDeleteTemplate}
             disabled={isPending}
+            onClick={handleDeleteTemplate}
+            variant="destructive"
           >
             {isPending ? (
               <>

@@ -76,7 +76,7 @@ const joinWaitlistSchema = z.object({
 });
 
 export async function joinWaitlistAction(
-  params: z.infer<typeof joinWaitlistSchema>,
+  params: z.infer<typeof joinWaitlistSchema>
 ): Promise<{
   success: boolean;
   isInWaitlist?: boolean;
