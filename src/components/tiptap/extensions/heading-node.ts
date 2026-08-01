@@ -1,17 +1,6 @@
 import Heading from "@tiptap/extension-heading";
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
-import StarterKit from "@tiptap/starter-kit";
 import { editorStyles } from "./editor-style";
-
-export const ModStarterKit = StarterKit.extend({
-  extendNodeSchema(extension) {
-    if (extension.name === "heading") {
-      extension.configure({
-        levels: [1, 2, 3, 4, 5, 6],
-      });
-    }
-  },
-});
 
 export const CustomHeading = Heading.extend({
   addAttributes() {

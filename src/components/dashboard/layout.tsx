@@ -182,10 +182,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
 export const DashboardLayoutHeader = ({
   breadcrumbs,
+  className,
 }: {
   breadcrumbs: Array<{ label: string; href?: Route }>;
+  className?: string;
 }) => (
-  <header className="sticky top-0 z-10 flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) supports-[backdrop-filter]:bg-background/60">
+  <header
+    className={cn(
+      "sticky top-0 z-10 flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) supports-[backdrop-filter]:bg-background/60",
+      className
+    )}
+  >
     <div className="flex flex-1 items-center gap-2">
       <SidebarTrigger className="-ml-1" />
       <Separator

@@ -80,27 +80,29 @@ export const ChatInput = ({
             <GlobeIcon size={16} />
             <span>Search</span>
           </PromptInputButton> */}
-            <PromptInputSelect
-              onValueChange={(value) => {
-                setTone?.(value as Tone);
-              }}
-              value={tone}
-            >
-              <PromptInputSelectTrigger>
-                <PromptInputSelectValue />
-              </PromptInputSelectTrigger>
-              <PromptInputSelectContent>
-                {PROPOSAL_TONE.map((proposalTone) => (
-                  <PromptInputSelectItem
-                    className="capitalize"
-                    key={proposalTone}
-                    value={proposalTone}
-                  >
-                    {proposalTone}
-                  </PromptInputSelectItem>
-                ))}
-              </PromptInputSelectContent>
-            </PromptInputSelect>
+            {tone && (
+              <PromptInputSelect
+                onValueChange={(value) => {
+                  setTone?.(value as Tone);
+                }}
+                value={tone}
+              >
+                <PromptInputSelectTrigger>
+                  <PromptInputSelectValue />
+                </PromptInputSelectTrigger>
+                <PromptInputSelectContent>
+                  {PROPOSAL_TONE.map((proposalTone) => (
+                    <PromptInputSelectItem
+                      className="capitalize"
+                      key={proposalTone}
+                      value={proposalTone}
+                    >
+                      {proposalTone}
+                    </PromptInputSelectItem>
+                  ))}
+                </PromptInputSelectContent>
+              </PromptInputSelect>
+            )}
           </PromptInputTools>
           <PromptInputSubmit disabled={!(text || status)} status={status} />
         </PromptInputFooter>

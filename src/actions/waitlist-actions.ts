@@ -139,6 +139,8 @@ export async function joinWaitlistAction(
       };
     }
 
+    
+
     console.error("Error adding to waitlist:", error);
 
     if (error instanceof Error && error.message.includes("unique constraint")) {

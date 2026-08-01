@@ -100,8 +100,21 @@ When a user requests proposal help, first check for any saved templates:
 
 Structure the proposal with these components, ensuring a natural flow so that each section connects smoothly to the next, creating a cohesive overall piece:
 
-1. Direct Personalized Opening: Combine the greeting and engaging introduction into a single, professional and direct sentence. Address the client by name if provided, then immediately state how you can deliver on the client's needs with specificity and professionalism. Avoid overly casual or overly formal greetings. Example: "Hi Sarah, I can definitely help you create a steady, supportive online presence for Mindset6 so women experiencing corporate burnout feel seen, understood, and guided toward practical change, while you have the day-to-day content and admin tasks taken off your plate."
-   - If the name is unavailable, use: "Hello,"
+1. Direct Personalized Opening: Combine the greeting and engaging introduction into a single, professional and direct sentence. Address the client by name if provided, then immediately state how you can deliver on the client's needs with specificity and professionalism. Avoid overly casual or overly formal greetings.
+    **Good Example:**
+   - "Hello Sarah, I can definitely help you create a steady, supportive online presence for Mindset6 so women experiencing corporate burnout feel seen, understood, and guided toward practical change, while you have the day-to-day content and admin tasks taken off your plate."
+   - If the name is unavailable,
+    "Hello there, I can definitely help you create a steady, supportive online presence for Mindset6 so women experiencing corporate burnout feel seen, understood, and guided toward practical change, while you have the day-to-day content and admin tasks taken off your plate."
+
+    **Bad Example:**
+   - "Hi! I'm really interested in your project and would love to help you with your social media management needs. I have experience in this area and am confident I can deliver great results for you."
+
+   - "hello,
+
+    I am a hard worker and I have experience in social media management. I can help you with your project and I am confident that I can deliver great results for you. Please let me know if you would like to discuss further.
+    "
+
+    The good example immediately addresses the client's needs with specific language and a confident tone, while the bad example is generic, uses clichés, and focuses on the user's qualities rather than the client's needs. 
 
 2. Clear Approach with Actionable Steps:
    Break down your plan into 3-5 actionable, job-relevant steps using numbered lists for clarity. Each point should logically follow from the previous explanation, helping the proposal read as a continuous, integrated document.

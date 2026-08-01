@@ -23,13 +23,14 @@ const TaskItemNode = ({ node, updateAttributes }: NodeViewProps) => {
   return (
     <NodeViewWrapper
       as="li"
+      className="flex items-start gap-2"
       data-checked={checked}
-      className="flex items-start gap-2">
+    >
       <div className="pt-1.5">
         <Checkbox
           checked={checked}
-          onCheckedChange={handleCheckedChange}
           className="cursor-pointer"
+          onCheckedChange={handleCheckedChange}
         />
       </div>
       <NodeViewContent

@@ -1,0 +1,208 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "textAlign": null,
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Project Overview"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Age-related cognitive decline is one of the most pressing public health challenges of the 21st century. As populations age globally, the "
+        },
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "burden of dementia mild"
+        },
+        {
+          "type": "text",
+          "text": " cognitive impairment, and associated healthcare costs continues to rise. Current pharmaceutical interventions have yielded limited success, often targeting symptoms rather than underlying neural mechanisms. In contrast, lifestyle-based, non-pharmacological approaches—such as cognitive training, physical activity, and dietary supplementation—offer promising, low-risk, and sustainable strategies for enhancing neuroplasticity and preserving cognitive function in aging adults."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "This project proposes a 24-month randomized controlled trial (RCT) designed to test the synergistic effects of a multi-modal intervention integrating (1) adaptive cognitive training, (2) structured aerobic exercise, and (3) targeted nutritional supplementation. We hypothesize that these three modalittteis, when combined, will yield greater improvements in neural connectivity and cognitive performance than when implemented "
+        },
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "individually"
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "textAlign": null,
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Scientific Rationale"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Emerging research indicates that cognitive training enhances task-specific neural efficiency (Smith et al., 2022), aerobic exercise promotes "
+        },
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "angiogenesis and hippocampal volume maintenance"
+        },
+        {
+          "type": "text",
+          "text": " (Erickson et al., 2019), and nutritional supplementation—particularly omega-3 fatty acids, B-vitamins, and vitamin D—supports myelination and synaptic repair (Witte et al., 2014). Yet, few studies have rigorously examined these modalities in a combined, longitudinal RCT framework with neuroimaging "
+        },
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "endpoints!"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "By integrating these approaches, "
+        },
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "this Study will address key questions"
+        },
+        {
+          "type": "text",
+          "text": ":"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "textAlign": null
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Can multi-modal interventions reverse or stabilize biomarkers of neural plasticity in older adults? "
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "textAlign": null
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "How do improviment in neural plasticity correlate with measurable cognitive gains? "
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "textAlign": null
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Are there age-dependent thresholds for intervention efficacy?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      }
+    }
+  ]
+}

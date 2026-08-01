@@ -8,15 +8,23 @@ import { Superscript } from "@tiptap/extension-superscript";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Typography } from "@tiptap/extension-typography";
 import { Selection } from "@tiptap/extensions";
-import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
+import { Editor, EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { useImperativeHandle } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 import { cn } from "@/lib/utils";
 import { BlockquoteButton } from "./blockquote-button";
+import { ChangesToolbar } from "./change-tracking";
 import { CodeBlockButton } from "./code-block-button";
 import { ColorHighlightPopover } from "./color-highlight";
+import { ExportButton } from "./export-button";
+import {
+  AcceptedItemNode,
+  ChangeIndicatorNode,
+  InlineChangeMark,
+  RejectedItemNode,
+} from "./extensions/change-indicator";
 import { editorStyles } from "./extensions/editor-style";
 import { CustomHeading } from "./extensions/heading-node";
 import { HorizontalRule } from "./extensions/horizontal-rule-node";
@@ -26,6 +34,7 @@ import {
   type ImageUploadNodeOptions,
 } from "./extensions/image-upload";
 import { CustomTaskItem } from "./extensions/task-item";
+import testContent from "./extensions/test.json";
 import { HeadingDropdownMenu } from "./heading-dropdown-menu";
 import { ImageUploadButton } from "./image-upload-button";
 import { LinkPopover } from "./link-popover";
@@ -35,9 +44,14 @@ import { TextAlignButton } from "./text-align-button";
 import { Toolbar, ToolbarSeparator, ToolbarToggleGroup } from "./toolbar";
 import { UndoRedoButton } from "./undo-redo-button";
 
-const EditorToolbar = () => {
+const EditorToolbar = ({ className }: { className?: string }) => {
   return (
-    <Toolbar className="h-12 flex items-center md:justify-center overflow-x-auto border-0 border-input border-b">
+    <Toolbar
+      className={cn(
+        "h-12 flex items-center md:justify-center overflow-x-auto border-0 border-input border-b",
+        className
+      )}
+    >
       <ToolbarToggleGroup type="single">
         <UndoRedoButton action="undo" />
         <UndoRedoButton action="redo" />
@@ -85,6 +99,12 @@ const EditorToolbar = () => {
       <ToolbarToggleGroup type="multiple">
         <ImageUploadButton text="Add" />
       </ToolbarToggleGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarToggleGroup type="multiple">
+        <ExportButton />
+      </ToolbarToggleGroup>
     </Toolbar>
   );
 };
@@ -92,6 +112,8 @@ const EditorToolbar = () => {
 export function SimpleEditor({
   className,
   editorContentClassName,
+  toolbarClassName,
+  editorWrapperClassName,
   onChange,
   value,
   ref,
@@ -101,10 +123,16 @@ export function SimpleEditor({
 }: {
   className?: string;
   editorContentClassName?: string;
+  toolbarClassName?: string;
+  editorWrapperClassName?: string;
   onChange?: (content: string) => void;
   value?: string;
   error?: boolean;
-  ref?: React.Ref<{ focus: () => void; blur: () => void }>;
+  ref?: React.Ref<{
+    focus: () => void;
+    blur: () => void;
+    setContent: (content: string) => void;
+  }>;
   imageUploadModes?: ImageUploadNodeOptions["modes"];
   placeholder?: string;
 }) {
@@ -176,10 +204,22 @@ export function SimpleEditor({
         onError: (error) => console.error("Upload failed:", error),
         modes: imageUploadModes,
       }),
+      ChangeIndicatorNode.configure({
+        onChangeAccepted: () => {
+          // handle change accepted
+        },
+        onChangeRejected: () => {
+          // handle change rejected
+        },
+      }),
+      AcceptedItemNode,
+      RejectedItemNode,
+      InlineChangeMark,
     ],
-    content: value,
+    content: value || testContent,
     onUpdate: ({ editor }) => {
       onChange?.(editor.isEmpty ? "" : editor.getHTML());
+      console.log("Editor content updated:", editor.getJSON());
     },
   });
 
@@ -187,6 +227,9 @@ export function SimpleEditor({
     //  mimick the onFocus and onBlur methods from react-hook-form
     focus: () => editor?.commands.focus(),
     blur: () => editor?.commands.blur(),
+    setContent: (content: string) => {
+      editor?.commands.setContent(content);
+    },
   }));
 
   return (
@@ -203,16 +246,26 @@ export function SimpleEditor({
       )}
     >
       <EditorContext.Provider value={{ editor }}>
-        <EditorToolbar />
-        <ScrollArea className="flex-1 overflow-y-auto [&>[data-radix-scroll-area-viewport]>div]:h-full">
+        <EditorToolbar className={toolbarClassName} />
+        <ScrollArea
+          className={cn(
+            "flex-1 overflow-y-auto [&>[data-radix-scroll-area-viewport]>div]:h-full",
+            editorWrapperClassName
+          )}
+        >
           <EditorContent
             aria-invalid={error}
-            className={cn("p-4 h-full [&>div]:h-full", editorContentClassName)}
+            className={cn(
+              "p-4 h-full [&>div]:h-full pb-40",
+              editorContentClassName
+            )}
             data-slot="main-editor"
             editor={editor}
             role="presentation"
           />
         </ScrollArea>
+
+        {editor && <ChangesToolbar editor={editor} />}
       </EditorContext.Provider>
     </div>
   );
